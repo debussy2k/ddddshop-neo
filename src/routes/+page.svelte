@@ -63,7 +63,30 @@
 	function handleCategoryClick(event: CustomEvent) {
 		const { category } = event.detail;
 		console.log('선택된 카테고리:', category);
-		// 여기에 카테고리 클릭 시 처리 로직 추가
+		
+		// 카테고리 클릭 시 해당 카테고리 페이지로 이동
+		const categorySlug = generateCategorySlug(category);
+		if (categorySlug) {
+			window.location.href = `/category/${categorySlug}`;
+		}
+	}
+
+	function generateCategorySlug(category: any): string | null {
+		// 카테고리 이름을 기반으로 slug 생성
+		if (category.name) {
+			// 한글을 영문으로 매핑
+			const slugMap: { [key: string]: string } = {
+				'도서': 'book',
+				'전자제품': 'electronics',
+				'의류': 'clothing',
+				'식품': 'food',
+				'가구': 'furniture',
+				'스포츠': 'sports'
+			};
+			
+			return slugMap[category.name] || category.name.toLowerCase().replace(/\s+/g, '-');
+		}
+		return null;
 	}
 </script>
 

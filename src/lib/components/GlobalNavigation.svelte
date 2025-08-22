@@ -12,7 +12,31 @@
 	let isMobileMenuOpen = false;
 
 	function handleCategoryClick(category: any) {
-		dispatch('categoryClick', { category });
+		// 카테고리 ID나 slug를 기반으로 URL 생성
+		const categorySlug = generateCategorySlug(category);
+		if (categorySlug) {
+			window.location.href = `/category/${categorySlug}`;
+		} else {
+			dispatch('categoryClick', { category });
+		}
+	}
+
+	function generateCategorySlug(category: any): string | null {
+		// 카테고리 이름을 기반으로 slug 생성
+		if (category.name) {
+			// 한글을 영문으로 매핑 (실제로는 더 체계적인 매핑이 필요)
+			const slugMap: { [key: string]: string } = {
+				'도서': 'book',
+				'전자제품': 'electronics',
+				'의류': 'clothing',
+				'식품': 'food',
+				'가구': 'furniture',
+				'스포츠': 'sports'
+			};
+			
+			return slugMap[category.name] || category.name.toLowerCase().replace(/\s+/g, '-');
+		}
+		return null;
 	}
 
 	function toggleMobileMenu() {
