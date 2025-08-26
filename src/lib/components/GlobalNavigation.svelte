@@ -1,8 +1,12 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
-	let categories: any[] = [];
-	let isVisible: boolean = true;
+	interface Props {
+		categories?: any[];
+		isVisible?: boolean;
+	}
+
+	let { categories = [], isVisible = true }: Props = $props();
 
 	const dispatch = createEventDispatcher<{
 		categoryClick: { category: any };

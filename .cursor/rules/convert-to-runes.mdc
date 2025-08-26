@@ -1,0 +1,140 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Svelte 5 Runes Conversion Rule
+
+When instructed to convert a Svelte component to Svelte 5 runes syntax, follow these guidelines:
+
+## Component Structure
+- Replace `export let myProp` with `let { myProp }: Props = $props<Props>();`
+- Use `$state()` for reactive variables instead of `let` with `$:`
+- Use `$derived()` for computed values instead of `$:`
+- Use `$effect()` for side effects instead of `$:`
+
+## Props Handling
+```svelte
+<script lang="ts">
+	interface Props {
+		class?: ClassValue;
+		// other props...
+	}
+
+	let { class: className }: Props = $props<Props>();
+</script>
+```
+
+## State Management
+```svelte
+<script lang="ts">
+	// Instead of: let count = 0;
+	let count = $state(0);
+	
+	// Instead of: $: doubled = count * 2;
+	let doubled = $derived(count * 2);
+	
+	// Instead of: $: console.log(count);
+	$effect(() => {
+		console.log(count);
+	});
+</script>
+```
+
+## Event Handling
+
+### Component-to-Component Communication
+Use callback functions passed as props instead of custom events or window.dispatchEvent:
+
+```svelte
+<!-- Child Component -->
+<script lang="ts">
+	interface Props {
+		onDataUpdate?: (data: any) => void | Promise<void>;
+	}
+
+	let { onDataUpdate }: Props = $props();
+
+	async function handleSave() {
+		// Do some work...
+		if (onDataUpdate) {
+			await onDataUpdate(newData);
+		}
+	}
+</script>
+
+<!-- Parent Component -->
+<script lang="ts">
+	async function handleChildDataUpdate(data: any) {
+		// Handle the update
+		await refreshData();
+	}
+</script>
+
+<ChildComponent onDataUpdate={handleChildDataUpdate} />
+```
+
+### DOM Event Handling
+```svelte
+<script lang="ts">
+	function handleClick() {
+		// event handling logic
+	}
+</script>
+
+<button on:click={handleClick}>
+	Click me
+</button>
+```
+
+## Template Syntax
+- Keep the same template syntax in the HTML section
+- Use `{expression}` for reactive expressions
+- Use `{#if}`, `{#each}`, `{#await}` blocks as before
+
+## Key Changes to Apply:
+1. Replace `let` with `$state()` for reactive variables
+2. Replace `$:` with `$derived()` for computed values
+3. Replace `$:` with `$effect()` for side effects
+4. Update props syntax to use `$props<Props>()`
+5. Use callback functions for component communication instead of custom events
+6. Remove unnecessary reactive statements
+7. Keep template syntax unchanged
+8. Remove all `HTMLAttributes<some-tags>` types if found
+
+## Example Conversion:
+```svelte
+<!-- Before (Svelte 4) -->
+<script lang="ts">
+	let count = 0;
+	$: doubled = count * 2;
+	$: console.log(count);
+</script>
+
+<!-- After (Svelte 5) -->
+<script lang="ts">
+	let count = $state(0);
+	let doubled = $derived(count * 2);
+	$effect(() => {
+		console.log(count);
+	});
+</script>
+```
+
+## Component Scaffolding
+
+All components should follow this standard format as shown in the scaffolding below:
+
+<script lang="ts">
+	import type { ClassValue } from "svelte/elements";
+	import { cn } from "$lib/utils";
+
+	interface Props {
+		class?: ClassValue;
+	}
+
+	let { class: className }: Props = $props<Props>();
+</script>
+
+<div class={cn('', className || '')}>
+</div>

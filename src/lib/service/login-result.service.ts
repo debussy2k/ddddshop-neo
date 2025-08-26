@@ -9,7 +9,7 @@ export interface LoginResult {
 }
 
 export class LoginResultService {
-	private currentLoginResult: LoginResult | null = null;
+	public currentLoginResult: LoginResult | null = null;
 
 	public constructor() {}
 
@@ -70,4 +70,4 @@ export class LoginResultService {
 	}
 }
 
-export const loginResultService = new LoginResultService();
+export const loginResult = new LoginResultService();

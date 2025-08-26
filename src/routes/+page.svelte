@@ -6,11 +6,12 @@
 	import { user, isAuthenticated, initializeAuth } from '$lib/stores/auth.store';
 	import cloudIf from '$lib/components/cloudif';
 	import TopSection from '$lib/components/TopSection.svelte';
+	import { loginResult } from '$lib/service/login-result.service';	
 
-	let showLoginForm = false;
-	let productCategories: any = null;
-	let isLoadingCategories = false;
-	let categoriesError: string | null = null;
+	let showLoginForm = $state(false);
+	let productCategories = $state<any>(null);
+	let isLoadingCategories = $state(false);
+	let categoriesError = $state<string | null>(null);
 
 	onMount(async () => {
 		// API 초기화

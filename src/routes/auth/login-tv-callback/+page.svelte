@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { initializeAPI } from '$lib/config/api.config';	
 	import { getShopicusAPI } from '$lib/service/shopicus.api';
-	import { loginResultService } from '$lib/service/login-result.service';
+	import { loginResult } from '$lib/service/login-result.service';
 
 	onMount(async () => {
 		console.log('login-tv-callback');
@@ -38,7 +38,7 @@
 	async function signInExternal(provider: string, loginKey: string, secondaryLoginKey: string) {
 		try {
 			// 로그인 시도 정보를 서비스에 저장
-			loginResultService.saveLoginAttempt(provider, loginKey, secondaryLoginKey);
+			loginResult.saveLoginAttempt(provider, loginKey, secondaryLoginKey);
 
 			initializeAPI();
 			const api = getShopicusAPI();
@@ -57,14 +57,14 @@
 			console.log('사용자 정보:', result);
 			
 			// 로그인 성공 결과를 서비스에 업데이트
-			loginResultService.updateLoginSuccess(result);
+			loginResult.updateLoginSuccess(result);
 			
 			return result;
 		} catch (error) {
 			console.error('외부 로그인 API 호출 실패:', error);
 			
 			// 로그인 실패 결과를 서비스에 업데이트
-			loginResultService.updateLoginFailure(error instanceof Error ? error.message : String(error));
+			loginResult.updateLoginFailure(error instanceof Error ? error.message : String(error));
 			
 			throw error;
 		}
