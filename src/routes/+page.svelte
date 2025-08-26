@@ -5,6 +5,7 @@
 	import { initializeAPI } from '$lib/config/api.config';
 	import { user, isAuthenticated, initializeAuth } from '$lib/stores/auth.store';
 	import cloudIf from '$lib/components/cloudif';
+	import TopSection from '$lib/components/TopSection.svelte';
 
 	let showLoginForm = false;
 	let productCategories: any = null;
@@ -90,50 +91,14 @@
 	}
 </script>
 
+<TopSection />
 <!-- Global Navigation Bar -->
 <GlobalNavigation 
 	categories={productCategories || []} 
 	isVisible={true}
 	on:categoryClick={handleCategoryClick}
 />
-
 <main>
-	{#if $isAuthenticated}
-		<div class="welcome-section">
-			<h1>환영합니다, {$user?.username || '사용자'}님!</h1>
-			<p>로그인이 완료되었습니다.</p>
-			<div class="user-info">
-				<p><strong>사용자 ID:</strong> {$user?.userid}</p>
-				<p><strong>이메일:</strong> {$user?.email || '정보 없음'}</p>
-				<p><strong>멤버십:</strong> {$user?.membershipName || '일반'}</p>
-				<p><strong>가입일:</strong> {$user?.registerDate ? new Date($user.registerDate).toLocaleDateString('ko-KR') : '정보 없음'}</p>
-			</div>
-		</div>
-	{:else}
-		<div class="welcome-section">
-			<h1>DDDD Shop Neo에 오신 것을 환영합니다!</h1>
-			<p>쇼핑을 시작하려면 로그인해주세요.</p>
-			
-			{#if showLoginForm}
-				<div class="login-container">
-					<div class="login-header">
-						<h2>로그인</h2>
-						<button class="close-button" on:click={closeLoginForm} aria-label="닫기">
-							×
-						</button>
-					</div>
-					<LoginForm 
-						on:loginSuccess={handleLoginSuccess}
-						on:loginError={handleLoginError}
-					/>
-				</div>
-			{:else}
-				<button class="login-button" on:click={toggleLoginForm}>
-					로그인
-				</button>
-			{/if}
-		</div>
-	{/if}
 
 	<!-- 제품 카테고리 섹션 -->
 	<div class="categories-section">
