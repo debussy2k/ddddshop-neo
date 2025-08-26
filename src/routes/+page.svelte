@@ -8,6 +8,13 @@
 	import TopSection from '$lib/components/TopSection.svelte';
 	import { loginResult } from '$lib/service/login-result.service';	
 	import { JsonView } from '@zerodevx/svelte-json-view';
+	import type { PageData } from './$types';
+	
+	interface Props {
+		data: PageData;
+	}
+	
+	let { data }: Props = $props<Props>();
 
 	let showLoginForm = $state(false);
 	let productCategories = $state<any>(null);
@@ -100,11 +107,11 @@
 	isVisible={true}
 	on:categoryClick={handleCategoryClick}
 />
-<main>
 
-	<div>hello</div>
-	<JsonView json={loginResult.currentLoginResult} />
-	
+<JsonView json={data} />
+
+
+<main>	
 	<!-- 제품 카테고리 섹션 -->
 	<div class="categories-section">
 		<h2>제품 카테고리</h2>
