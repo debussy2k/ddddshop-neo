@@ -1,27 +1,26 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import type { ClassValue } from "svelte/elements";
+	import { cn } from "$lib/utils";
 
 	interface Props {
 		categories?: any[];
 		isVisible?: boolean;
+		onCategoryClick?: (category: any) => void | Promise<void>;
+		class?: ClassValue;
 	}
 
-	let { categories = [], isVisible = true }: Props = $props();
+	let { categories = [], isVisible = true, onCategoryClick, class: className }: Props = $props();
 
-	const dispatch = createEventDispatcher<{
-		categoryClick: { category: any };
-	}>();
-
-	let activeCategory: any = null;
-	let isMobileMenuOpen = false;
+	let activeCategory = $state<any>(null);
+	let isMobileMenuOpen = $state(false);
 
 	function handleCategoryClick(category: any) {
 		// 카테고리 ID나 slug를 기반으로 URL 생성
 		const categorySlug = generateCategorySlug(category);
 		if (categorySlug) {
 			window.location.href = `/category/${categorySlug}`;
-		} else {
-			dispatch('categoryClick', { category });
+		} else if (onCategoryClick) {
+			onCategoryClick(category);
 		}
 	}
 
@@ -51,16 +50,36 @@
 		isMobileMenuOpen = false;
 	}
 
+	let hoverTimeout: number | null = null;
+
 	function handleCategoryHover(category: any) {
+		if (hoverTimeout) {
+			clearTimeout(hoverTimeout);
+			hoverTimeout = null;
+		}
 		activeCategory = category;
 	}
 
 	function handleCategoryLeave() {
+		// 약간의 지연을 두어 사용자가 서브메뉴로 이동할 시간을 줍니다
+		hoverTimeout = setTimeout(() => {
+			activeCategory = null;
+		}, 150);
+	}
+
+	function handleSubmenuEnter() {
+		if (hoverTimeout) {
+			clearTimeout(hoverTimeout);
+			hoverTimeout = null;
+		}
+	}
+
+	function handleSubmenuLeave() {
 		activeCategory = null;
 	}
 </script>
 
-<nav class="gnb" class:visible={isVisible}>
+<nav class={cn("gnb", isVisible && "visible", className || "")}>
 	<div class="gnb-container">
 		<!-- 로고 영역 -->
 		<div class="gnb-logo">
@@ -76,47 +95,53 @@
 					<li 
 						class="menu-item"
 						class:has-submenu={category.children && category.children.length > 0}
-						on:mouseenter={() => handleCategoryHover(category)}
-						on:mouseleave={handleCategoryLeave}
+						onmouseenter={() => handleCategoryHover(category)}
+						onmouseleave={handleCategoryLeave}
 					>
-						<a 
-							href="#" 
+						<button 
 							class="menu-link"
-							on:click|preventDefault={() => handleCategoryClick(category)}
+							onclick={() => handleCategoryClick(category)}
+							type="button"
 						>
 							{category.name || '카테고리'}
 							{#if category.children && category.children.length > 0}
 								<span class="dropdown-arrow">▼</span>
 							{/if}
-						</a>
+						</button>
 
 						<!-- 서브메뉴 -->
 						{#if category.children && category.children.length > 0 && activeCategory === category}
-							<div class="submenu">
+							<div 
+								class="submenu"
+								onmouseenter={handleSubmenuEnter}
+								onmouseleave={handleSubmenuLeave}
+								role="menu"
+								tabindex="-1"
+							>
 								<div class="submenu-content">
 									<div class="submenu-grid">
 										{#each category.children as childCategory}
 											<div class="submenu-column">
 												<h4 class="submenu-title">
-													<a 
-														href="#" 
+													<button 
 														class="submenu-title-link"
-														on:click|preventDefault={() => handleCategoryClick(childCategory)}
+														onclick={() => handleCategoryClick(childCategory)}
+														type="button"
 													>
 														{childCategory.name || '서브카테고리'}
-													</a>
+													</button>
 												</h4>
 												{#if childCategory.children && childCategory.children.length > 0}
 													<ul class="submenu-list">
 														{#each childCategory.children as grandChild}
 															<li class="submenu-list-item">
-																<a 
-																	href="#" 
+																<button 
 																	class="submenu-list-link"
-																	on:click|preventDefault={() => handleCategoryClick(grandChild)}
+																	onclick={() => handleCategoryClick(grandChild)}
+																	type="button"
 																>
 																	{grandChild.name || '하위카테고리'}
-																</a>
+																</button>
 															</li>
 														{/each}
 													</ul>
@@ -137,7 +162,7 @@
 			<button class="search-button" aria-label="검색">
 				🔍
 			</button>
-			<button class="mobile-menu-toggle" on:click={toggleMobileMenu} aria-label="메뉴 열기">
+			<button class="mobile-menu-toggle" onclick={toggleMobileMenu} aria-label="메뉴 열기">
 				☰
 			</button>
 		</div>
@@ -145,41 +170,47 @@
 
 	<!-- 모바일 메뉴 -->
 	{#if isMobileMenuOpen}
-		<div class="mobile-menu-overlay" on:click={closeMobileMenu}></div>
+		<div 
+			class="mobile-menu-overlay" 
+			onclick={closeMobileMenu}
+			role="button"
+			tabindex="0"
+			onkeydown={(e) => e.key === 'Escape' && closeMobileMenu()}
+		></div>
 		<div class="mobile-menu">
 			<div class="mobile-menu-header">
 				<h3>메뉴</h3>
-				<button class="close-button" on:click={closeMobileMenu} aria-label="메뉴 닫기">
+				<button class="close-button" onclick={closeMobileMenu} aria-label="메뉴 닫기">
 					×
 				</button>
 			</div>
 			<ul class="mobile-menu-list">
 				{#each categories as category}
 					<li class="mobile-menu-item">
-						<a 
-							href="#" 
+						<button 
 							class="mobile-menu-link"
-							on:click|preventDefault={() => {
+							onclick={() => {
 								handleCategoryClick(category);
 								closeMobileMenu();
 							}}
+							type="button"
 						>
 							{category.name || '카테고리'}
-						</a>
+						</button>
 						{#if category.children && category.children.length > 0}
 							<ul class="mobile-submenu">
 								{#each category.children as subcategory}
 									<li class="mobile-submenu-item">
-										<a 
-											href="#" 
+										<button 
 											class="mobile-submenu-link"
-											on:click|preventDefault={() => {
+											onclick={() => {
 												handleCategoryClick(subcategory);
 												closeMobileMenu();
 											}}
+											type="button"
 										>
 											{subcategory.name || '서브카테고리'}
-										</a>
+										</button>
 									</li>
 								{/each}
 							</ul>
@@ -256,6 +287,11 @@
 		font-weight: 500;
 		transition: all 0.2s ease;
 		white-space: nowrap;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: inherit;
+		font-family: inherit;
 	}
 
 	.menu-link:hover {
@@ -313,6 +349,12 @@
 		text-decoration: none;
 		color: #333;
 		transition: color 0.2s ease;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: inherit;
+		font-family: inherit;
+		font-weight: inherit;
 	}
 
 	.submenu-title-link:hover {
@@ -338,6 +380,12 @@
 		transition: all 0.2s ease;
 		border-radius: 4px;
 		padding-left: 0.5rem;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: inherit;
+		width: 100%;
+		text-align: left;
 	}
 
 	.submenu-list-link:hover {
@@ -459,6 +507,13 @@
 		color: #333;
 		font-weight: 500;
 		transition: background-color 0.2s ease;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-size: inherit;
+		font-family: inherit;
+		width: 100%;
+		text-align: left;
 	}
 
 	.mobile-menu-link:hover {
@@ -483,6 +538,12 @@
 		color: #666;
 		font-size: 0.9rem;
 		transition: background-color 0.2s ease;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: inherit;
+		width: 100%;
+		text-align: left;
 	}
 
 	.mobile-submenu-link:hover {

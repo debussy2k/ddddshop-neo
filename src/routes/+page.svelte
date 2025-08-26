@@ -13,7 +13,7 @@
 		data: PageData;
 	}
 	
-	let { data }: Props = $props<Props>();
+	let { data }: Props = $props();
 
 	let showLoginForm = $state(false);
 	let productCategories = $state<any>(null);
@@ -67,8 +67,7 @@
 		showLoginForm = false;
 	}
 
-	function handleCategoryClick(event: CustomEvent) {
-		const { category } = event.detail;
+	function handleCategoryClick(category: any) {
 		console.log('선택된 카테고리:', category);
 		
 		// 카테고리 클릭 시 해당 카테고리 페이지로 이동
@@ -102,7 +101,7 @@
 <GlobalNavigation 
 	categories={productCategories || []} 
 	isVisible={true}
-	on:categoryClick={handleCategoryClick}
+	onCategoryClick={handleCategoryClick}
 />
 
 <JsonView json={data} />
@@ -156,106 +155,7 @@
 		gap: 2rem;
 	}
 
-	.welcome-section {
-		background: white;
-		padding: 3rem;
-		border-radius: 12px;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-		text-align: center;
-		max-width: 600px;
-		width: 100%;
-	}
 
-	.welcome-section h1 {
-		color: #333;
-		margin-bottom: 1rem;
-		font-size: 2rem;
-	}
-
-	.welcome-section p {
-		color: #666;
-		margin-bottom: 2rem;
-		font-size: 1.1rem;
-	}
-
-	.user-info {
-		text-align: left;
-		background: #f8f9fa;
-		padding: 1.5rem;
-		border-radius: 8px;
-		margin-top: 2rem;
-	}
-
-	.user-info p {
-		margin: 0.5rem 0;
-		color: #555;
-	}
-
-	.user-info strong {
-		color: #333;
-	}
-
-	.login-button {
-		background-color: #007bff;
-		color: white;
-		border: none;
-		padding: 1rem 2rem;
-		border-radius: 8px;
-		font-size: 1.1rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-	}
-
-	.login-button:hover {
-		background-color: #0056b3;
-		transform: translateY(-2px);
-		box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
-	}
-
-	.login-container {
-		position: relative;
-		margin-top: 2rem;
-		padding: 2rem;
-		background: #f8f9fa;
-		border-radius: 8px;
-		border: 1px solid #e9ecef;
-	}
-
-	.login-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1.5rem;
-	}
-
-	.login-header h2 {
-		margin: 0;
-		color: #333;
-		font-size: 1.3rem;
-	}
-
-	.close-button {
-		background: none;
-		border: none;
-		font-size: 1.5rem;
-		color: #666;
-		cursor: pointer;
-		padding: 0.25rem;
-		border-radius: 50%;
-		width: 32px;
-		height: 32px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition: background-color 0.2s ease;
-	}
-
-	.close-button:hover {
-		background-color: #f8f9fa;
-		color: #333;
-	}
 
 	.categories-section {
 		background: white;
