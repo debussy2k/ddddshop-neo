@@ -6390,6 +6390,7 @@ function getShopicusAPI() {
 
 function initializeShopicusAPI(config: ApiConfig<unknown>) {
 	ShopicusAPI = new Api(config);
+	console.log('ShopicusAPI initialized', ShopicusAPI);
 }
 
 export { initializeShopicusAPI, getShopicusAPI };

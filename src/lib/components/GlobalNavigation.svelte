@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 
-	export let categories: any[] = [];
-	export let isVisible: boolean = true;
+	let categories: any[] = [];
+	let isVisible: boolean = true;
 
 	const dispatch = createEventDispatcher<{
 		categoryClick: { category: any };
