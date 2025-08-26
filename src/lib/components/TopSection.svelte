@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { isLogined, getCurrentUser } from '$lib/stores/auth.store';
+
 	function loginAsTeacher() {
 		let login_callback_url = `http://localhost:7000/auth/login-tv-callback`;
 
@@ -14,8 +16,12 @@
 <div class="flex h-[48px] items-center justify-between border-b border-gray-200 px-4">
 	<div class="flex items-center">ddddShop</div>
 	<div class="flex items-center">
-		<button class="text-gray-500" onclick={loginAsTeacher}>
-			<span class="text-gray-500">Login</span>
-		</button>
+		{#if isLogined()}
+			<span class="text-gray-500">Hello, {getCurrentUser()?.username}</span>
+		{:else}
+			<button class="text-gray-500" onclick={loginAsTeacher}>
+				<span class="text-gray-500">Login</span>
+			</button>
+		{/if}
 	</div>
 </div>

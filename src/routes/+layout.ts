@@ -1,9 +1,11 @@
 import type { LayoutLoad } from './$types';
 import { initializeAPI } from '$lib/config/api.config';	
 import { getShopicusAPI } from '$lib/service/shopicus.api';
+import { setUser } from '$lib/stores/auth.store';
+import type { ShopUser } from '$lib/service/shopicus.api';
 
 export const load: LayoutLoad = async ({ url }) => {
-	let user = null;
+	let user: ShopUser | null = null;
 	
 	// auth 폴더 경로가 아닌 경우에만 실행
 	if (!url.pathname.startsWith('/auth')) {
@@ -16,6 +18,8 @@ export const load: LayoutLoad = async ({ url }) => {
 				const response = await api.accountApi.getCurrentUser();
 				if (response.data) {
 					user = response.data;
+					// 스토어에 사용자 정보 저장
+					setUser(response.data);
 					// console.log('현재 사용자:', user);
 				}
 			}
