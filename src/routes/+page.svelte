@@ -3,7 +3,6 @@
 	import LoginForm from '$lib/components/LoginForm.svelte';
 	import GlobalNavigation from '$lib/components/GlobalNavigation.svelte';
 	import { initializeAPI } from '$lib/config/api.config';
-	import { user, isAuthenticated, initializeAuth } from '$lib/stores/auth.store';
 	import cloudIf from '$lib/components/cloudif';
 	import TopSection from '$lib/components/TopSection.svelte';
 	import { loginResult } from '$lib/service/login-result.service';	
@@ -25,8 +24,6 @@
 		// API 초기화
 		try {
 			initializeAPI();
-			// 인증 상태 초기화
-			initializeAuth();
 			
 			// 제품 카테고리 가져오기
 			await loadProductCategories();
