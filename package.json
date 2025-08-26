@@ -41,6 +41,7 @@
 		]
 	},
 	"dependencies": {
+		"@zerodevx/svelte-json-view": "^1.0.11",
 		"neverthrow": "^8.2.0"
 	}
 }

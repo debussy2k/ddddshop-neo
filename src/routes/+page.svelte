@@ -7,6 +7,7 @@
 	import cloudIf from '$lib/components/cloudif';
 	import TopSection from '$lib/components/TopSection.svelte';
 	import { loginResult } from '$lib/service/login-result.service';	
+	import { JsonView } from '@zerodevx/svelte-json-view';
 
 	let showLoginForm = $state(false);
 	let productCategories = $state<any>(null);
@@ -101,6 +102,9 @@
 />
 <main>
 
+	<div>hello</div>
+	<JsonView json={loginResult.currentLoginResult} />
+	
 	<!-- 제품 카테고리 섹션 -->
 	<div class="categories-section">
 		<h2>제품 카테고리</h2>
