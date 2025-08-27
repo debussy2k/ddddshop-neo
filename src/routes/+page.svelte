@@ -17,6 +17,9 @@
 		
 	let showcaseForTeacher = $derived(showcaseStore.getShowcase("for_teacher"));
 	let showcaseTopEight = $derived(showcaseStore.getShowcase("top_eight"));
+	let showcaseMustMake = $derived(showcaseStore.getShowcase("must_make"));
+	let showcaseMdPick = $derived(showcaseStore.getShowcase("md_pick"));
+	let showcaseBestSeller = $derived(showcaseStore.getShowcase("best_seller"));
 
 	onMount(async () => {
 		// API 초기화
@@ -77,3 +80,20 @@
 	<div>Top Eight</div>
 	<JsonView json={showcaseTopEight} depth={0} />
 </div>
+
+<div>
+	<div>Must Make</div>
+	<JsonView json={showcaseMustMake} depth={0} />
+</div>
+
+<div>
+	<div>Md Pick</div>
+	<JsonView json={showcaseMdPick} depth={0} />
+</div>
+
+<div>
+	<div>Best Seller</div>
+	<JsonView json={showcaseBestSeller} depth={0} />
+</div>
+
+
