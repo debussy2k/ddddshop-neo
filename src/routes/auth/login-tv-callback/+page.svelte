@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { initializeAPI } from '$lib/config/api.config';	
+	import { initializeAPI } from '$lib/service/api.config';	
 	import { getShopicusAPI } from '$lib/service/shopicus.api';
 	import { loginResult } from '$lib/service/login-result.service';
 

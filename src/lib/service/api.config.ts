@@ -1,5 +1,5 @@
-import { SITE_CONFIG } from './site.config';
-import { initializeShopicusAPI } from '../service/shopicus.api';
+import { SITE_CONFIG } from '../config/site.config';
+import { initializeShopicusAPI, getShopicusAPI as _getShopicusAPI } from './shopicus.api';
 
 // API 기본 설정
 const API_CONFIG = {
@@ -13,21 +13,25 @@ const API_CONFIG = {
 	}
 };
 
+let initialized = false;
+
 // API 초기화 함수
-export function initializeAPI() {
+function initializeAPI() {
+	if (initialized) {
+		return;
+	}
+
 	try {
 		initializeShopicusAPI(API_CONFIG);
 		console.log('Shopicus API가 성공적으로 초기화되었습니다.');
+		initialized = true;
 	} catch (error) {
 		console.error('Shopicus API 초기화 실패:', error);
 		throw error;
 	}
 }
 
-// 환경 변수 타입 정의
-export interface EnvironmentVariables {
-	VITE_SHOPICUS_API_BASE_URL?: string;
+export function getShopicusAPI() {
+	initializeAPI();
+	return _getShopicusAPI();
 }
-
-// 설정 객체 내보내기
-export { API_CONFIG };

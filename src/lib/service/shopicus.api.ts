@@ -3898,6 +3898,7 @@ export class HttpClient<SecurityDataType> {
  * @version v1
  */
 export class Api<SecurityDataType> extends HttpClient<SecurityDataType> {
+	private static instance: Api<any> | null = null;
 	accountApi = {
 		/**
 		 * No description
@@ -6380,17 +6381,59 @@ export class Api<SecurityDataType> extends HttpClient<SecurityDataType> {
 			return queryString;
 		}
 	};
+
+	/**
+	 * 싱글톤 인스턴스를 반환합니다.
+	 * @param config API 설정 (처음 호출시에만 사용됩니다)
+	 * @returns Api 인스턴스
+	 */
+	public static getInstance<T = unknown>(config?: ApiConfig<T>): Api<T> {
+		if (!Api.instance) {
+			if (!config) {
+				throw new Error('Api 인스턴스가 초기화되지 않았습니다. 처음 호출시에는 config가 필요합니다.');
+			}
+			Api.instance = new Api(config);
+			console.log('ShopicusAPI 싱글톤 인스턴스가 생성되었습니다.', Api.instance);
+		}
+		return Api.instance as Api<T>;
+	}
+
+	/**
+	 * 기존 인스턴스를 제거하고 새로운 설정으로 인스턴스를 생성합니다.
+	 * @param config 새로운 API 설정
+	 * @returns 새로운 Api 인스턴스
+	 */
+	public static resetInstance<T = unknown>(config: ApiConfig<T>): Api<T> {
+		Api.instance = null;
+		return Api.getInstance(config);
+	}
 }
 
-let ShopicusAPI: null | Api<unknown>;
-
-function getShopicusAPI() {
-	return ShopicusAPI as Api<unknown>;
+/**
+ * ShopicusAPI 인스턴스를 초기화합니다.
+ * @param config API 설정
+ * @returns Api 인스턴스
+ */
+function initializeShopicusAPI(config: ApiConfig<unknown>): Api<unknown> {
+	return Api.getInstance(config);
 }
 
-function initializeShopicusAPI(config: ApiConfig<unknown>) {
-	ShopicusAPI = new Api(config);
-	console.log('ShopicusAPI initialized', ShopicusAPI);
+/**
+ * 초기화된 ShopicusAPI 인스턴스를 반환합니다.
+ * @returns Api 인스턴스
+ * @throws {Error} 인스턴스가 초기화되지 않은 경우
+ */
+function getShopicusAPI(): Api<unknown> {
+	return Api.getInstance();
 }
 
-export { initializeShopicusAPI, getShopicusAPI };
+/**
+ * ShopicusAPI 인스턴스를 재설정합니다.
+ * @param config 새로운 API 설정
+ * @returns 새로운 Api 인스턴스
+ */
+function resetShopicusAPI(config: ApiConfig<unknown>): Api<unknown> {
+	return Api.resetInstance(config);
+}
+
+export { initializeShopicusAPI, getShopicusAPI, resetShopicusAPI };

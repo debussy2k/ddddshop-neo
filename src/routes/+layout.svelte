@@ -5,11 +5,10 @@
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
 
-	import { initializeAPI } from '$lib/config/api.config';	
+	// import { initializeAPI } from '$lib/service/api.config';	
 	import { getShopicusAPI } from '$lib/service/shopicus.api';
-	import { categoryStore } from '$lib/stores/category.store.svelte';
 
-	initializeAPI();
+	// initializeAPI();
 
 	let { children, data }: { children: any; data: LayoutData } = $props();
 
@@ -22,9 +21,6 @@
 				setUser(response.data);
 			}
 		}
-
-		console.log("카테고리 정보 로딩");
-		categoryStore.loadData();
 	});
 </script>
 

@@ -5,21 +5,20 @@
 	import TopSection from '$lib/components/TopSection.svelte';
 	import { JsonView } from '@zerodevx/svelte-json-view';
 	import type { PageData } from './$types';
-	import { categoryStore } from '$lib/stores/category.store.svelte';
-	import { showcaseStore } from '$lib/stores/showcase.store.svelte';
+	import { backendStore } from '$lib/stores/backend.store.svelte';
 	
 	interface Props {
 		data: PageData;
 	}
 	let { data }: Props = $props();
 
-	let productCategories = $state<any>(categoryStore.getCategories())
-		
-	let showcaseForTeacher = $derived(showcaseStore.getShowcase("for_teacher"));
-	let showcaseTopEight = $derived(showcaseStore.getShowcase("top_eight"));
-	let showcaseMustMake = $derived(showcaseStore.getShowcase("must_make"));
-	let showcaseMdPick = $derived(showcaseStore.getShowcase("md_pick"));
-	let showcaseBestSeller = $derived(showcaseStore.getShowcase("best_seller"));
+	let productCategories = $derived(backendStore.getCategories())
+	let showcaseForTeacher = $derived(backendStore.getShowcase("for_teacher"));
+	let showcaseTopEight = $derived(backendStore.getShowcase("top_eight"));
+	let showcaseMustMake = $derived(backendStore.getShowcase("must_make"));
+	let showcaseMdPick = $derived(backendStore.getShowcase("md_pick"));
+	let showcaseBestSeller = $derived(backendStore.getShowcase("best_seller"));
+	let bannerSub = $derived(backendStore.getBanner("sub"));
 
 	onMount(async () => {
 		// API 초기화
@@ -61,14 +60,14 @@
 <TopSection />
 <!-- Global Navigation Bar -->
 <GlobalNavigation 
-	categories={categoryStore.getCategories() || []} 
+	categories={productCategories} 
 	isVisible={true}
 	onCategoryClick={handleCategoryClick}
 />
 
 <div class="text-xs">
 	<div>Categories</div>
-	<JsonView json={categoryStore.getCategories()} depth={0} />
+	<JsonView json={productCategories} depth={0} />
 </div>
 
 <div>
@@ -94,6 +93,11 @@
 <div>
 	<div>Best Seller</div>
 	<JsonView json={showcaseBestSeller} depth={0} />
+</div>
+
+<div>
+	<div>Banner Sub</div>
+	<JsonView json={bannerSub} depth={0} />
 </div>
 
 
