@@ -60,44 +60,45 @@
 <TopSection />
 <!-- Global Navigation Bar -->
 <GlobalNavigation 
-	categories={productCategories} 
+	categories={productCategories || []} 
 	isVisible={true}
 	onCategoryClick={handleCategoryClick}
 />
 
-<div class="text-xs">
-	<div>Categories</div>
-	<JsonView json={productCategories} depth={0} />
-</div>
+<div class='p-4'>
+	<div class="text-xs">
+		<div>Categories</div>
+		<JsonView json={productCategories} depth={0} />
+	</div>
+	
+	<div>
+		<div>Showcases</div>
+		<JsonView json={showcaseForTeacher} depth={0} />
+	</div>
+	
+	<div>
+		<div>Top Eight</div>
+		<JsonView json={showcaseTopEight} depth={0} />
+	</div>
+	
+	<div>
+		<div>Must Make</div>
+		<JsonView json={showcaseMustMake} depth={0} />
+	</div>
+	
+	<div>
+		<div>Md Pick</div>
+		<JsonView json={showcaseMdPick} depth={0} />
+	</div>
+	
+	<div>
+		<div>Best Seller</div>
+		<JsonView json={showcaseBestSeller} depth={0} />
+	</div>
+	
+	<div>
+		<div>Banner Sub</div>
+		<JsonView json={bannerSub} depth={0} />
+	</div>
 
-<div>
-	<div>Showcases</div>
-	<JsonView json={showcaseForTeacher} depth={0} />
-</div>
-
-<div>
-	<div>Top Eight</div>
-	<JsonView json={showcaseTopEight} depth={0} />
-</div>
-
-<div>
-	<div>Must Make</div>
-	<JsonView json={showcaseMustMake} depth={0} />
-</div>
-
-<div>
-	<div>Md Pick</div>
-	<JsonView json={showcaseMdPick} depth={0} />
-</div>
-
-<div>
-	<div>Best Seller</div>
-	<JsonView json={showcaseBestSeller} depth={0} />
-</div>
-
-<div>
-	<div>Banner Sub</div>
-	<JsonView json={bannerSub} depth={0} />
-</div>
-
-
+</div>	
