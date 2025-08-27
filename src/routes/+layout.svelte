@@ -9,10 +9,11 @@
 	import { getShopicusAPI } from '$lib/service/shopicus.api';
 	import { categoryStore } from '$lib/stores/category.store.svelte';
 
+	initializeAPI();
+
 	let { children, data }: { children: any; data: LayoutData } = $props();
 
 	onMount(async () => {
-		initializeAPI();
 		let api = getShopicusAPI();
 		if (api) {
 			console.log("user 정보 조회");

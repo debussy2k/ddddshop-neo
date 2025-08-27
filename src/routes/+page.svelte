@@ -6,13 +6,17 @@
 	import { JsonView } from '@zerodevx/svelte-json-view';
 	import type { PageData } from './$types';
 	import { categoryStore } from '$lib/stores/category.store.svelte';
+	import { showcaseStore } from '$lib/stores/showcase.store.svelte';
 	
 	interface Props {
 		data: PageData;
 	}
 	let { data }: Props = $props();
 
-	let productCategories = $state<any>(categoryStore.getCategories());
+	let productCategories = $state<any>(categoryStore.getCategories())
+		
+	let showcaseForTeacher = $derived(showcaseStore.getShowcase("for_teacher"));
+	let showcaseTopEight = $derived(showcaseStore.getShowcase("top_eight"));
 
 	onMount(async () => {
 		// API 초기화
@@ -60,5 +64,16 @@
 />
 
 <div class="text-xs">
-	<JsonView json={categoryStore.getCategories()} depth={1} />
+	<div>Categories</div>
+	<JsonView json={categoryStore.getCategories()} depth={0} />
+</div>
+
+<div>
+	<div>Showcases</div>
+	<JsonView json={showcaseForTeacher} depth={0} />
+</div>
+
+<div>
+	<div>Top Eight</div>
+	<JsonView json={showcaseTopEight} depth={0} />
 </div>
