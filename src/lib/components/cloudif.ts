@@ -1,4 +1,5 @@
 import { err, ok } from 'neverthrow'
+import { SITE_CONFIG } from '$lib/config/site.config';
 
 export class CloudIf {
 	resultCache: any = [];
@@ -12,7 +13,7 @@ export class CloudIf {
 			method: 'GET',
 			headers: {
 				'content-type': 'application/json',
-				'SP-MallCode': "sptville"
+				'SP-MallCode': SITE_CONFIG.mallCode
 			},
 			credentials: "include" // cookie를 보내도록 설정
 		});
@@ -27,7 +28,7 @@ export class CloudIf {
 		if (this.resultCache['getProductCategories'] !== undefined)
 			return this.resultCache['getProductCategories'];
 
-		let apiHost = `https://admin.ddddshop.co.kr`;
+		let apiHost = SITE_CONFIG.backendApiUrl;
 		let url = `${apiHost}/ProductApi/Shop/Categories`;
 		let ret = await this.getMethod(url);
 

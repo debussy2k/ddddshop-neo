@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import LoginForm from '$lib/components/LoginForm.svelte';
 	import GlobalNavigation from '$lib/components/GlobalNavigation.svelte';
 	import { initializeAPI } from '$lib/config/api.config';
 	import cloudIf from '$lib/components/cloudif';
 	import TopSection from '$lib/components/TopSection.svelte';
-	import { loginResult } from '$lib/service/login-result.service';	
 	import { JsonView } from '@zerodevx/svelte-json-view';
 	import type { PageData } from './$types';
 	
@@ -118,8 +116,10 @@
 			<div class="error">{categoriesError}</div>
 		{:else if productCategories}
 			<div class="categories-container">
-				<h3>카테고리 데이터 (JSON)</h3>
-				<pre class="json-display">{JSON.stringify(productCategories, null, 2)}</pre>
+				<h3>카테고리 데이터</h3>
+				<div class="text-xs">
+					<JsonView json={productCategories} depth={1} />
+				</div>
 				
 				<h3>카테고리 목록</h3>
 				<div class="categories-list">

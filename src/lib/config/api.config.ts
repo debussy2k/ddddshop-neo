@@ -1,13 +1,14 @@
+import { SITE_CONFIG } from './site.config';
 import { initializeShopicusAPI } from '../service/shopicus.api';
 
 // API 기본 설정
 const API_CONFIG = {
-	baseUrl: import.meta.env.VITE_SHOPICUS_API_BASE_URL || 'https://admin.ddddshop.co.kr',
+	baseUrl: import.meta.env.VITE_SHOPICUS_API_BASE_URL || SITE_CONFIG.backendApiUrl,
 	baseApiParams: {
 		credentials: 'include' as RequestCredentials,
 		headers: {
 			'Content-Type': 'application/json',
-			'SP-MallCode': "sptville" // 호출하는 곳의 domain이 확정적이지 못한 경우 전달한 MallCode가 사용됨
+			'SP-MallCode': SITE_CONFIG.mallCode // 호출하는 곳의 domain이 확정적이지 못한 경우 전달한 MallCode가 사용됨
 		}
 	}
 };

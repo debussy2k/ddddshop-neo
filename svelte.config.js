@@ -16,7 +16,13 @@ const config = {
 
 	compilerOptions: {
 		// runes: true
-	}
+	},
+
+	vitePlugin: {
+		inspector: {
+			toggleKeyCombo: `control-alt`
+		}
+	}	
 };
 
 export default config;
