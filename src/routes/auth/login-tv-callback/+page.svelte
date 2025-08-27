@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { initializeAPI } from '$lib/service/api.config';	
-	import { getShopicusAPI } from '$lib/service/shopicus.api';
+	import { getShopicusAPI } from '$lib/service/api.config';	
 	import { loginResult } from '$lib/service/login-result.service';
 
 	onMount(async () => {
@@ -40,7 +39,6 @@
 			// 로그인 시도 정보를 서비스에 저장
 			loginResult.saveLoginAttempt(provider, loginKey, secondaryLoginKey);
 
-			initializeAPI();
 			const api = getShopicusAPI();
 			
 			const loginData = {
