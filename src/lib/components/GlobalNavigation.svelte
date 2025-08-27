@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
+	import { goto } from "$app/navigation";
 
 	interface Props {
 		categories?: any[];
@@ -18,7 +19,7 @@
 		// 카테고리 ID나 slug를 기반으로 URL 생성
 		const categorySlug = generateCategorySlug(category);
 		if (categorySlug) {
-			window.location.href = `/category/${categorySlug}`;
+			goto(`/category/${categorySlug}`);
 		} else if (onCategoryClick) {
 			onCategoryClick(category);
 		}
@@ -82,11 +83,11 @@
 <nav class={cn("gnb", isVisible && "visible", className || "")}>
 	<div class="gnb-container">
 		<!-- 로고 영역 -->
-		<div class="gnb-logo">
+		<!-- <div class="gnb-logo">
 			<a href="/" class="logo-link">
-				<span class="logo-text">DDDD Shop Neo</span>
+				<span class="logo-text">ddddShop</span>
 			</a>
-		</div>
+		</div> -->
 
 		<!-- 메인 메뉴 -->
 		<div class="gnb-menu">
