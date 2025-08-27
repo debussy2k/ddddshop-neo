@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 import type { ShopUser } from '$lib/service/shopicus.api';
 
 type User = ShopUser;
@@ -55,19 +55,13 @@ export function setError(error: string | null) {
 
 // 로그인 상태 확인 함수
 export function isLogined(): boolean {
-	let currentState: AuthStore | undefined;
-	authStore.subscribe(state => {
-		currentState = state;
-	})();
+	const currentState = get(authStore);
 	return currentState?.user !== null;
 }
 
 // 현재 사용자 정보 가져오기 함수
 export function getCurrentUser(): User | null {
-	let currentState: AuthStore | undefined;
-	authStore.subscribe(state => {
-		currentState = state;
-	})();
+	const currentState = get(authStore);
 	return currentState?.user || null;
 }
 
