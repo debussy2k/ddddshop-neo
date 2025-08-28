@@ -68,10 +68,6 @@ class StudioDoc {
         return this.doc;
     }
 
-    get sections(): Section[] {
-        return this.doc.sections;
-    }
-
     addSampleSection(): DocState {
         this.sampleCount++;
         
