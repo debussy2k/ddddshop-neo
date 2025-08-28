@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
     import { onMount } from 'svelte';
     import { studioDoc } from './studio-doc.svelte';
+    import { cmdSection } from './command';
 
     let { width }: { width: string } = $props();
 
@@ -9,12 +10,12 @@
 
     onMount(() => {
         console.log('LeftPanel mounted');
-        studioDoc.addSampleSection();
+        cmdSection.addSampleSection();
 
     });
 
     function addSampleSection() {
-        studioDoc.addSampleSection();
+        cmdSection.addSampleSection();
     }
 </script>
 
