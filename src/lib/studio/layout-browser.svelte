@@ -2,10 +2,15 @@
 	import { studioDoc } from "./studio-doc.svelte";
     import type { Section } from "./types";
     import { cmdSection } from "./command";
+    import { EditableText } from "$lib/components/ui/editable-text";
     let doc = $derived(studioDoc.document);
 
     function deleteSection(section: Section) {
         cmdSection.removeSection(section.id);
+    }
+
+    async function updateSectionName(section: Section, newName: string) {
+        cmdSection.updateSection(section.id, { name: newName });
     }
 </script>
 
@@ -19,7 +24,11 @@
                         <div class="w-1.5 h-1.5 bg-white rounded-xs"></div>
                     </div>
                 </div>
-                <span class="text-gray-800 truncate font-medium">{section.name}</span>
+                <EditableText 
+                    value={section.name} 
+                    onSave={(newName) => updateSectionName(section, newName)}
+                    class="flex-1 min-w-0"
+                />
             </div>
             <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <!-- 눈 아이콘 -->
