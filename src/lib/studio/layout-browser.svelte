@@ -5,6 +5,10 @@
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 
+	function handleSectionClick(id:string) {
+		studioDoc.activeId = id;
+	}
+
     function deleteSection(section: Section) {
         cmdSection.removeSection(section.id);
     }
@@ -15,8 +19,15 @@
 </script>
 
 <div class='border w-full flex-1 min-h-0 overflow-y-auto'>
+	<div class='text-sm'>{studioDoc.activeId}</div>
     {#each doc.sections as section}
-        <div class="group relative flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 cursor-pointer text-sm">
+		<!-- svelte-ignore  a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+        <div class="group relative flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 cursor-pointer text-sm"
+			onclick={() => 	handleSectionClick(section.id)}
+			aria-label='section click'
+			role='button'
+			tabindex='0'
+			>
             <div class="flex items-center gap-1.5 flex-1 min-w-0">
                 <!-- Figma 스타일 아이콘 -->
                 <div class="w-4 h-4 flex items-center justify-center">

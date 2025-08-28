@@ -25,6 +25,9 @@ class StudioDoc {
         canRedo: false
     });
 
+	// 현재 활성화 되어있는 항목 id
+	activeId = $state<string | null>(null);
+
     constructor() {
         this.unsub = this.historyManager.subscribe((state) => {
             this.doc = state;
