@@ -70,7 +70,7 @@
 	/>
 {:else}
 	<span
-		class={cn("text-gray-800 truncate font-medium cursor-pointer hover:bg-gray-100 rounded px-1 py-0.5", className)}
+		class={cn("text-gray-800 truncate font-medium cursor-pointer hover:bg-gray-100 rounded px-1 py-0.5 select-none", className)}
 		ondblclick={startEdit}
 		role="button"
 		tabindex="0"

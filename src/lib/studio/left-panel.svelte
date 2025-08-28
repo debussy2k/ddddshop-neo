@@ -27,8 +27,11 @@
     }
 </script>
 
-<div class="bg-gray-100" style={style}>
+<div class="bg-white text-sm" style={style}>
     <Button variant="outline" onclick={addSampleSection}>Add Section</Button>
 
+    <div class='p-2 mt-4'>
+        레이아웃
+    </div>
     <LayoutBrowser />
 </div>
