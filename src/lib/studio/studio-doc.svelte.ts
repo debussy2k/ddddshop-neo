@@ -10,21 +10,11 @@ interface Section {
 
 interface DocState {
     sections: Section[];
-    metadata?: {
-        title?: string;
-        author?: string;
-        createdAt?: Date;
-        updatedAt?: Date;
-    };
 }
 
 class StudioDoc {
     private doc = $state<DocState>({
         sections: [],
-        metadata: {
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }
     });
     
     private sampleCount = 0;
@@ -79,7 +69,6 @@ class StudioDoc {
 
         return this.historyManager.execute((draft) => {
             draft.sections.push(section);
-            draft.metadata!.updatedAt = new Date();
         });
     }
 
@@ -91,14 +80,12 @@ class StudioDoc {
 
         return this.historyManager.execute((draft) => {
             draft.sections.push(newSection);
-            draft.metadata!.updatedAt = new Date();
         });
     }
 
     removeSection(id: number): DocState {
         return this.historyManager.execute((draft) => {
             draft.sections = draft.sections.filter(s => s.id !== id);
-            draft.metadata!.updatedAt = new Date();
         });
     }
 
