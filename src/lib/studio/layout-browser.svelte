@@ -2,7 +2,7 @@
 	import { studioDoc } from "./studio-doc.svelte";
     import type { Section } from "./types";
     import { cmdSection } from "./command";
-    import { EditableText } from "$lib/components/ui/editable-text";
+    import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 
     function deleteSection(section: Section) {
