@@ -6,27 +6,14 @@ export interface Section {
     name: string;
     type: string;
     content?: any;
+
+    height: string;
 }
 
 
 export class SectionActions {
-    private sampleCount = 0;
 
     constructor(private historyManager: HistoryManager<DocState>) {}
-
-    addSampleSection(): DocState {
-        this.sampleCount++;
-        
-        const section: Section = {
-            id: this.sampleCount,
-            name: `Section ${this.sampleCount}`,
-            type: 'section'
-        };
-
-        return this.historyManager.execute((draft) => {
-            draft.sections.push(section);
-        });
-    }
 
     addSection(section: Omit<Section, 'id'>): DocState {
         const newSection: Section = {

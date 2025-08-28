@@ -4,4 +4,6 @@
 
 </script>
 
-<div class='border-b border-blue-500 border-dotted'>{section.name}</div>
+<div class='border-b border-blue-500 border-dotted bg-red-100' style:height={section.height}>
+    {section.name}
+</div>
