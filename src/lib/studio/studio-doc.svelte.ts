@@ -1,6 +1,14 @@
 import HistoryManager from "./history-manager";
-import type { Section, DocState, HistoryInfo } from "./types";
+import type { DocState } from "./types";
 // import Command from "./command";
+
+export interface HistoryInfo {
+    pastCount: number;
+    futureCount: number;
+    canUndo: boolean;
+    canRedo: boolean;
+}
+
 
 class StudioDoc {
     private doc = $state<DocState>({
@@ -9,7 +17,6 @@ class StudioDoc {
     
     historyManager = new HistoryManager(this.doc);
     private unsub: () => void;
-    // cmd = new Command(this.historyManager);
     
     // 히스토리 정보를 reactive state로 관리
     private _historyInfo = $state<HistoryInfo>({

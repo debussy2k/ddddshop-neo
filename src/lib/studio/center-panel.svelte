@@ -25,6 +25,9 @@
         <div class='border-b border-blue-500 border-dotted'>{section.name}</div>
     {/each}
 
-    <JsonView json={doc} />
+
+    <div class="text-xs">
+        <JsonView json={doc} />
+    </div>
 
 </div>
