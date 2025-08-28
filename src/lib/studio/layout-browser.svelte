@@ -14,7 +14,7 @@
     }
 </script>
 
-<div class='border w-full flex-1 h-full overflow-y-auto'>
+<div class='border w-full flex-1 min-h-0 overflow-y-auto'>
     {#each doc.sections as section}
         <div class="group relative flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 cursor-pointer text-sm">
             <div class="flex items-center gap-1.5 flex-1 min-w-0">
