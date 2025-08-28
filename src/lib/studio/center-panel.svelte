@@ -1,10 +1,10 @@
 <script lang="ts">
+    import { onMount } from "svelte";
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import { studioDoc } from "./studio-doc.svelte";
-    import { onMount } from "svelte";
-
     import { JsonView } from "@zerodevx/svelte-json-view";
+    import SectionWidget from "./widgets/section.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -22,7 +22,7 @@
 	<!-- Workspace 내용이 여기에 들어갑니다 -->
 
     {#each doc.sections as section}
-        <div class='border-b border-blue-500 border-dotted'>{section.name}</div>
+        <SectionWidget section={section} />
     {/each}
 
 
