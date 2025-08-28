@@ -23,6 +23,7 @@
     {#each doc.sections as section}
 		<!-- svelte-ignore  a11y_click_events_have_key_events a11y_no_static_element_interactions -->
         <div class="group relative flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 cursor-pointer text-sm"
+			class:bg-yellow-200={section.id === studioDoc.activeId}
 			onclick={() => 	handleSectionClick(section.id)}
 			aria-label='section click'
 			role='button'
