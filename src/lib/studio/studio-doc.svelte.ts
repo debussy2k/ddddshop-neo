@@ -1,6 +1,5 @@
 import HistoryManager from "./history-manager";
 import type { DocState } from "./types";
-// import Command from "./command";
 
 export interface HistoryInfo {
     pastCount: number;

@@ -1,5 +1,13 @@
-import type HistoryManager from "./history-manager";
-import type { Section, DocState } from "./types";
+import type HistoryManager from "../history-manager";
+import type { DocState } from "../types";
+
+export interface Section {
+    id: number;
+    name: string;
+    type: string;
+    content?: any;
+}
+
 
 export class SectionActions {
     private sampleCount = 0;

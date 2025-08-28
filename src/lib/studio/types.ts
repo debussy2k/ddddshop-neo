@@ -1,9 +1,4 @@
-export interface Section {
-    id: number;
-    name: string;
-    type: string;
-    content?: any;
-}
+import type { Section } from "./actions/section-actions";
 
 export interface DocState {
     sections: Section[];
