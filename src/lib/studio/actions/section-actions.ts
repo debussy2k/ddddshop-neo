@@ -1,8 +1,9 @@
+import { nanoid } from 'nanoid';
 import type HistoryManager from "../history-manager";
 import type { DocState } from "../types";
 
 export interface Section {
-    id: number;
+    id: string;
     name: string;
     type: string;
     content?: any;
@@ -18,7 +19,7 @@ export class SectionActions {
     addSection(section: Omit<Section, 'id'>): DocState {
         const newSection: Section = {
             ...section,
-            id: Date.now() // 또는 UUID 사용
+            id: nanoid()
         };
 
         return this.historyManager.execute((draft) => {
@@ -26,13 +27,13 @@ export class SectionActions {
         });
     }
 
-    removeSection(id: number): DocState {
+    removeSection(id: string): DocState {
         return this.historyManager.execute((draft) => {
             draft.sections = draft.sections.filter(s => s.id !== id);
         });
     }
 
-    updateSection(id: number, updates: Partial<Omit<Section, 'id'>>): DocState {
+    updateSection(id: string, updates: Partial<Omit<Section, 'id'>>): DocState {
         return this.historyManager.execute((draft) => {
             const sectionIndex = draft.sections.findIndex(s => s.id === id);
             if (sectionIndex !== -1) {
