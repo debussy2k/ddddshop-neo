@@ -41,11 +41,15 @@
 	"pnpm": {
 		"onlyBuiltDependencies": [
 			"esbuild"
+		],
+		"ignoredBuiltDependencies": [
+			"@tailwindcss/oxide"
 		]
 	},
 	"dependencies": {
 		"@zerodevx/svelte-json-view": "^1.0.11",
 		"clsx": "^2.1.1",
+		"immer": "^10.1.1",
 		"neverthrow": "^8.2.0",
 		"tailwind-merge": "^3.3.1"
 	}

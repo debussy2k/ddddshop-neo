@@ -21,6 +21,6 @@
 	<!-- Workspace 내용이 여기에 들어갑니다 -->
 
     {#each doc.sections as section}
-        <div>{section.name}</div>
+        <div class='border-b border-blue-500 border-dotted'>{section.name}</div>
     {/each}
 </div>
