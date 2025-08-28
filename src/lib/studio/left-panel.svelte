@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/button/button.svelte';
     import { onMount } from 'svelte';
-    import { studioDoc } from './doc.svelte';
+    import { studioDoc } from './studio-doc.svelte';
 
     let { width }: { width: string } = $props();
 
@@ -9,6 +9,8 @@
 
     onMount(() => {
         console.log('LeftPanel mounted');
+        studioDoc.addSampleSection();
+
     });
 
     function addSampleSection() {

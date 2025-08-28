@@ -1,8 +1,10 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
-	import { studioDoc } from "./doc.svelte";
+	import { studioDoc } from "./studio-doc.svelte";
     import { onMount } from "svelte";
+
+    import { JsonView } from "@zerodevx/svelte-json-view";
 
 	interface Props {
 		class?: ClassValue;
@@ -13,7 +15,6 @@
     let doc = $derived(studioDoc.document);
 
     onMount(() => {
-        studioDoc.setSample();
     });
 </script>
 
@@ -23,4 +24,7 @@
     {#each doc.sections as section}
         <div class='border-b border-blue-500 border-dotted'>{section.name}</div>
     {/each}
+
+    <JsonView json={doc} />
+
 </div>

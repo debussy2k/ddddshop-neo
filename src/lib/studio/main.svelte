@@ -1,7 +1,17 @@
 <script lang="ts">
+    import { onDestroy, onMount } from 'svelte';
+    import { studioDoc } from './studio-doc.svelte';
     import LeftPanel from './left-panel.svelte';
     import RightPanel from './right-panel.svelte';
     import Workspace from './workspace.svelte';
+
+    onMount(() => {
+        
+    });
+
+    onDestroy(() => {
+        studioDoc.destroy();
+    });
 </script>
 
 <div class="flex flex-col h-screen">
