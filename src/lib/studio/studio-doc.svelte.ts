@@ -94,6 +94,53 @@ class StudioDoc {
     get historyInfo() {
         return this._historyInfo;
     }
+
+    // localStorage 키
+    private readonly STORAGE_KEY = 'studio-doc-state';
+
+    // 문서를 localStorage에 저장
+    save = () => {
+        try {
+            const docData = {
+                doc: this.doc,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(docData));
+            return true;
+        } catch (error) {
+            console.error('Failed to save document:', error);
+            return false;
+        }
+    }
+
+    // localStorage에서 문서 불러오기
+    load = () => {
+        try {
+            const savedData = localStorage.getItem(this.STORAGE_KEY);
+            if (!savedData) {
+                return false;
+            }
+            
+            const { doc } = JSON.parse(savedData);
+            
+            // 히스토리에 새로운 상태로 실행 (execute 사용)
+            this.historyManager.execute(() => doc);
+            
+            return true;
+        } catch (error) {
+            console.error('Failed to load document:', error);
+            return false;
+        }
+    }
+
+    // 저장된 문서가 있는지 확인
+    hasSavedDocument = () => {
+        try {
+            return localStorage.getItem(this.STORAGE_KEY) !== null;
+        } catch (error) {
+            return false;
+        }
+    }
 }
 
 export const studioDoc = new StudioDoc();
