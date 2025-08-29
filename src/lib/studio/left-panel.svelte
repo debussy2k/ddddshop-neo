@@ -10,17 +10,13 @@
 
     onMount(() => {
         console.log('LeftPanel mounted');
-        cmdSection.addSection({
-            name: 'Section 1',
-            height: '60px'
-        });
-
+        addSampleSection();
     });
 
     function addSampleSection() {
         cmdSection.addSection({
             name: 'Section 1',
-            height: '48px'
+            height: '60px'
         });
     }
 </script>

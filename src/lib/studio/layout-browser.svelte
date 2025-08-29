@@ -19,7 +19,7 @@
 </script>
 
 <div class='border w-full flex-1 min-h-0 overflow-y-auto'>
-	<div class='text-sm'>{studioDoc.activeId}</div>
+	<!-- <div class='text-sm'>{studioDoc.activeId}</div> -->
     {#each doc.sections as section}
 		<!-- svelte-ignore  a11y_click_events_have_key_events a11y_no_static_element_interactions -->
         <div class="group relative flex items-center gap-2 px-2 py-1.5 hover:bg-blue-50 cursor-pointer text-sm"
