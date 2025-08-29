@@ -12,7 +12,6 @@
         console.log('LeftPanel mounted');
         cmdSection.addSection({
             name: 'Section 1',
-            type: 'content',
             height: 'auto'
         });
 
@@ -21,7 +20,6 @@
     function addSampleSection() {
         cmdSection.addSection({
             name: 'Section 1',
-            type: 'content',
             height: '48px'
         });
     }

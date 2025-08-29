@@ -20,6 +20,6 @@
     <div class="flex flex-1">
         <LeftPanel width="240px" />
         <CenterPanel class="flex-1" />
-        <RightPanel width="200px" />
+        <RightPanel width="240px" />
     </div>
 </div>

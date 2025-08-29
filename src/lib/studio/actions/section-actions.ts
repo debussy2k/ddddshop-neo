@@ -4,8 +4,8 @@ import type { DocState } from "../types";
 
 export interface Section {
     id: string;
+    type: 'section';
     name: string;
-    type: string;
     content?: any;
 
     height: string;
@@ -16,10 +16,11 @@ export class SectionActions {
 
     constructor(private historyManager: HistoryManager<DocState>) {}
 
-    addSection(section: Omit<Section, 'id'>): DocState {
+    addSection(section: Omit<Section, 'id'|'type'>): DocState {
         const newSection: Section = {
             ...section,
-            id: nanoid()
+            id: nanoid(),
+            type: 'section'
         };
 
         return this.historyManager.execute((draft) => {
