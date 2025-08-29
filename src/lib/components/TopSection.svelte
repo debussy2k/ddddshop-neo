@@ -7,7 +7,7 @@
 	let currentUser = $derived(getCurrentUser());
 
 	function loginAsTeacher() {
-		let login_callback_url = `http://localhost:7788/admin/studio/auth/login-tv-callback`;
+		let login_callback_url = `http://localhost:7000/admin/studio/auth/login-tv-callback`;
 
 		// 로그인을 했던 페이지를 기록하고, 로그인 후 다시 띄움
 		let url_to_landing_after_login = location.href;
