@@ -15,8 +15,7 @@
 
     function addSampleSection() {
         cmdSection.addSection({
-            name: 'Section 1',
-            height: '60px'
+            height: '160px'
         });
     }
 </script>

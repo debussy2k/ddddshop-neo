@@ -18,16 +18,15 @@
     });
 </script>
 
-<div class={cn('bg-gray-50', className || '')}>
-	<!-- Workspace 내용이 여기에 들어갑니다 -->
-
-    {#each doc.sections as section}
-        <SectionWidget section={section} />
-    {/each}
-
-
-    <div class="text-xs">
-        <JsonView json={doc} />
+<div class={cn('relative bg-gray-50', className || '')}>
+    <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-auto'>
+        {#each doc.sections as section}
+            <SectionWidget section={section} />
+        {/each}
+    
+    
+        <!-- <div class="text-xs">
+            <JsonView json={doc} />
+        </div> -->
     </div>
-
 </div>

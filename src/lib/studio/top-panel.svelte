@@ -6,7 +6,7 @@
     let historyInfo = $derived(studioDoc.historyInfo);
 </script>
 
-<div class="w-full h-8 bg-gray-100 border-b border-gray-200 flex items-center px-2 gap-1">
+<div class="w-full h-8 bg-white border-b border-gray-200 flex items-center px-2 gap-1">
     <div class="flex items-center gap-1">
         <Button 
             variant="ghost" 
