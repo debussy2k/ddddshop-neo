@@ -69,6 +69,19 @@
 		} else if (event.key === 'Escape') {
 			event.preventDefault();
 			cancelEdit();
+		} else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+			event.preventDefault();
+			const currentValue = parseFloat(editValue) || 0;
+			const increment = event.shiftKey ? 10 : 1;
+			let newValue: number;
+			
+			if (event.key === 'ArrowUp') {
+				newValue = currentValue + increment;
+			} else {
+				newValue = Math.max(1, currentValue - increment); // 1보다 작아질 수 없음
+			}
+			
+			editValue = newValue.toString();
 		}
 	}
 
