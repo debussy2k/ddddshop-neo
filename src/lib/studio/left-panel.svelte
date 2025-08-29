@@ -21,7 +21,9 @@
 </script>
 
 <div class="bg-white text-sm h-full flex flex-col" style={style}>
-    <Button variant="outline" onclick={addSampleSection}>Add Section</Button>
+    <div>
+        <Button variant="outline" onclick={addSampleSection}>Add Section</Button>
+    </div>
 
     <div class='p-2 mt-4'>
         레이아웃
