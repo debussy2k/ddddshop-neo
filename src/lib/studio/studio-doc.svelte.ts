@@ -57,6 +57,11 @@ class StudioDoc {
         return this.doc;
     }
 
+    get activeItem() {
+        if(!this.activeId) return null;
+        return this.doc.sections.find(section => section.id === this.activeId);
+    }
+
     // 편의 메서드들 (화살표 함수로 this 바인딩)
     undo = () => {
         return this.historyManager.undo();

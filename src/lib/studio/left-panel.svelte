@@ -12,7 +12,7 @@
         console.log('LeftPanel mounted');
         cmdSection.addSection({
             name: 'Section 1',
-            height: 'auto'
+            height: '60px'
         });
 
     });
