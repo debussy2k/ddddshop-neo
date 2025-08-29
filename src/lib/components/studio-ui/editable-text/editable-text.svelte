@@ -63,7 +63,7 @@
 		onkeydown={handleKeydown}
 		onblur={handleBlur}
 		class={cn(
-			"bg-white border border-blue-500 rounded px-1 py-0.5 text-sm font-medium text-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500",
+			"bg-white border border-blue-500 rounded px-1 py-0.5 text-sm font-medium text-gray-800 ",
 			className
 		)}
 		{placeholder}

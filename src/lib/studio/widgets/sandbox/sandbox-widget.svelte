@@ -4,8 +4,10 @@
 
     let { sandbox }: { sandbox: Sandbox } = $props();
 
-    function handleClick() {
+    function handleClick(event: MouseEvent) {
         studioDoc.activeId = sandbox.id;
+        // 이벤트 버블링 방지
+        event.stopPropagation();
     }
 
     // 현재 샌드박스가 활성화되어 있는지 확인
@@ -18,13 +20,13 @@
             ? 'bg-green-100 hover:bg-green-200 border-green-600' 
             : 'bg-green-50 hover:bg-green-100'
     }`}
-    onclick={handleClick}
+    onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"
     onkeydown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            handleClick();
+            handleClick(e);
         }
     }}
 >

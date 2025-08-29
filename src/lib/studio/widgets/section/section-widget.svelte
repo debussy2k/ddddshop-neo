@@ -1,6 +1,5 @@
 <script lang="ts">
     import type { Section } from "./section-actions";
-    import type { Sandbox } from "../sandbox/sandbox-actions";
     import SandboxWidget from "../sandbox/sandbox-widget.svelte";
     import { studioDoc } from "../../studio-doc.svelte";
 

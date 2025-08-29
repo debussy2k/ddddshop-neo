@@ -31,7 +31,7 @@
     </div>
     
     <div class='p-2 flex items-center gap-2'>
-        <span>텍스트 :</span>
+        <span>T :</span>
         <EditableText 
             value={sandbox.text} 
             onSave={updateSandboxText}
