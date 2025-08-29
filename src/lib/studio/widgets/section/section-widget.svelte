@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from "../actions/section-actions";
+    import type { Section } from "./section-actions";
     let { section }: { section: Section } = $props();
 
 </script>

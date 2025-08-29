@@ -4,7 +4,7 @@
 	import { cn } from "$lib/utils";
 	import { studioDoc } from "./studio-doc.svelte";
     import { JsonView } from "@zerodevx/svelte-json-view";
-    import SectionWidget from "./widgets/section-widget.svelte";
+    import SectionWidget from "./widgets/section/section-widget.svelte";
 
 	interface Props {
 		class?: ClassValue;

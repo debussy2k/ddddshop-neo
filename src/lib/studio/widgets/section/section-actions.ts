@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
-import type HistoryManager from "../history-manager";
-import type { DocState } from "../types";
+import type HistoryManager from "../../history-manager";
+import type { DocState } from "../../types";
 
 export interface Section {
     id: string;
@@ -34,7 +34,7 @@ export class SectionActions {
         });
     }
 
-    updateSection(id: string, updates: Partial<Omit<Section, 'id'>>): DocState {
+    updateSection(id: string, updates: Partial<Omit<Section, 'id'|'type'>>): DocState {
         return this.historyManager.execute((draft) => {
             const sectionIndex = draft.sections.findIndex(s => s.id === id);
             if (sectionIndex !== -1) {
