@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import GlobalNavigation from '$lib/components/GlobalNavigation.svelte';
-	import cloudIf from '$lib/components/cloudif';
 	import TopSection from '$lib/components/TopSection.svelte';
 	import { JsonView } from '@zerodevx/svelte-json-view';
-	import type { PageData } from './$types';
 	import { backendStore } from '$lib/stores/backend.store.svelte';
 	
 	let productCategories = $derived(backendStore.getCategories())
@@ -50,6 +48,7 @@
 <div class='p-2 border-b border-gray-200'>
 	<a href="/admin" class='text-sm text-gray-500'>admin</a>
 	<a href="/admin/studio" class='text-sm text-gray-500'>studio</a>
+	<a href="/admin/site-test" class='text-sm text-gray-500'>site-test</a>	
 </div>
 
 
