@@ -89,46 +89,41 @@
 	}
 </script>
 
-{#if isEditing}
-	<div class="flex items-center gap-1">
-		<input
-			bind:this={inputElement}
-			bind:value={editValue}
-			oninput={handleInput}
-			onkeydown={handleKeydown}
-			onblur={handleBlur}
-			class={cn(
-				"bg-white border border-blue-500 rounded px-1 py-0.5 text-sm font-medium text-gray-800 focus:outline-none  w-16",
-				className
-			)}
-			{placeholder}
-			type="text"
-		/>
-		{#if unitValue}
-			<span class="text-sm text-gray-500 font-medium">{unitValue}</span>
+<div class={cn("flex items-center justify-between min-h-[1.75rem] border", className)}>
+	<div class="flex-1">
+		{#if isEditing}
+			<input
+				bind:this={inputElement}
+				bind:value={editValue}
+				oninput={handleInput}
+				onkeydown={handleKeydown}
+				onblur={handleBlur}
+				class="bg-transparent border-none rounded px-1 py-0.5 text-sm font-medium text-gray-800 focus:outline-none w-full"
+				{placeholder}
+				type="text"
+			/>
+		{:else}
+			<div 
+				class="rounded px-1 py-0.5 cursor-pointer hover:bg-gray-100 h-full flex items-center"
+				onclick={startEdit}
+				ondblclick={startEdit}
+				role="button"
+				tabindex="0"
+				onkeydown={(e) => {
+					if (e.key === 'Enter' || e.key === ' ' || e.key === 'F2') {
+						e.preventDefault();
+						startEdit();
+					}
+				}}
+				title="클릭하여 편집"
+			>
+				<span class="text-gray-800 font-medium select-none">{numericValue}</span>
+			</div>
 		{/if}
 	</div>
-{:else}
-    <div 
-        class={cn(
-            "flex items-center gap-1 rounded px-1 py-0.5 cursor-pointer hover:bg-gray-100",
-            className
-        )}
-        onclick={startEdit}
-        ondblclick={startEdit}
-        role="button"
-        tabindex="0"
-        onkeydown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ' || e.key === 'F2') {
-                e.preventDefault();
-                startEdit();
-            }
-        }}
-        title="클릭하여 편집"
-    >
-        <span class="w-[60px] text-gray-800 font-medium select-none">{numericValue}</span>
-        {#if unitValue}
-            <span class="text-sm text-gray-500 font-medium select-none">{unitValue}</span>
-        {/if}
-    </div>
-{/if}
+	{#if unitValue}
+		<div class="flex-shrink-0 px-1">
+			<span class="text-sm text-gray-500 font-medium select-none">{unitValue}</span>
+		</div>
+	{/if}
+</div>

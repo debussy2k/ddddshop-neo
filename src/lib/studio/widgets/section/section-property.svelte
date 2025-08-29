@@ -24,6 +24,7 @@
             value={section.height} 
             onSave={updateSectionHeight}
             placeholder="높이 입력"
+            class="w-[70px]"
         />
     </div>
 </div>
