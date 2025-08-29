@@ -1,5 +1,7 @@
 <script lang="ts">
     import type { Section } from "./section-actions";
+    import type { Sandbox } from "../sandbox/sandbox-actions";
+    import SandboxWidget from "../sandbox/sandbox-widget.svelte";
     import { studioDoc } from "../../studio-doc.svelte";
 
     let { section }: { section: Section } = $props();
@@ -10,6 +12,11 @@
 
     // 현재 섹션이 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === section.id);
+
+    // Section의 child Sandbox들 가져오기
+    let childSandboxes = $derived(() => {
+        return section.children || [];
+    });
 </script>
 
 <div 
@@ -29,5 +36,16 @@
         }
     }}
 >
-    {section.name}
+    <div class="p-2">
+        <div class="font-medium mb-2">{section.name}</div>
+        
+        <!-- Child Sandbox들 렌더링 -->
+        {#if childSandboxes().length > 0}
+            <div class="space-y-2 flex gap-2 w-full">
+                {#each childSandboxes() as sandbox (sandbox.id)}
+                    <SandboxWidget {sandbox} />
+                {/each}
+            </div>
+        {/if}
+    </div>
 </div>

@@ -10,11 +10,13 @@ export interface HistoryInfo {
 
 
 class StudioDoc {
-    private doc = $state<DocState>({
+    private initialDoc: DocState = {
         sections: [],
-    });
+    }
     
-    historyManager = new HistoryManager(this.doc);
+    private doc = $state<DocState>(this.initialDoc);
+    
+    historyManager = new HistoryManager(this.initialDoc);
     private unsub: () => void;
     
     // 히스토리 정보를 reactive state로 관리
@@ -57,9 +59,26 @@ class StudioDoc {
         return this.doc;
     }
 
+    get current(): DocState {
+        return this.doc;
+    }
+
     get activeItem() {
         if(!this.activeId) return null;
-        return this.doc.sections.find(section => section.id === this.activeId);
+        
+        // Section에서 찾기
+        const section = this.doc.sections.find(section => section.id === this.activeId);
+        if (section) return section;
+        
+        // 모든 Section의 children에서 Sandbox 찾기
+        for (const section of this.doc.sections) {
+            if (section.children) {
+                const sandbox = section.children.find(child => child.id === this.activeId);
+                if (sandbox) return sandbox;
+            }
+        }
+        
+        return null;
     }
 
     // 편의 메서드들 (화살표 함수로 this 바인딩)

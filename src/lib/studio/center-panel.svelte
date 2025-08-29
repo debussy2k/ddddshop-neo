@@ -25,8 +25,8 @@
         {/each}
     
     
-        <!-- <div class="text-xs">
+        <div class="text-xs">
             <JsonView json={doc} />
-        </div> -->
+        </div>
     </div>
 </div>

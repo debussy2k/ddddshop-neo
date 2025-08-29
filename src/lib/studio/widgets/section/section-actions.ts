@@ -1,12 +1,13 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState } from "../../types";
+import type { DocState, Sandbox } from "../../types";
 
 export interface Section {
     id: string;
     type: 'section';
     name: string;
     content?: any;
+    children?: Sandbox[]; // child Sandbox 객체들
 
     height: string;
 }
@@ -73,6 +74,32 @@ export class SectionActions {
                 toIndex >= 0 && toIndex < sections.length) {
                 const [movedSection] = sections.splice(fromIndex, 1);
                 sections.splice(toIndex, 0, movedSection);
+            }
+        });
+    }
+
+    // Section에 child Sandbox 추가
+    addChildToSection(sectionId: string, sandbox: Sandbox): DocState {
+        return this.historyManager.execute((draft) => {
+            const section = draft.sections.find(s => s.id === sectionId);
+            if (section) {
+                if (!section.children) {
+                    section.children = [];
+                }
+                // 이미 같은 ID의 Sandbox가 있는지 확인
+                if (!section.children.find(child => child.id === sandbox.id)) {
+                    section.children.push(sandbox);
+                }
+            }
+        });
+    }
+
+    // Section에서 child Sandbox 제거
+    removeChildFromSection(sectionId: string, sandboxId: string): DocState {
+        return this.historyManager.execute((draft) => {
+            const section = draft.sections.find(s => s.id === sectionId);
+            if (section && section.children) {
+                section.children = section.children.filter(child => child.id !== sandboxId);
             }
         });
     }

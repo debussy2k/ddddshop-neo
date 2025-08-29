@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
 	import { studioDoc } from "./studio-doc.svelte";
     import SectionProperty from "./widgets/section/section-property.svelte";
+    import SandboxProperty from "./widgets/sandbox/sandbox-property.svelte";
 
 
     let { width }: { width: string } = $props();
@@ -17,6 +18,8 @@
         {@const item = studioDoc.activeItem}
         {#if item.type === 'section'}
             <SectionProperty section={item} />
+        {:else if item.type === 'sandbox'}
+            <SandboxProperty sandbox={item} />
         {/if}
     {/if}
 </div>
