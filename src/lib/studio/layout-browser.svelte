@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { studioDoc } from "./studio-doc.svelte";
     import type { Section, Widget } from "./types";
-    import { cmdSection } from "./command";
+    import { cmdSection, cmdSandbox } from "./command";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 
@@ -17,8 +17,44 @@
         cmdSection.removeSection(section.id);
     }
 
+    function deleteWidget(widget: Widget) {
+        // Widget 타입에 따라 적절한 삭제 함수 호출
+        switch (widget.type) {
+            case 'sandbox':
+                cmdSandbox.removeSandbox(widget.id);
+                break;
+            // 미래에 다른 Widget 타입들이 추가될 때 여기에 case를 추가
+            // case 'button':
+            //     cmdButton.removeButton(widget.id);
+            //     break;
+            // case 'text':
+            //     cmdText.removeText(widget.id);
+            //     break;
+            default:
+                console.warn(`Unknown widget type: ${widget.type}. Cannot delete.`);
+        }
+    }
+
     async function updateSectionName(section: Section, newName: string) {
         cmdSection.updateSection(section.id, { name: newName });
+    }
+
+    async function updateWidgetName(widget: Widget, newName: string) {
+        // Widget 타입에 따라 적절한 업데이트 함수 호출
+        switch (widget.type) {
+            case 'sandbox':
+                cmdSandbox.updateSandbox(widget.id, { name: newName });
+                break;
+            // 미래에 다른 Widget 타입들이 추가될 때 여기에 case를 추가
+            // case 'button':
+            //     cmdButton.updateButton(widget.id, { name: newName });
+            //     break;
+            // case 'text':
+            //     cmdText.updateText(widget.id, { name: newName });
+            //     break;
+            default:
+                console.warn(`Unknown widget type: ${widget.type}. Cannot update name.`);
+        }
     }
 
     // 섹션의 펼침/접힘 상태를 관리하는 Map
@@ -116,18 +152,50 @@
                                 tabindex="0"
                                 aria-label='widget click'
                             >
-                                <!-- Widget 아이콘 -->
+                                <!-- Widget 아이콘 (타입별로 다른 색상) -->
                                 <div class="w-4 h-4 flex items-center justify-center">
-                                    <div class="w-3 h-3 bg-green-500 rounded-sm flex items-center justify-center">
-                                        <div class="w-1 h-1 bg-white rounded-full"></div>
-                                    </div>
+                                    {#if widget.type === 'sandbox'}
+                                        <div class="w-3 h-3 bg-green-500 rounded-sm flex items-center justify-center">
+                                            <div class="w-1 h-1 bg-white rounded-full"></div>
+                                        </div>
+                                    {:else if widget.type === 'button'}
+                                        <div class="w-3 h-3 bg-blue-500 rounded-sm flex items-center justify-center">
+                                            <div class="w-1.5 h-0.5 bg-white rounded-xs"></div>
+                                        </div>
+                                    {:else if widget.type === 'text'}
+                                        <div class="w-3 h-3 bg-orange-500 rounded-sm flex items-center justify-center">
+                                            <div class="w-0.5 h-1.5 bg-white rounded-xs"></div>
+                                        </div>
+                                    {:else}
+                                        <!-- 기본 아이콘 -->
+                                        <div class="w-3 h-3 bg-gray-500 rounded-sm flex items-center justify-center">
+                                            <div class="w-1 h-1 bg-white rounded-full"></div>
+                                        </div>
+                                    {/if}
                                 </div>
 
                                 <!-- Widget 이름 -->
-                                <span class="flex-1 truncate font-medium">{widget.name}</span>
+                                <EditableText 
+                                    value={widget.name} 
+                                    onSave={(newName) => updateWidgetName(widget, newName)}
+                                    class="flex-1 min-w-0"
+                                />
 
-                                <!-- Widget 타입 표시 -->
-                                <span class="text-xs text-gray-400 uppercase">{widget.type}</span>
+
+                                <!-- Widget 삭제 버튼 -->
+                                <button 
+                                    class="w-3 h-3 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                    onclick={(e) => {
+                                        e.stopPropagation();
+                                        deleteWidget(widget);
+                                    }}
+                                    title="삭제"
+                                    aria-label='Delete widget'
+                                >
+                                    <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 3L3 9M3 3l6 6"/>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     {/each}
