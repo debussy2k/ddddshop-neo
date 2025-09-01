@@ -6,6 +6,7 @@
     import type { Sandbox } from "$lib/studio/widgets/sandbox";
     import type { SimpleImage } from "$lib/studio/widgets/simple-image";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
+    import { HistoryMode } from "$lib/studio/history-manager";
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
 
@@ -70,8 +71,17 @@
         threshold={10}
         minSize={50}
         maxSize={800}
+        onStart={(newHeight) => {
+            studioDoc.historyManager.setBatchMode();
+            cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+        }}
         onResize={(newHeight) => {
             cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+        }}
+        onEnd={(newHeight) => {
+            cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+            studioDoc.historyManager.commitBatch();
+            studioDoc.historyManager.setRecordMode();
         }}
     />
 </div>
