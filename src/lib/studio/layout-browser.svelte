@@ -142,7 +142,7 @@
             {#if section.children && section.children.length > 0 && isSectionExpanded(section.id)}
                 <div class="ml-6 border-l border-gray-200">
                     {#each section.children as widget (widget.id)}
-                        <div class="pl-4 py-1">
+                        <div class="pl-4 pb-1">
                             <!-- svelte-ignore  a11y_click_events_have_key_events a11y_no_static_element_interactions -->
                             <div 
                                 class="group flex items-center gap-2 px-2 py-1.5 cursor-pointer rounded hover:bg-gray-100 text-sm transition-colors"
