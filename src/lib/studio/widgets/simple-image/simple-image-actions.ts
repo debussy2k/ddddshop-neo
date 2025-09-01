@@ -50,7 +50,7 @@ export class SimpleImageActions {
                 id: nanoid(),
                 type: 'simple-image',
                 name: simpleImageName,
-                url: simpleImage.url || '',
+                url: simpleImage.url || 'https://cdn.sanity.io/images/v6z6vmuj/production/3fbb8957ea4c9f043d3935ed7aab9984d259971f-500x500.png?w=500&h=500&fit=crop&auto=format',
                 alt: simpleImage.alt || '이미지',
                 width: simpleImage.width || '300px',
                 height: simpleImage.height || '200px'
