@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
-    import { browser } from '$  app/environment';
+    import { browser } from '$app/environment';
     import { studioDoc } from './studio-doc.svelte';
     import TopPanel from './top-panel.svelte';
     import LeftPanel from './left-panel.svelte';
