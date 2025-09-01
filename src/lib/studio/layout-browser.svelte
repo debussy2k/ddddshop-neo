@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { studioDoc } from "./studio-doc.svelte";
     import type { Section, Widget } from "./types";
-    import { cmdSection, cmdSandbox } from "./command";
+    import { cmdSection, cmdSandbox, cmdSimpleImage } from "./command";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 
@@ -19,19 +19,15 @@
 
     function deleteWidget(widget: Widget) {
         // Widget 타입에 따라 적절한 삭제 함수 호출
-        switch (widget.type) {
+        switch ((widget as any).type) {
             case 'sandbox':
                 cmdSandbox.removeSandbox(widget.id);
                 break;
-            // 미래에 다른 Widget 타입들이 추가될 때 여기에 case를 추가
-            // case 'button':
-            //     cmdButton.removeButton(widget.id);
-            //     break;
-            // case 'text':
-            //     cmdText.removeText(widget.id);
-            //     break;
+            case 'simple-image':
+                cmdSimpleImage.removeSimpleImage(widget.id);
+                break;
             default:
-                console.warn(`Unknown widget type: ${widget.type}. Cannot delete.`);
+                console.warn(`Unknown widget type: ${(widget as any).type}. Cannot delete.`);
         }
     }
 
@@ -41,19 +37,15 @@
 
     async function updateWidgetName(widget: Widget, newName: string) {
         // Widget 타입에 따라 적절한 업데이트 함수 호출
-        switch (widget.type) {
+        switch ((widget as any).type) {
             case 'sandbox':
                 cmdSandbox.updateSandbox(widget.id, { name: newName });
                 break;
-            // 미래에 다른 Widget 타입들이 추가될 때 여기에 case를 추가
-            // case 'button':
-            //     cmdButton.updateButton(widget.id, { name: newName });
-            //     break;
-            // case 'text':
-            //     cmdText.updateText(widget.id, { name: newName });
-            //     break;
+            case 'simple-image':
+                cmdSimpleImage.updateSimpleImage(widget.id, { name: newName });
+                break;
             default:
-                console.warn(`Unknown widget type: ${widget.type}. Cannot update name.`);
+                console.warn(`Unknown widget type: ${(widget as any).type}. Cannot update name.`);
         }
     }
 
@@ -154,15 +146,19 @@
                             >
                                 <!-- Widget 아이콘 (타입별로 다른 색상) -->
                                 <div class="w-4 h-4 flex items-center justify-center">
-                                    {#if widget.type === 'sandbox'}
+                                    {#if (widget as any).type === 'sandbox'}
                                         <div class="w-3 h-3 bg-green-500 rounded-sm flex items-center justify-center">
                                             <div class="w-1 h-1 bg-white rounded-full"></div>
                                         </div>
-                                    {:else if widget.type === 'button'}
+                                    {:else if (widget as any).type === 'simple-image'}
+                                        <div class="w-3 h-3 bg-indigo-500 rounded-sm flex items-center justify-center">
+                                            <div class="w-1.5 h-1 bg-white rounded-xs"></div>
+                                        </div>
+                                    {:else if (widget as any).type === 'button'}
                                         <div class="w-3 h-3 bg-blue-500 rounded-sm flex items-center justify-center">
                                             <div class="w-1.5 h-0.5 bg-white rounded-xs"></div>
                                         </div>
-                                    {:else if widget.type === 'text'}
+                                    {:else if (widget as any).type === 'text'}
                                         <div class="w-3 h-3 bg-orange-500 rounded-sm flex items-center justify-center">
                                             <div class="w-0.5 h-1.5 bg-white rounded-xs"></div>
                                         </div>

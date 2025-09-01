@@ -2,16 +2,16 @@
     import type { Sandbox } from "./sandbox-actions";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
 
-    let { sandbox }: { sandbox: Sandbox } = $props();
+    let { data: data }: { data: Sandbox } = $props();
 
     function handleClick(event: MouseEvent) {
-        studioDoc.activeId = sandbox.id;
+        studioDoc.activeId = data.id;
         // 이벤트 버블링 방지
         event.stopPropagation();
     }
 
     // 현재 샌드박스가 활성화되어 있는지 확인
-    let isActive = $derived(studioDoc.activeId === sandbox.id);
+    let isActive = $derived(studioDoc.activeId === data.id);
 </script>
 
 <div 
@@ -32,10 +32,7 @@
 >
     <div class="flex flex-col items-center justify-center ">
         <div class="text-center text-gray-700 font-medium">
-            {sandbox.text}
+            {data.text}
         </div>
-        <!-- <div class="text-xs text-gray-500 mt-2">
-            {sandbox.name}
-        </div> -->
     </div>
 </div>
