@@ -1,13 +1,13 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Sandbox } from "../../types";
+import type { DocState, Widget, Sandbox } from "../../types";
 
 export interface Section {
     id: string;
     type: 'section';
     name: string;
     content?: any;
-    children?: Sandbox[]; // child Sandbox 객체들
+    children?: Widget[]; // child Widget 객체들
 
     height: string;
 }

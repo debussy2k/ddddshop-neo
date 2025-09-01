@@ -30,12 +30,12 @@
         }
     }}
 >
-    <div class="flex flex-col items-center justify-center min-h-[100px]">
+    <div class="flex flex-col items-center justify-center ">
         <div class="text-center text-gray-700 font-medium">
             {sandbox.text}
         </div>
-        <div class="text-xs text-gray-500 mt-2">
+        <!-- <div class="text-xs text-gray-500 mt-2">
             {sandbox.name}
-        </div>
+        </div> -->
     </div>
 </div>
