@@ -40,11 +40,9 @@
     }}
 >
     <div class="p-2">
-        <div class="font-medium mb-2">{section.name}</div>
-        
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class="space-y-2 flex gap-2 w-full flex-wrap">
+            <div class="flex gap-x-2 w-full flex-wrap">
                 {#each childWidgets() as widgetData (widgetData.id)}
                     {#if (widgetData as any).type === 'sandbox'}
                         <SandboxWidget data={widgetData as Sandbox} />

@@ -50,7 +50,7 @@ export class SimpleImageActions {
                 id: nanoid(),
                 type: 'simple-image',
                 name: simpleImageName,
-                url: simpleImage.url || 'https://via.placeholder.com/300x200?text=Image',
+                url: simpleImage.url || '',
                 alt: simpleImage.alt || '이미지',
                 width: simpleImage.width || '300px',
                 height: simpleImage.height || '200px'

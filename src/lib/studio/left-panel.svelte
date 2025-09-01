@@ -34,7 +34,7 @@
         if (studioDoc.activeId) {
             cmdSimpleImage.addSimpleImage({
                 parentId: studioDoc.activeId,
-                url: 'https://via.placeholder.com/300x200?text=Simple+Image'
+                url: ''
             });
         }
     }
