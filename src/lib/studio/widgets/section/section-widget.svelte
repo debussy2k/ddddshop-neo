@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { Section } from "./section-actions";
-    import SandboxWidget from "../sandbox/sandbox-widget.svelte";
-    import { studioDoc } from "../../studio-doc.svelte";
+    import { SandboxWidget } from "$lib/studio/widgets/sandbox";
+    import { studioDoc } from "$lib/studio/studio-doc.svelte";
+
 
     let { section }: { section: Section } = $props();
 

@@ -2,7 +2,7 @@
     import type { Section } from "./section-actions";
     import { SectionActions } from "./section-actions";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
-    import { studioDoc } from "../../studio-doc.svelte";
+    import { studioDoc } from "$lib/studio/studio-doc.svelte";
 
     let { section }: { section: Section } = $props();
 
