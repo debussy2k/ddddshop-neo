@@ -15,6 +15,11 @@
 
     // 이미지 로드 오류 상태
     let imageError = $state(false);
+    
+    // 이미지 URL이 변경될 때마다 에러 상태 초기화
+    $effect(() => {
+        imageError = false;
+    });
 
     function handleImageError() {
         imageError = true;
@@ -50,14 +55,16 @@
                 <span class="text-xs">이미지 로드 실패</span>
             </div>
         {:else}
-            <img 
-                src={simpleImage.url} 
-                alt={simpleImage.alt || '이미지'}
-                class="max-w-full max-h-full object-contain rounded"
-                style="width: {simpleImage.width || '100%'}; height: {simpleImage.height || 'auto'};"
-                onerror={handleImageError}
-                onload={handleImageLoad}
-            />
+            <!-- {#key simpleImage.url} -->
+                <img 
+                    src={simpleImage.url} 
+                    alt={simpleImage.alt || '이미지'}
+                    class="max-w-full max-h-full object-contain rounded"
+                    style="width: {simpleImage.width || '100%'}; height: {simpleImage.height || 'auto'};"
+                    onerror={handleImageError}
+                    onload={handleImageLoad}
+                />
+            <!-- {/key} -->
         {/if}
         <div class="text-center text-gray-700 font-medium text-xs mt-2 truncate w-full">
             {simpleImage.name}

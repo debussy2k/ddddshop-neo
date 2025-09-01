@@ -49,7 +49,9 @@
                     {#if (widgetData as any).type === 'sandbox'}
                         <SandboxWidget data={widgetData as Sandbox} />
                     {:else if (widgetData as any).type === 'simple-image'}
-                        <SimpleImageWidget simpleImage={widgetData as SimpleImage} />
+                        {#key widgetData.id + (widgetData as SimpleImage).url}
+                            <SimpleImageWidget simpleImage={widgetData as SimpleImage} />
+                        {/key}
                     {/if}
                 {/each}
             </div>
