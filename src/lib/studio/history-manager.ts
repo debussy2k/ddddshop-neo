@@ -28,7 +28,7 @@ class HistoryManager<T extends Record<string, any>> {
 	private currentMode: HistoryMode = HistoryMode.RECORD;
 	private batchStartState: T | null = null;
 
-	constructor(initialState: T, maxHistorySize: number = 50) {
+	constructor(initialState: T, maxHistorySize: number = 300) {
 		this.history = {
 			past: [],
 			present: initialState,
