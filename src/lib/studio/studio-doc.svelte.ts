@@ -8,6 +8,7 @@ export interface HistoryInfo {
     canRedo: boolean;
 }
 
+export type BreakPoint = 'desktop' | 'tablet' | 'mobile';
 
 class StudioDoc {
     private initialDoc: DocState = {
@@ -29,6 +30,10 @@ class StudioDoc {
 
 	// 현재 활성화 되어있는 항목 id
 	activeId = $state<string | null>(null);
+
+
+    // break point
+    breakPoint = $state<BreakPoint>('desktop');
 
     constructor() {
         this.unsub = this.historyManager.subscribe((state) => {
