@@ -19,7 +19,7 @@
 </script>
 
 <div class={cn('relative bg-gray-50', className || '')}>
-    <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-auto'>
+    <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-scroll'>
         {#each doc.sections as section}
             <SectionWidget section={section} />
         {/each}
