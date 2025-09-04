@@ -6,20 +6,43 @@
 	interface Props {
 		class?: ClassValue;
 		isOpen: boolean;
-		imageUrl: string;
+		imageUrls: string[];
+		currentIndex: number;
 		title: string;
-		pageNumber: number;
 		onClose: () => void;
+		onIndexChange?: (newIndex: number) => void;
 	}
 
-	let { class: className, isOpen, imageUrl, title, pageNumber, onClose }: Props = $props();
+	let { class: className, isOpen, imageUrls, currentIndex, title, onClose, onIndexChange }: Props = $props();
+
+	// 현재 이미지 URL과 페이지 번호 계산
+	let currentImageUrl = $derived(imageUrls[currentIndex] || '');
+	let currentPageNumber = $derived(currentIndex + 1);
 
 	let dialogElement: HTMLDialogElement;
 
-	// ESC 키 이벤트 핸들러
+	// 키보드 이벤트 핸들러
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			onClose();
+		} else if (event.key === 'ArrowLeft') {
+			navigateToPrevious();
+		} else if (event.key === 'ArrowRight') {
+			navigateToNext();
+		}
+	}
+
+	// 이전 썸네일로 이동
+	function navigateToPrevious() {
+		if (currentIndex > 0 && onIndexChange) {
+			onIndexChange(currentIndex - 1);
+		}
+	}
+
+	// 다음 썸네일로 이동
+	function navigateToNext() {
+		if (currentIndex < imageUrls.length - 1 && onIndexChange) {
+			onIndexChange(currentIndex + 1);
 		}
 	}
 
@@ -53,12 +76,12 @@
 	class={cn('modal p-0', className || '')}
 	onclick={handleBackdropClick}
 >
-	<div class="bg-white rounded-lg p-6 w-auto h-auto max-w-[90vw] max-h-[90vh] overflow-hidden shadow-2xl mx-4 my-4">
+	<div class="bg-white rounded-lg p-6 w-[570px] h-auto max-w-[90vw] max-h-[90vh] overflow-hidden shadow-2xl mx-4 my-4">
 		<!-- 헤더 -->
 		<div class="flex justify-between items-start mb-4">
 			<div>
 				<h3 class="text-lg font-semibold text-gray-900">{title}</h3>
-				<p class="text-sm text-gray-600">페이지 {pageNumber}</p>
+				<p class="text-sm text-gray-600">페이지 {currentPageNumber} / {imageUrls.length}</p>
 			</div>
 			<button
 				type="button"
@@ -73,13 +96,41 @@
 		</div>
 
 		<!-- 이미지 -->
-		<div class="flex justify-center items-center bg-gray-50 rounded-lg p-4">
+		<div class="relative flex justify-center items-center bg-gray-50 rounded-lg p-4">
+			<!-- 이전 버튼 -->
+			{#if currentIndex > 0}
+				<button
+					type="button"
+					class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 cursor-pointer user-select-none"
+					onclick={navigateToPrevious}
+					aria-label="이전 이미지"
+				>
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+					</svg>
+				</button>
+			{/if}
+
 			<img 
-				src={imageUrl} 
-				alt={`${title} - 페이지 ${pageNumber}`}
+				src={currentImageUrl} 
+				alt={`${title} - 페이지 {currentPageNumber}`}
 				class="max-w-[480px] max-h-[480px] w-auto h-auto object-contain rounded-md shadow-sm"
 				style="max-width: min(480px, 70vw); max-height: min(480px, 60vh);"
 			/>
+
+			<!-- 다음 버튼 -->
+			{#if currentIndex < imageUrls.length - 1}
+				<button
+					type="button"
+					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 cursor-pointer user-select-none"
+					onclick={navigateToNext}
+					aria-label="다음 이미지"
+				>
+					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+					</svg>
+				</button>
+			{/if}
 		</div>
 
 		<!-- 푸터 -->

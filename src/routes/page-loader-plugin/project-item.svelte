@@ -40,8 +40,7 @@
 
 	// 팝업 상태 관리
 	let isPopupOpen = $state(false);
-	let popupImageUrl = $state('');
-	let popupPageNumber = $state(0);
+	let popupCurrentIndex = $state(0);
 	let hoveredThumbnailIndex = $state(-1);
 
 	function getProductOptionName(productOptions: any[], optionName: string) {
@@ -82,16 +81,18 @@
 		return selectedThumbnails.includes(index);
 	}
 
-	function handleViewThumbnail(imageUrl: string, index: number) {
-		popupImageUrl = imageUrl;
-		popupPageNumber = index + 1;
+	function handleViewThumbnail(index: number) {
+		popupCurrentIndex = index;
 		isPopupOpen = true;
 	}
 
 	function closePopup() {
 		isPopupOpen = false;
-		popupImageUrl = '';
-		popupPageNumber = 0;
+		popupCurrentIndex = 0;
+	}
+
+	function handleIndexChange(newIndex: number) {
+		popupCurrentIndex = newIndex;
 	}
 
 	function handleThumbnailMouseEnter(index: number) {
@@ -199,7 +200,7 @@
 								class="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs hover:bg-opacity-90 transition-all duration-200"
 								onclick={(e) => {
 									e.stopPropagation();
-									handleViewThumbnail(tnUrl, index);
+									handleViewThumbnail(index);
 								}}
 								aria-label={`썸네일 ${index + 1} 크게 보기`}
 							>
@@ -222,8 +223,9 @@
 <!-- 썸네일 미리보기 팝업 -->
 <ThumbnailPopup 
 	isOpen={isPopupOpen}
-	imageUrl={popupImageUrl}
+	imageUrls={project.tnUrls || []}
+	currentIndex={popupCurrentIndex}
 	title={project.title}
-	pageNumber={popupPageNumber}
 	onClose={closePopup}
+	onIndexChange={handleIndexChange}
 />
