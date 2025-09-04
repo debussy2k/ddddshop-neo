@@ -40,8 +40,8 @@
 	}
 </script>
 
-<div class={cn('p-4 border border-gray-200', className || '')}>
-	<div class='flex gap-x-4'>
+<div class={cn('border border-gray-200', className || '')}>
+	<div class='flex gap-x-4 p-4'>
 		<!-- 썸네일 -->
 		<div>
 			<img 
@@ -80,18 +80,20 @@
 							전체 선택
 						</label>
 					</div>
-					<div>
+					<!-- <div>
 						<Button variant="outline" onclick={handleSelectPartial}>
 							일부만 선택
 						</Button>
-					</div>
+					</div> -->
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<div class="h-[1px] bg-gray-200 my-2"></div>
+	
 	{#if project.tnUrls && project.tnUrls.length > 0}
-		<div class='flex gap-2 mt-2 overflow-x-auto'>
+		<div class='flex gap-2 mt-2 overflow-x-auto p-4'>
 			{#each project.tnUrls as tnUrl, index}
 				<div class="flex flex-col items-center">
 					<img 
