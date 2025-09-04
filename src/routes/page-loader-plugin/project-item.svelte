@@ -226,6 +226,8 @@
 	imageUrls={project.tnUrls || []}
 	currentIndex={popupCurrentIndex}
 	title={project.title}
+	selectedThumbnails={selectedThumbnails}
 	onClose={closePopup}
 	onIndexChange={handleIndexChange}
+	onThumbnailToggle={onThumbnailSelect ? (index) => onThumbnailSelect(project.edicusProjectId, index) : undefined}
 />
