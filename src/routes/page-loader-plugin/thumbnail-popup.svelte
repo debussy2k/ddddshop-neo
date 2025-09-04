@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- 푸터 -->
-		<div class="flex justify-end mt-4 pt-4 border-t border-gray-200">
+		<div class="flex justify-center mt-4 pt-4 border-t border-gray-200">
 			<button
 				type="button"
 				class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
