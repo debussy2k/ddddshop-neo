@@ -33,14 +33,16 @@
 	}
 
 	// 이전 썸네일로 이동
-	function navigateToPrevious() {
+	function navigateToPrevious(event?: Event) {
+		event?.preventDefault();
 		if (currentIndex > 0 && onIndexChange) {
 			onIndexChange(currentIndex - 1);
 		}
 	}
 
 	// 다음 썸네일로 이동
-	function navigateToNext() {
+	function navigateToNext(event?: Event) {
+		event?.preventDefault();
 		if (currentIndex < imageUrls.length - 1 && onIndexChange) {
 			onIndexChange(currentIndex + 1);
 		}
@@ -101,8 +103,9 @@
 			{#if currentIndex > 0}
 				<button
 					type="button"
-					class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 cursor-pointer user-select-none"
-					onclick={navigateToPrevious}
+					class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
+					onclick={(e) => navigateToPrevious(e)}
+					onmousedown={(e) => e.preventDefault()}
 					aria-label="이전 이미지"
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,8 +125,9 @@
 			{#if currentIndex < imageUrls.length - 1}
 				<button
 					type="button"
-					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 cursor-pointer user-select-none"
-					onclick={navigateToNext}
+					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
+					onclick={(e) => navigateToNext(e)}
+					onmousedown={(e) => e.preventDefault()}
 					aria-label="다음 이미지"
 				>
 					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,5 +183,23 @@
 	dialog {
 		-ms-overflow-style: none;
 		scrollbar-width: none;
+	}
+
+	/* 텍스트 선택 방지 */
+	.select-none {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		-webkit-touch-callout: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	/* 버튼 요소 전체에 텍스트 선택 방지 */
+	button {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
 	}
 </style>
