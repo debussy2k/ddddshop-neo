@@ -7,6 +7,7 @@
     let targetPsCode = $state<string>('A4@TV-1PAGE-BODY'); // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
     let childUsers = $state<any[]>([]);
     let projects = $state<any[]>([]);
+    let selectedThumbnails = $state<Map<string, number[]>>(new Map()); // projectId -> selected thumbnail indices
 
 
     onMount(async () => {
@@ -60,13 +61,63 @@
     }
 
     function handleSelectAll(project: any) {
-        console.log('전체 선택:', project);
-        // 전체 선택 로직 구현
+        console.log('=== 전체 선택 함수 호출 ===');
+        console.log('프로젝트:', project);
+        console.log('프로젝트 ID:', project.edicusProjectId);
+        console.log('썸네일 개수:', project.tnUrls?.length || 0);
+        
+        const projectId = project.edicusProjectId;
+        const currentSelected = selectedThumbnails.get(projectId) || [];
+        const totalThumbnails = project.tnUrls ? project.tnUrls.length : 0;
+        
+        console.log('현재 선택된 썸네일:', currentSelected);
+        console.log('전체 썸네일 개수:', totalThumbnails);
+        
+        if (currentSelected.length === totalThumbnails) {
+            // 모든 썸네일이 선택된 상태 -> 전체 해제
+            console.log('전체 해제 실행');
+            selectedThumbnails.delete(projectId);
+        } else {
+            // 일부 또는 아무것도 선택되지 않은 상태 -> 전체 선택
+            console.log('전체 선택 실행');
+            const allIndices = Array.from({ length: totalThumbnails }, (_, i) => i);
+            console.log('선택할 인덱스들:', allIndices);
+            selectedThumbnails.set(projectId, allIndices);
+        }
+        
+        // Map 업데이트를 위해 새로운 Map 생성
+        selectedThumbnails = new Map(selectedThumbnails);
+        
+        console.log('전체 선택 후 최종 상태:', Object.fromEntries(selectedThumbnails));
+        console.log('=== 전체 선택 함수 종료 ===');
     }
 
     function handleSelectPartial(project: any) {
         console.log('일부만 선택:', project);
         // 일부 선택 로직 구현
+    }
+
+    function handleThumbnailSelect(projectId: string, thumbnailIndex: number) {
+        const currentSelected = selectedThumbnails.get(projectId) || [];
+        const isSelected = currentSelected.includes(thumbnailIndex);
+        
+        if (isSelected) {
+            // 선택 해제
+            const newSelected = currentSelected.filter(index => index !== thumbnailIndex);
+            if (newSelected.length === 0) {
+                selectedThumbnails.delete(projectId);
+            } else {
+                selectedThumbnails.set(projectId, newSelected);
+            }
+        } else {
+            // 선택 추가
+            selectedThumbnails.set(projectId, [...currentSelected, thumbnailIndex]);
+        }
+        
+        // Map 업데이트를 위해 새로운 Map 생성
+        selectedThumbnails = new Map(selectedThumbnails);
+        
+        console.log('선택된 썸네일:', Object.fromEntries(selectedThumbnails));
     }
 
     // edicus project의 썸네일 이미지 주소를 조립한다.
@@ -97,10 +148,30 @@
         {#each projects as project}
             <ProjectItem 
                 {project} 
+                selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
                 onSelectAll={handleSelectAll}
                 onSelectPartial={handleSelectPartial}
+                onThumbnailSelect={handleThumbnailSelect}
             />
         {/each}
+
+        <!-- 선택된 썸네일 정보 -->
+        {#if selectedThumbnails.size > 0}
+            <div class='mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md'>
+                <h3 class='font-bold text-blue-800 mb-2'>선택된 썸네일</h3>
+                {#each Array.from(selectedThumbnails.entries()) as [projectId, thumbnailIndices]}
+                    {@const project = projects.find(p => p.edicusProjectId === projectId)}
+                    {#if project}
+                        <div class='mb-2'>
+                            <div class='font-medium'>{project.title}</div>
+                            <div class='text-sm text-gray-600'>
+                                선택된 페이지: {thumbnailIndices.map(i => i + 1).join(', ')} ({thumbnailIndices.length}개)
+                            </div>
+                        </div>
+                    {/if}
+                {/each}
+            </div>
+        {/if}
 
         <div class=''>
             <JsonView json={projects} />
