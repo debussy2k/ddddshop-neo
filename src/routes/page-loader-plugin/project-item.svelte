@@ -3,6 +3,7 @@
 	import { cn } from "$lib/utils";
 	import { Checkbox } from "$lib/components/ui/checkbox/index.js";
 	import { Button } from "$lib/components/ui/button/index.js";
+	import ThumbnailPopup from "./thumbnail-popup.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -36,6 +37,12 @@
 			handleSelectAll();
 		}
 	});
+
+	// 팝업 상태 관리
+	let isPopupOpen = $state(false);
+	let popupImageUrl = $state('');
+	let popupPageNumber = $state(0);
+	let hoveredThumbnailIndex = $state(-1);
 
 	function getProductOptionName(productOptions: any[], optionName: string) {
 		return productOptions.find((option) => option.displayName === optionName)?.displayValue;
@@ -73,6 +80,26 @@
 
 	function isThumbnailSelected(index: number): boolean {
 		return selectedThumbnails.includes(index);
+	}
+
+	function handleViewThumbnail(imageUrl: string, index: number) {
+		popupImageUrl = imageUrl;
+		popupPageNumber = index + 1;
+		isPopupOpen = true;
+	}
+
+	function closePopup() {
+		isPopupOpen = false;
+		popupImageUrl = '';
+		popupPageNumber = 0;
+	}
+
+	function handleThumbnailMouseEnter(index: number) {
+		hoveredThumbnailIndex = index;
+	}
+
+	function handleThumbnailMouseLeave() {
+		hoveredThumbnailIndex = -1;
 	}
 </script>
 
@@ -135,28 +162,51 @@
 		<div class='flex gap-2 mt-2 overflow-x-auto p-4'>
 			{#each project.tnUrls as tnUrl, index}
 				<div class="flex flex-col items-center">
-					<button 
-						type="button"
-						class={cn(
-							'relative cursor-pointer border-2 rounded-md transition-all duration-200 hover:scale-105 p-0 bg-transparent',
-							isThumbnailSelected(index) 
-								? 'border-blue-500 bg-blue-50 shadow-md' 
-								: 'border-gray-200 hover:border-gray-400'
-						)}
-						onclick={() => handleThumbnailClick(index)}
-						aria-label={`썸네일 ${index + 1} ${isThumbnailSelected(index) ? '선택됨' : '선택하기'}`}
+					<div 
+						class="relative"
+						onmouseenter={() => handleThumbnailMouseEnter(index)}
+						onmouseleave={handleThumbnailMouseLeave}
+						role="group"
+						aria-label={`썸네일 ${index + 1} 컨테이너`}
 					>
-						<img 
-							src={tnUrl} 
-							alt={project.title} 
-							class='w-26 h-26 object-contain max-w-[200px] max-h-[200px] rounded-sm' 
-						/>
-						{#if isThumbnailSelected(index)}
-							<div class="absolute top-1 right-1 bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-								✓
-							</div>
+						<button 
+							type="button"
+							class={cn(
+								'relative cursor-pointer border-2 rounded-md transition-all duration-200 hover:scale-105 p-0 bg-transparent',
+								isThumbnailSelected(index) 
+									? 'border-blue-500 bg-blue-50 shadow-md' 
+									: 'border-gray-200 hover:border-gray-400'
+							)}
+							onclick={() => handleThumbnailClick(index)}
+							aria-label={`썸네일 ${index + 1} ${isThumbnailSelected(index) ? '선택됨' : '선택하기'}`}
+						>
+							<img 
+								src={tnUrl} 
+								alt={project.title} 
+								class='w-26 h-26 object-contain max-w-[200px] max-h-[200px] rounded-sm' 
+							/>
+							{#if isThumbnailSelected(index)}
+								<div class="absolute top-1 right-1 bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+									✓
+								</div>
+							{/if}
+						</button>
+						
+						<!-- 호버 시 보기 버튼 -->
+						{#if hoveredThumbnailIndex === index}
+							<button
+								type="button"
+								class="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs hover:bg-opacity-90 transition-all duration-200"
+								onclick={(e) => {
+									e.stopPropagation();
+									handleViewThumbnail(tnUrl, index);
+								}}
+								aria-label={`썸네일 ${index + 1} 크게 보기`}
+							>
+								보기
+							</button>
 						{/if}
-					</button>
+					</div>
 					<div class={cn(
 						'text-sm mt-1',
 						isThumbnailSelected(index) ? 'text-blue-600 font-semibold' : 'text-gray-600'
@@ -168,3 +218,12 @@
 		</div>
 	{/if}
 </div>
+
+<!-- 썸네일 미리보기 팝업 -->
+<ThumbnailPopup 
+	isOpen={isPopupOpen}
+	imageUrl={popupImageUrl}
+	title={project.title}
+	pageNumber={popupPageNumber}
+	onClose={closePopup}
+/>
