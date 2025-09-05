@@ -138,7 +138,7 @@
 			<div class='flex flex-col gap-1 flex-1'>
 				<div class="text-lg font-bold">{project.title}</div>
 				<div>
-					초대 계정(ID): {project.childUserLoginId} | {project.childUserDisplayName}
+					초대 계정(ID): {project.childUserLoginId} | {project.childUserDisplayName} | 구분정보: {project.userMemo}
 				</div>
 				<div class='flex'>
 					<div class='bg-gray-200 border border-gray-300 px-1 rounded-xs mr-2'>판형</div>
