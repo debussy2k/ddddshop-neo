@@ -5,6 +5,7 @@
 	import ThumbnailPopup from "./thumbnail-popup.svelte";
 	import TnList from "./tn-list.svelte";
 	import { pluginStore } from "./plugin.store.svelte";
+	import { isInnerPageSize } from "./util";
 
 	interface Props {
 		class?: ClassValue;
@@ -111,11 +112,6 @@
 		hoveredThumbnailIndex = -1;
 	}
 
-	function isInnerPageSize(edicusPsCode: string) {
-		let sizeCode = edicusPsCode.split('@')[0];
-		console.log(sizeCode, pluginStore.innerPageSizeCode);
-		return sizeCode === pluginStore.innerPageSizeCode;
-	}
 </script>
 
 <div class={cn('border border-gray-200', className || '')}>

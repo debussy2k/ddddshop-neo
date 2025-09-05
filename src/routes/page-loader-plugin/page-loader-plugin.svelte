@@ -4,6 +4,7 @@
     import { JsonView } from '@zerodevx/svelte-json-view';
     import ProjectItem from './project-item.svelte';
     import { pluginStore } from './plugin.store.svelte';
+    import { isInnerPageSize, getTnUrl } from './util';
     
     
     let childUsers = $state<any[]>([]);
@@ -34,11 +35,20 @@
     });
 
     async function fetchCartItems(loginId: string) {
+        let filter = `
+            (Status eq 'Editing') 
+            and (
+                User/ParentId ne null 
+                and contains(User/UserName,'${loginId}') 
+                and contains(EdicusPsCode,'@${pluginStore.innerPageProductCode}') 
+            )
+        `;
+
         let data = await ShopicusFunc.getCartItems({
             $orderby: 'Id desc',
             $top: '5',
             $skip: '0',
-            $filter: `(Status eq 'Editing') and (User/ParentId ne null and contains(User/UserName,'${loginId}') and contains(EdicusPsCode,'@${pluginStore.innerPageProductCode}') )`,
+            $filter: filter,
         });
         let totalCount = data.count;
         let items = data.result;
@@ -59,6 +69,7 @@
                     childUserDisplayName: item.childUserDisplayName,
                     modificationDate: item.modificationDate,
                     authorGuid: item.authorGuid,
+                    userMemo: item.userMemo,
                     tnUrls: Array.from({ length: item.pageCount }, (_, index) => getTnUrl(item, index)),
                 }
             }),
@@ -125,19 +136,6 @@
         console.log('선택된 썸네일:', Object.fromEntries(selectedThumbnails));
     }
 
-    // edicus project의 썸네일 이미지 주소를 조립한다.
-    function getTnUrl(project: any, index: number) {
-        let partnerId = 'tville';
-        let timeStamp = new Date(project.modificationDate).getTime();
-        let url = `https://storage.googleapis.com/edicusbase.appspot.com/partners/${partnerId}/users/${partnerId}-${project.authorGuid}/projects/${project.edicusProjectId}/preivew/preview_${index}.jpg?ts=${timeStamp}`;
-        return url;
-    }
-
-    // 내지 사이즈 확인 함수
-    function isInnerPageSize(edicusPsCode: string) {
-        let sizeCode = edicusPsCode.split('@')[0];
-        return sizeCode === pluginStore.innerPageSizeCode;
-    }
 
     // 필터된 프로젝트 목록
     let filteredProjects = $derived.by(() => {
