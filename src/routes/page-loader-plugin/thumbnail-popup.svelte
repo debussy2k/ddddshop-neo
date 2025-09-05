@@ -13,9 +13,11 @@
 		onClose: () => void;
 		onIndexChange?: (newIndex: number) => void;
 		onThumbnailToggle?: (index: number) => void;
+		project?: any;
+		isInnerPageSize?: (edicusPsCode: string) => boolean;
 	}
 
-	let { class: className, isOpen, imageUrls, currentIndex, title, selectedThumbnails, onClose, onIndexChange, onThumbnailToggle }: Props = $props();
+	let { class: className, isOpen, imageUrls, currentIndex, title, selectedThumbnails, onClose, onIndexChange, onThumbnailToggle, project, isInnerPageSize }: Props = $props();
 
 	// 현재 이미지 URL과 페이지 번호 계산
 	let currentImageUrl = $derived(imageUrls[currentIndex] || '');
@@ -55,9 +57,22 @@
 
 	// 현재 썸네일 선택/해제 토글
 	function toggleCurrentThumbnail() {
+		// 내지 사이즈가 일치하지 않으면 선택 불가
+		if (!canSelectThumbnail()) {
+			return;
+		}
+		
 		if (onThumbnailToggle) {
 			onThumbnailToggle(currentIndex);
 		}
+	}
+
+	// 썸네일 선택 가능 여부 확인
+	function canSelectThumbnail(): boolean {
+		if (!project || !isInnerPageSize) {
+			return true; // 기본적으로 선택 가능
+		}
+		return isInnerPageSize(project.edicusPsCode);
 	}
 
 	// 팝업 외부 클릭 핸들러
@@ -96,29 +111,31 @@
 			<div class="flex-1">
 				<div class="flex items-center gap-2">
 					<h3 class="text-lg font-semibold text-gray-900">{title}</h3>
-					<button
-						type="button"
-						class={cn(
-							"flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border",
-							isCurrentThumbnailSelected 
-								? "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200" 
-								: "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
-						)}
-						onclick={toggleCurrentThumbnail}
-						aria-label={isCurrentThumbnailSelected ? "선택 해제" : "선택"}
-					>
-						{#if isCurrentThumbnailSelected}
-							<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-							</svg>
-							선택됨
-						{:else}
-							<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-							</svg>
-							선택하기
-						{/if}
-					</button>
+					{#if canSelectThumbnail()}
+						<button
+							type="button"
+							class={cn(
+								"flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 border",
+								isCurrentThumbnailSelected 
+									? "bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200" 
+									: "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+							)}
+							onclick={toggleCurrentThumbnail}
+							aria-label={isCurrentThumbnailSelected ? "선택 해제" : "선택"}
+						>
+							{#if isCurrentThumbnailSelected}
+								<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+								</svg>
+								선택됨
+							{:else}
+								<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+									<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+								</svg>
+								선택하기
+							{/if}
+						</button>
+					{/if}
 				</div>
 				<p class="text-sm text-gray-600 mt-1">페이지 {currentPageNumber} / {imageUrls.length}</p>
 			</div>
@@ -158,27 +175,29 @@
 					class="max-w-[480px] max-h-[480px] w-auto h-auto object-contain rounded-md shadow-sm"
 					style="max-width: min(480px, 70vw); max-height: min(480px, 60vh);"
 				/>
-				<button
-					type="button"
-					class={cn(
-						"absolute top-2 right-2 rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all duration-200 border-2",
-						isCurrentThumbnailSelected 
-							? "bg-blue-500 text-white border-blue-600 hover:bg-blue-600" 
-							: "bg-white text-gray-400 border-gray-300 hover:bg-gray-50 hover:text-gray-600"
-					)}
-					onclick={toggleCurrentThumbnail}
-					aria-label={isCurrentThumbnailSelected ? "선택 해제" : "선택"}
-				>
-					{#if isCurrentThumbnailSelected}
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-					{:else}
-						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-							<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-						</svg>
-					{/if}
-				</button>
+				{#if canSelectThumbnail()}
+					<button
+						type="button"
+						class={cn(
+							"absolute top-2 right-2 rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-all duration-200 border-2",
+							isCurrentThumbnailSelected 
+								? "bg-blue-500 text-white border-blue-600 hover:bg-blue-600" 
+								: "bg-white text-gray-400 border-gray-300 hover:bg-gray-50 hover:text-gray-600"
+						)}
+						onclick={toggleCurrentThumbnail}
+						aria-label={isCurrentThumbnailSelected ? "선택 해제" : "선택"}
+					>
+						{#if isCurrentThumbnailSelected}
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+							</svg>
+						{:else}
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+								<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+							</svg>
+						{/if}
+					</button>
+				{/if}
 			</div>
 
 			<!-- 다음 버튼 -->

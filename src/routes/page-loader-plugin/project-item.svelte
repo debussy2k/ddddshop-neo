@@ -206,4 +206,6 @@
 	onClose={closePopup}
 	onIndexChange={handleIndexChange}
 	onThumbnailToggle={onThumbnailSelect ? (index) => onThumbnailSelect(project.edicusProjectId, index) : undefined}
+	project={project}
+	isInnerPageSize={isInnerPageSize}
 />
