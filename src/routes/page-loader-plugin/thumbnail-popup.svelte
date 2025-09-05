@@ -140,7 +140,7 @@
 			{#if currentIndex > 0}
 				<button
 					type="button"
-					class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
+					class="absolute bg-gray-500 left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
 					onclick={(e) => navigateToPrevious(e)}
 					onmousedown={(e) => e.preventDefault()}
 					aria-label="이전 이미지"
@@ -185,7 +185,7 @@
 			{#if currentIndex < imageUrls.length - 1}
 				<button
 					type="button"
-					class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
+					class="absolute bg-gray-500 right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-70 transition-all z-10 select-none"
 					onclick={(e) => navigateToNext(e)}
 					onmousedown={(e) => e.preventDefault()}
 					aria-label="다음 이미지"
