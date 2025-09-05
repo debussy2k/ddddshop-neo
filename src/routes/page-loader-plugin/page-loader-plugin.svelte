@@ -3,15 +3,19 @@
     import ShopicusFunc from './shopicus-func';
     import { JsonView } from '@zerodevx/svelte-json-view';
     import ProjectItem from './project-item.svelte';
+    import { pluginStore } from './plugin.store.svelte';
     
-    let targetPsCode = $state<string>('A4@TV-1PAGE-BODY'); // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
+    
     let childUsers = $state<any[]>([]);
     let projects = $state<any[]>([]);
     let selectedThumbnails = $state<Map<string, number[]>>(new Map()); // projectId -> selected thumbnail indices
 
+    pluginStore.innerPageProductCode = 'TV-1PAGE-BODY'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
+    pluginStore.innerPageSizeCode = 'A4'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
 
     onMount(async () => {
-        childUsers = await ShopicusFunc.getChildUsers({
+            
+            childUsers = await ShopicusFunc.getChildUsers({
             $orderby: 'LoginId asc',
             $top: '10',
             $skip: '0',
@@ -33,7 +37,7 @@
             $orderby: 'Id desc',
             $top: '5',
             $skip: '0',
-            $filter: `(Status eq 'Editing') and (User/ParentId ne null and contains(User/UserName,'${loginId}'))`,
+            $filter: `(Status eq 'Editing') and (User/ParentId ne null and contains(User/UserName,'${loginId}') and contains(EdicusPsCode,'@${pluginStore.innerPageProductCode}') )`,
         });
         let totalCount = data.count;
         let items = data.result;

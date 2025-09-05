@@ -2,8 +2,8 @@
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import { Checkbox } from "$lib/components/ui/checkbox/index.js";
-	import { Button } from "$lib/components/ui/button/index.js";
 	import ThumbnailPopup from "./thumbnail-popup.svelte";
+	import { pluginStore } from "./plugin.store.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -101,6 +101,10 @@
 
 	function handleThumbnailMouseLeave() {
 		hoveredThumbnailIndex = -1;
+	}
+
+	function isInnerPageProduct(edicusPsCode: string) {
+		return project.edicusPsCode.split('@')[1] === edicusPsCode;
 	}
 </script>
 
