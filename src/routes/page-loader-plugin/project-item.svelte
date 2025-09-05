@@ -59,6 +59,11 @@
 
 	function handleSelectAll(event?: Event) {
 		console.log('handleSelectAll 호출됨:', project.edicusProjectId);
+		// 내지 사이즈가 일치하지 않으면 선택 불가
+		if (!isInnerPageSize(project.edicusPsCode)) {
+			return;
+		}
+		
 		// 이벤트가 있다면 기본 동작을 막지 않고 우리 로직을 실행
 		if (onSelectAll) {
 			onSelectAll(project);
@@ -72,6 +77,11 @@
 	}
 
 	function handleThumbnailClick(index: number) {
+		// 내지 사이즈가 일치하지 않으면 선택 불가
+		if (!isInnerPageSize(project.edicusPsCode)) {
+			return;
+		}
+		
 		if (onThumbnailSelect) {
 			onThumbnailSelect(project.edicusProjectId, index);
 		}
@@ -103,20 +113,29 @@
 		hoveredThumbnailIndex = -1;
 	}
 
-	function isInnerPageProduct(edicusPsCode: string) {
-		return project.edicusPsCode.split('@')[1] === edicusPsCode;
+	function isInnerPageSize(edicusPsCode: string) {
+		let sizeCode = edicusPsCode.split('@')[0];
+		console.log(sizeCode, pluginStore.innerPageSizeCode);
+		return sizeCode === pluginStore.innerPageSizeCode;
 	}
 </script>
 
 <div class={cn('border border-gray-200', className || '')}>
 	<div class='flex gap-x-4 p-4'>
 		<!-- 썸네일 -->
-		<div>
+		<div class="relative">
 			<img 
 				src={project.thumbnailUrl} 
 				alt={project.title} 
 				class='w-26 h-26 object-contain border border-gray-200' 
 			/>
+			{#if !isInnerPageSize(project.edicusPsCode)}
+				<div class="absolute inset-0 flex items-center justify-center rounded bg-gray-500/70">
+					<div class=" text-white text-xs font-bold text-center px-2 py-1 rounded">
+						내지 사이즈가<br/>일치하지 않습니다
+					</div>
+				</div>
+			{/if}
 		</div>
 
 		<!-- 상세정보 -->
@@ -143,10 +162,14 @@
 						<Checkbox 
 							id="selectAll-{project.edicusProjectId}" 
 							bind:checked={checkboxChecked}
+							disabled={!isInnerPageSize(project.edicusPsCode)}
 						/>
 						<label
 							for="selectAll-{project.edicusProjectId}"
-							class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ml-2 cursor-pointer"
+							class={cn(
+								"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ml-2",
+								isInnerPageSize(project.edicusPsCode) ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+							)}
 						>
 							전체 선택
 						</label>
@@ -177,12 +200,16 @@
 						<button 
 							type="button"
 							class={cn(
-								'relative cursor-pointer border-2 rounded-md transition-all duration-200 hover:scale-105 p-0 bg-transparent',
+								'relative border-2 rounded-md transition-all duration-200 p-0 bg-transparent',
+								isInnerPageSize(project.edicusPsCode) 
+									? 'cursor-pointer hover:scale-105' 
+									: 'cursor-not-allowed opacity-60',
 								isThumbnailSelected(index) 
 									? 'border-blue-500 bg-blue-50 shadow-md' 
 									: 'border-gray-200 hover:border-gray-400'
 							)}
 							onclick={() => handleThumbnailClick(index)}
+							disabled={!isInnerPageSize(project.edicusPsCode)}
 							aria-label={`썸네일 ${index + 1} ${isThumbnailSelected(index) ? '선택됨' : '선택하기'}`}
 						>
 							<img 
