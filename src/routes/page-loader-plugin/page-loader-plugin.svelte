@@ -9,6 +9,7 @@
     let childUsers = $state<any[]>([]);
     let projects = $state<any[]>([]);
     let selectedThumbnails = $state<Map<string, number[]>>(new Map()); // projectId -> selected thumbnail indices
+    let filterType = $state<'all' | 'available' | 'unavailable'>('all'); // 필터 상태
 
     pluginStore.innerPageProductCode = 'TV-1PAGE-BODY'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
     pluginStore.innerPageSizeCode = 'A4'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
@@ -132,6 +133,25 @@
         return url;
     }
 
+    // 내지 사이즈 확인 함수
+    function isInnerPageSize(edicusPsCode: string) {
+        let sizeCode = edicusPsCode.split('@')[0];
+        return sizeCode === pluginStore.innerPageSizeCode;
+    }
+
+    // 필터된 프로젝트 목록
+    let filteredProjects = $derived.by(() => {
+        switch (filterType) {
+            case 'available':
+                return projects.filter(project => isInnerPageSize(project.edicusPsCode));
+            case 'unavailable':
+                return projects.filter(project => !isInnerPageSize(project.edicusPsCode));
+            case 'all':
+            default:
+                return projects;
+        }
+    });
+
 </script>
 
 <div class='w-[920px] min-h-[600px] border border-gray-200'>
@@ -148,8 +168,47 @@
         </div>
     </div>
 
+    <div class='flex justify-between items-center p-4'>
+        <div class='flex-1'>
+           검색기능
+        </div>
+        <div class='flex-1 flex justify-end'>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input 
+                            type="radio" 
+                            bind:group={filterType} 
+                            value="all"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                        />
+                        <span class="text-sm text-gray-700">전체</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input 
+                            type="radio" 
+                            bind:group={filterType} 
+                            value="available"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                        />
+                        <span class="text-sm text-gray-700">추가 가능한 내지</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input 
+                            type="radio" 
+                            bind:group={filterType} 
+                            value="unavailable"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                        />
+                        <span class="text-sm text-gray-700">추가 불가능한 내지</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class='text-sm p-4 flex flex-col gap-4'>
-        {#each projects as project}
+        {#each filteredProjects as project}
             <ProjectItem 
                 {project} 
                 selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
