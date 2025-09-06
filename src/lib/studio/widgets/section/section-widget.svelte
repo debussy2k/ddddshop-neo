@@ -18,6 +18,13 @@
         studioDoc.activeId = section.id;
     }
 
+	function  keydown(e: KeyboardEvent) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			handleClick();
+		}
+	}
+
     // 현재 섹션이 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === section.id);
 
@@ -30,7 +37,7 @@
 
 <div 
     bind:this={sectionElement}
-    class={`relative border-b border-blue-500 border-dotted cursor-pointer overflow-hidden ${
+    class={`relative border-b border-blue-500 border-dotted cursor-pointer overflow-visible ${
         isActive 
             ? 'bg-blue-200 hover:bg-blue-300 border-solid' 
             : 'bg-red-100 hover:bg-red-200'
@@ -39,12 +46,7 @@
     onclick={handleClick}
     role="button"
     tabindex="0"
-    onkeydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick();
-        }
-    }}
+    onkeydown={keydown}
 >
     <div class="p-2">
         <!-- Child 위젯들 렌더링 -->
