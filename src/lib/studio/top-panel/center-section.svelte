@@ -22,10 +22,10 @@
 	<div class="text-sm text-gray-600">
 		<div class="flex gap-x-1">
 			<Button variant="outline" size="sm" 
-				class={cn("h-6 w-6 p-0", studioDoc.breakPoint === 'desktop' ? 'bg-gray-300' : '')} 
-				title="Desktop" 
-				onclick={() => handleBreakPointClick('desktop')}>
-				P
+				class={cn("h-6 w-6 p-0", studioDoc.breakPoint === 'mobile' ? 'bg-gray-300' : '')} 
+				title="Mobile" 
+				onclick={() => handleBreakPointClick('mobile')}>
+				M
 			</Button>
 
 			<Button variant="outline" size="sm" 
@@ -36,11 +36,12 @@
 			</Button>
 
 			<Button variant="outline" size="sm" 
-				class={cn("h-6 w-6 p-0", studioDoc.breakPoint === 'mobile' ? 'bg-gray-300' : '')} 
-				title="Mobile" 
-				onclick={() => handleBreakPointClick('mobile')}>
-				M
+				class={cn("h-6 w-6 p-0", studioDoc.breakPoint === 'desktop' ? 'bg-gray-300' : '')} 
+				title="Desktop" 
+				onclick={() => handleBreakPointClick('desktop')}>
+				P
 			</Button>
+
 		</div>
 	</div>
 </div>

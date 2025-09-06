@@ -30,7 +30,7 @@
 
 <div 
     bind:this={sectionElement}
-    class={`relative border-b border-blue-500 border-dotted cursor-pointer overflow-visible ${
+    class={`relative border-b border-blue-500 border-dotted cursor-pointer overflow-hidden ${
         isActive 
             ? 'bg-blue-200 hover:bg-blue-300 border-solid' 
             : 'bg-red-100 hover:bg-red-200'
