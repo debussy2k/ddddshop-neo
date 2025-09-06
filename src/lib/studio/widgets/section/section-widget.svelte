@@ -6,7 +6,6 @@
     import type { Sandbox } from "$lib/studio/widgets/sandbox";
     import type { SimpleImage } from "$lib/studio/widgets/simple-image";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
-    import { HistoryMode } from "$lib/studio/history-manager";
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
 
@@ -16,6 +15,9 @@
 
     function handleClick() {
         studioDoc.activeId = section.id;
+		// studioDoc.activeWidget에 현재 지금의  svelte component 객체를 넣어줌
+		// studioDoc.activeWidget = section;
+
     }
 
 	function  keydown(e: KeyboardEvent) {
@@ -32,6 +34,10 @@
     let childWidgets = $derived(() => {
         return section.children || [];
     });
+
+	export function getContentHeight() {
+		return sectionElement?.scrollHeight || 0;
+	} 
 
 </script>
 

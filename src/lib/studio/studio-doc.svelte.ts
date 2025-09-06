@@ -1,5 +1,5 @@
 import HistoryManager from "./history-manager";
-import type { DocState } from "./types";
+import type { DocState, Widget } from "./types";
 
 export interface HistoryInfo {
     pastCount: number;
@@ -31,8 +31,13 @@ class StudioDoc {
 	// 현재 활성화 되어있는 항목 id
 	activeId = $state<string | null>(null);
 
-
-    // break point
+	// 현재 활성화 되어있는 위젯
+	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
+	widgetMap: Record<string, any> = {};
+	getWidget<T>(id: string): T {
+		return this.widgetMap[id] as T;
+	}
+	
     breakPoint = $state<BreakPoint>('desktop');
 
     constructor() {

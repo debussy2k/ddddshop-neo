@@ -3,6 +3,8 @@
     import { SectionActions } from "./section-actions";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
+    import { Button } from "$lib/components/ui/button";
+    import type { SectionWidget } from "./section-widget.svelte";
 
     let { section }: { section: Section } = $props();
 
@@ -11,6 +13,12 @@
     async function updateSectionHeight(newHeight: string) {
         cmdSection.updateSection(section.id, { height: newHeight });
     }
+
+	async function autoUpdateSectionHeight() {
+		let widget = studioDoc.getWidget<SectionWidget>(section.id);
+		let height = widget.getContentHeight();
+		updateSectionHeight(height + 'px');
+	}
 
 </script>
 
@@ -28,4 +36,12 @@
             class="w-[70px]"
         />
     </div>
+
+	<div>
+		<Button variant="outline" size="sm" onclick={() => {
+			autoUpdateSectionHeight();
+		}}>
+			높이 맞추기
+		</Button>
+	</div>
 </div>

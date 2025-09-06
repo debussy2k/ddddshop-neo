@@ -30,23 +30,24 @@
 
     onMount(() => {
     });
+
 </script>
 
 <div class={cn('relative bg-gray-50', className || '')}>
     <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
-        
         <div class={containerWidth()}>
             <div>
                 {studioDoc.breakPoint} / {containerWidth()}
             </div>
-            {#each doc.sections as section}
-                <SectionWidget section={section} />
+            {#each doc.sections as section (section.id)}
+                <SectionWidget section={section} 
+					bind:this={studioDoc.widgetMap[section.id]}
+				/>
             {/each}
         </div>
     
-    
-        <!-- <div class="text-xs">
-            <JsonView json={doc} />
-        </div> -->
+		<!-- <div class="text-xs">
+			<JsonView json={doc} />
+		</div> -->
     </div>
 </div>
