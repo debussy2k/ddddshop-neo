@@ -36,7 +36,32 @@
     });
 
 	export function getContentHeight() {
-		return sectionElement?.scrollHeight || 0;
+		if (!sectionElement) return 0;
+		
+		// 패딩 및 보더 고려
+		const computedStyle = getComputedStyle(sectionElement);
+		const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+		const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+		const borderTop = parseFloat(computedStyle.borderTopWidth) || 0;
+		const borderBottom = parseFloat(computedStyle.borderBottomWidth) || 0;
+		
+		// 내부 콘텐츠 컨테이너 찾기
+		const contentContainer = sectionElement.querySelector('._outer');
+		if (!contentContainer) {
+			return sectionElement.scrollHeight;
+		}
+		
+		// 하위 위젯들의 실제 높이 계산
+		const childWidgetContainer = contentContainer.querySelector('._inner');
+		if (!childWidgetContainer) {
+			return paddingTop + paddingBottom + borderTop + borderBottom + 16; // 기본 패딩
+		}
+		
+		// 하위 위젯들의 총 높이 계산 (flex-wrap을 고려한 실제 높이)
+		const childrenHeight = childWidgetContainer.scrollHeight;
+		const containerPadding = 8; // .p-2 클래스의 패딩 (0.5rem = 8px)
+		
+		return paddingTop + paddingBottom + borderTop + borderBottom + (containerPadding * 2) + childrenHeight;
 	} 
 
 </script>
@@ -54,10 +79,10 @@
     tabindex="0"
     onkeydown={keydown}
 >
-    <div class="p-2">
+    <div class="_outer p-2">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class="flex gap-x-2 w-full flex-wrap">
+            <div class="_inner flex gap-x-2 w-full flex-wrap">
                 {#each childWidgets() as widgetData (widgetData.id)}
                     {#if (widgetData as any).type === 'sandbox'}
                         <SandboxWidget data={widgetData as Sandbox} />
