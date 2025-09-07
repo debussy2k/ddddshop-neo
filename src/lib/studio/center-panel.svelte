@@ -35,7 +35,7 @@
 
 <div class={cn('relative bg-gray-50', className || '')}>
     <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
-        <div class={containerWidth()}>
+        <div class='@container {containerWidth()}'>
             <div>
                 {studioDoc.breakPoint} / {containerWidth()}
             </div>

@@ -35,6 +35,26 @@
         return section.children || [];
     });
 
+    // 섹션 컨테이너의 클래스를 계산하는 함수
+    function getSectionClasses(isActive: boolean): string {
+        const baseClasses = `relative border-b border-blue-500 border-dotted cursor-pointer overflow-visible`;
+
+        const activeClasses = 'bg-blue-200 hover:bg-blue-300 border-solid';
+        const inactiveClasses = 'bg-red-100 hover:bg-red-200';
+        
+        return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+    }
+
+	function getInnerClass() {
+		let mobileClass = 'flex flex-col gap-y-2';
+		let desktopClass = prependSizeVariant('flex flex-row flex-wrap gap-x-2', '@3xl:'); // @3xl : 768px 이상
+		return `w-full ${mobileClass} ${desktopClass}`;
+	}
+
+	function prependSizeVariant(classString: string, sizeVariant: string) {
+		return classString.split(/\s+/).map(cls => `${sizeVariant}${cls}`).join(' ');
+	}
+
 	export function getContentHeight() {
 		if (!sectionElement) return 0;
 		
@@ -68,11 +88,7 @@
 
 <div 
     bind:this={sectionElement}
-    class={`relative border-b border-blue-500 border-dotted cursor-pointer overflow-visible ${
-        isActive 
-            ? 'bg-blue-200 hover:bg-blue-300 border-solid' 
-            : 'bg-red-100 hover:bg-red-200'
-    }`}
+    class={getSectionClasses(isActive)}
     style:height={section.height}
     onclick={handleClick}
     role="button"
@@ -82,7 +98,7 @@
     <div class="_outer p-2">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class="_inner flex gap-x-2 w-full flex-wrap">
+            <div class="_inner {getInnerClass()}">
                 {#each childWidgets() as widgetData (widgetData.id)}
                     {#if (widgetData as any).type === 'sandbox'}
                         <SandboxWidget data={widgetData as Sandbox} />
