@@ -4,7 +4,7 @@
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { Button } from "$lib/components/ui/button";
-    import type { SectionWidget } from "./section-widget.svelte";
+    import type SectionWidget from "./section-widget.svelte";
 
     let { section }: { section: Section } = $props();
 
