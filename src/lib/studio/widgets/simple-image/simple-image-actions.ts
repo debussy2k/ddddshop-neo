@@ -1,29 +1,10 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
 import type { DocState, Section } from "../../types";
-import { SectionActions } from "../section/section-actions";
-
-export interface SimpleImage {
-    id: string;
-    type: 'simple-image';
-    name: string;
-    url: string;
-    alt?: string;
-    width?: string;
-    height?: string;
-    parentId?: string; // Section의 child로 사용될 때의 부모 ID
-}
-
-// SimpleImage 생성시 사용하는 타입 (name은 선택적)
-export type SimpleImageInput = Omit<SimpleImage, 'id' | 'type' | 'name'> & {
-    name?: string;
-};
-
+import type { SimpleImage, SimpleImageInput } from "./simple-image.type";
 export class SimpleImageActions {
-    private sectionActions: SectionActions;
 
     constructor(private historyManager: HistoryManager<DocState>) {
-        this.sectionActions = new SectionActions(historyManager);
     }
 
     // 자동 SimpleImage 이름 생성 - 모든 Section의 children에서 SimpleImage 검색
