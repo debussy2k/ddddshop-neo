@@ -3,6 +3,11 @@
 	import { cn } from "$lib/utils";
 	import { onMount, onDestroy } from "svelte";
 
+	interface SnapToInfo {
+		width: number;
+		devices: string[];
+	}
+
 	interface Props {
 		class?: ClassValue;
 		initialWidth?: number;
@@ -11,6 +16,7 @@
 		children?: any;
 		doubleResize?: boolean; // 마우스 움직임의 2배로 리사이즈하는 옵션
 		onWidthChange?: (width: number) => void; // 너비 변경 시 호출되는 콜백
+		snapTo?: SnapToInfo[]; // snapTo 정보
 	}
 
 	let { 
@@ -20,7 +26,8 @@
 		maxWidth = 800,
 		doubleResize = false,
 		onWidthChange,
-		children
+		children,
+		snapTo = []
 	}: Props = $props();
 
 	let containerRef: HTMLDivElement;
@@ -30,6 +37,15 @@
 	let startWidth = $state(0);
 	let resizeDirection = $state<'left' | 'right' | null>(null);
 	let showHandles = $state(false);
+
+	// 현재 너비와 매칭되는 snapTo 정보 찾기
+	let matchingSnapInfo = $derived(() => {
+		if (!snapTo || snapTo.length === 0) return null;
+		
+		// 정확히 일치하는 너비를 찾기 (±5px 허용)
+		const tolerance = 5;
+		return snapTo.find(snap => Math.abs(currentWidth - snap.width) <= tolerance) || null;
+	});
 
 	// initialWidth 변경 시 currentWidth 업데이트
 	$effect(() => {
@@ -162,6 +178,17 @@
 		role="button"
 		tabindex="0"
 	>
+		<!-- SnapTo 정보 박스 (오른쪽 리사이즈 핸들 우측하단) -->
+		{#if matchingSnapInfo() || true}
+			{@const snapInfo = matchingSnapInfo()}
+			{#if snapInfo}
+				<div class="absolute bottom-2 left-4 mt-2   text-sm px-2 py-1 pointer-events-none ">
+					{#each snapInfo.devices as device}
+						<div class="text-white bg-gray-800 rounded-md px-2 py-1 shadow-log z-30 whitespace-nowrap mb-2">{device}</div>
+					{/each}
+				</div>
+			{/if}
+		{/if}
 	</div>
 
 	<!-- 오른쪽 튀어나온 핸들 (추가 핸들) -->
