@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Sandbox } from "./sandbox-actions";
+    import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
 
     let { data: data }: { data: Sandbox } = $props();
