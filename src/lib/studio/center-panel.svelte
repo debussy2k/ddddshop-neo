@@ -110,15 +110,6 @@
                 snapTo={screenInfo().snapTo}
             >
                 {#snippet children()}
-                    <div class="h-full flex items-center justify-center flex-col border border-gray-300 pointer-events-none">
-                        <span class="text-lg font-semibold text-gray-700">
-                            Resizable Content
-                        </span>
-                        <span class="text-sm text-gray-500 mt-2">
-                            Width: {currentResizableWidth}px<br>
-							Min: {screenInfo().minWidth}px
-                        </span>
-                    </div>
                 {/snippet}
             </ResizableDiv>
         </div>        

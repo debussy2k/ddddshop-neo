@@ -43,7 +43,7 @@
 		if (!snapTo || snapTo.length === 0) return null;
 		
 		// 정확히 일치하는 너비를 찾기 (±5px 허용)
-		const tolerance = 5;
+		const tolerance = 8;
 		return snapTo.find(snap => Math.abs(currentWidth - snap.width) <= tolerance) || null;
 	});
 
