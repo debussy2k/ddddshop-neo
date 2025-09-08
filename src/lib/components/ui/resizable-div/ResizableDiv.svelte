@@ -179,12 +179,12 @@
 		tabindex="0"
 	>
 		<!-- SnapTo 정보 박스 (오른쪽 리사이즈 핸들 우측하단) -->
-		{#if matchingSnapInfo() || true}
+		{#if isResizing && matchingSnapInfo()}
 			{@const snapInfo = matchingSnapInfo()}
 			{#if snapInfo}
-				<div class="absolute bottom-2 left-4 mt-2   text-sm px-2 py-1 pointer-events-none ">
+				<div class="absolute bottom-2 left-4 mt-2 text-sm px-2 py-1 pointer-events-none">
 					{#each snapInfo.devices as device}
-						<div class="text-white bg-gray-800 rounded-md px-2 py-1 shadow-log z-30 whitespace-nowrap mb-2">{device}</div>
+						<div class="text-white bg-gray-800 rounded-md px-2 py-1 shadow-lg z-30 whitespace-nowrap mb-2">{device}</div>
 					{/each}
 				</div>
 			{/if}
