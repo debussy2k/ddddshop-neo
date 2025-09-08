@@ -31,6 +31,43 @@
 	let resizeDirection = $state<'left' | 'right' | null>(null);
 	let showHandles = $state(false);
 
+	// initialWidth 변경 시 currentWidth 업데이트
+	$effect(() => {
+		currentWidth = initialWidth;
+		if (containerRef) {
+			containerRef.style.width = initialWidth + 'px';
+		}
+		if (onWidthChange) {
+			onWidthChange(initialWidth);
+		}
+	});
+
+	// maxWidth 변경 시 현재 너비가 maxWidth를 초과하면 조정
+	$effect(() => {
+		if (currentWidth > maxWidth) {
+			currentWidth = maxWidth;
+			if (containerRef) {
+				containerRef.style.width = maxWidth + 'px';
+			}
+			if (onWidthChange) {
+				onWidthChange(maxWidth);
+			}
+		}
+	});
+
+	// minWidth 변경 시 현재 너비가 minWidth보다 작으면 조정
+	$effect(() => {
+		if (currentWidth < minWidth) {
+			currentWidth = minWidth;
+			if (containerRef) {
+				containerRef.style.width = minWidth + 'px';
+			}
+			if (onWidthChange) {
+				onWidthChange(minWidth);
+			}
+		}
+	});
+
 	function handleMouseDown(event: MouseEvent, direction: 'left' | 'right') {
 		event.preventDefault();
 		isResizing = true;
@@ -102,12 +139,12 @@
 
 <div 
 	bind:this={containerRef}
-	class={cn('relative border', className || '')}
-	style="width: {currentWidth}px; height: 300px;"
+	class={cn('relative', className || '')}
+	style="width: {currentWidth}px;"
 >
 	<!-- 왼쪽 리사이즈 핸들 (박스 바깥쪽) -->
 	<div 
-		class="resize-handle-left absolute -left-1 top-0 w-1 h-full bg-blue-400 cursor-col-resize transition-opacity duration-200 {showHandles ? 'opacity-100' : 'opacity-0'}"
+		class="pointer-events-auto resize-handle-left absolute -left-1 top-0 w-1 h-full bg-blue-400 cursor-col-resize transition-opacity duration-200 {showHandles ? 'opacity-100' : 'opacity-0'}"
 		onmousedown={(e) => handleMouseDown(e, 'left')}
 		onmouseenter={handleHandleMouseEnter}
 		onmouseleave={handleHandleMouseLeave}
@@ -118,7 +155,7 @@
 
 	<!-- 오른쪽 리사이즈 핸들 (박스 바깥쪽, 왼쪽과 동일) -->
 	<div 
-		class="resize-handle-right-bar absolute -right-1 top-0 w-1 h-full bg-blue-400 cursor-col-resize transition-opacity duration-200 {showHandles ? 'opacity-100' : 'opacity-0'}"
+		class="pointer-events-auto resize-handle-right-bar absolute -right-1 top-0 w-1 h-full bg-blue-400 cursor-col-resize transition-opacity duration-200 {showHandles ? 'opacity-100' : 'opacity-0'}"
 		onmousedown={(e) => handleMouseDown(e, 'right')}
 		onmouseenter={handleHandleMouseEnter}
 		onmouseleave={handleHandleMouseLeave}
@@ -129,7 +166,7 @@
 
 	<!-- 오른쪽 튀어나온 핸들 (추가 핸들) -->
 	<div 
-		class="resize-handle-right-knob absolute -right-4 top-1/2 transform -translate-y-1/2 w-4 h-8 bg-blue-500 rounded-md cursor-ew-resize hover:bg-blue-600 transition-all duration-200 shadow-md {showHandles ? 'opacity-100' : 'opacity-0'}"
+		class="pointer-events-auto resize-handle-right-knob absolute -right-4 top-5/12 transform -translate-y-1/2 w-4 h-12 bg-blue-500 rounded-sm cursor-col-resize hover:bg-blue-600 transition-all duration-200 shadow-md {showHandles ? 'opacity-100' : 'opacity-0'}"
 		onmousedown={(e) => handleMouseDown(e, 'right')}
 		onmouseenter={handleHandleMouseEnter}
 		onmouseleave={handleHandleMouseLeave}
@@ -142,9 +179,16 @@
 	</div>
 
 	<!-- 컨텐츠 영역 -->
-	<div class="p-4 h-full overflow-hidden">
+	<div class="h-full overflow-hidden">
 		{@render children?.()}
 	</div>
+
+	<!-- 너비 표시 박스 (드래그 중에만 표시) -->
+	{#if isResizing}
+		<div class="absolute bottom-2 right-2 bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg z-20 pointer-events-none">
+			{currentWidth}px
+		</div>
+	{/if}
 </div>
 
 <style>
