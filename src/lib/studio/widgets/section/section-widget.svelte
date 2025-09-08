@@ -46,14 +46,16 @@
     }
 
 	function getInnerClass() {
-		let mobileClass = 'flex flex-col gap-y-2';
-		let desktopClass = prependSizeVariant('flex flex-row flex-wrap gap-x-2', '@3xl:'); // @3xl : 768px 이상
+        // tailwindcss에 정상 build되도록 fullname 표기 필요.
+		let mobileClass = 'flex flex-col gap-y-2';        
+        let desktopClass = "@3xl:flex @3xl:flex-row @3xl:flex-wrap @3xl:gap-x-2"; 
+		// let desktopClass = prependSizeVariant('flex flex-row flex-wrap gap-x-2', '@3xl:'); // @3xl : 768px 이상
 		return `w-full ${mobileClass} ${desktopClass}`;
 	}
 
-	function prependSizeVariant(classString: string, sizeVariant: string) {
-		return classString.split(/\s+/).map(cls => `${sizeVariant}${cls}`).join(' ');
-	}
+	// function prependSizeVariant(classString: string, sizeVariant: string) {
+	// 	return classString.split(/\s+/).map(cls => `${sizeVariant}${cls}`).join(' ');
+	// }
 
 	export function getContentHeight() {
 		if (!sectionElement) return 0;
