@@ -12,14 +12,21 @@
 
     // 현재 샌드박스가 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === data.id);
+    function getSandboxClasses(isActive: boolean): string {
+        const baseClasses = `border border-green-400 rounded-lg p-4 cursor-pointer w-[200px] h-[100px]`;
+        const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
+        const inactiveClasses = 'bg-green-50 hover:bg-green-100';
+
+        let mobileClass = "w-full h-[100px]";
+        let tabletClass = "@3xl:w-[200px] @3xl:h-[120px]";
+
+        return `${baseClasses} ${mobileClass} ${tabletClass} ${isActive ? activeClasses : inactiveClasses} `;
+    }
+
 </script>
 
 <div 
-    class={`border border-green-400 rounded-lg p-4 cursor-pointer w-[200px] h-[100px]  ${
-        isActive 
-            ? 'bg-green-100 hover:bg-green-200 border-green-600' 
-            : 'bg-green-50 hover:bg-green-100'
-    }`}
+    class={getSandboxClasses(isActive)}
     onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"
