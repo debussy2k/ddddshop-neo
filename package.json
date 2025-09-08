@@ -16,6 +16,7 @@
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
 		"@eslint/js": "^9.18.0",
+		"@interactjs/types": "^1.10.27",
 		"@lucide/svelte": "^0.542.0",
 		"@sveltejs/adapter-auto": "^6.0.0",
 		"@sveltejs/kit": "^2.22.0",
@@ -47,6 +48,9 @@
 		]
 	},
 	"dependencies": {
+		"@interactjs/actions": "^1.10.27",
+		"@interactjs/interact": "^1.10.27",
+		"@interactjs/modifiers": "^1.10.27",
 		"@zerodevx/svelte-json-view": "^1.0.11",
 		"clsx": "^2.1.1",
 		"immer": "^10.1.1",
