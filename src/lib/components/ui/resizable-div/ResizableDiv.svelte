@@ -207,17 +207,6 @@
 		role="button"
 		tabindex="0"
 	>
-		<!-- SnapTo 정보 박스 (오른쪽 리사이즈 핸들 우측하단) -->
-		{#if isResizing && matchingSnapInfo()}
-			{@const snapInfo = matchingSnapInfo()}
-			{#if snapInfo}
-				<div class="absolute bottom-2 left-4 mt-2 text-sm px-2 py-1 pointer-events-none">
-					{#each snapInfo.devices as device}
-						<div class="text-white bg-gray-800 rounded-md px-2 py-1 shadow-lg z-30 whitespace-nowrap mb-2">{device}</div>
-					{/each}
-				</div>
-			{/if}
-		{/if}
 	</div>
 
 	<!-- 오른쪽 튀어나온 핸들 (추가 핸들) -->
@@ -238,6 +227,18 @@
 	<div class="h-full overflow-hidden">
 		{@render children?.()}
 	</div>
+
+	<!-- SnapTo 정보 박스 (오른쪽 리사이즈 핸들 근처) -->
+	{#if isResizing && matchingSnapInfo()}
+		{@const snapInfo = matchingSnapInfo()}
+		{#if snapInfo}
+			<div class="absolute bottom-2 text-sm pointer-events-none z-30" style="left: {currentWidth+16}px;">
+				{#each snapInfo.devices as device}
+					<div class="text-white bg-gray-800 rounded-md px-2 py-1 shadow-lg whitespace-nowrap mb-2">{device}</div>
+				{/each}
+			</div>
+		{/if}
+	{/if}
 
 	<!-- 너비 표시 박스 (드래그 중에만 표시) -->
 	{#if isResizing}
