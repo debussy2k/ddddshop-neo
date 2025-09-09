@@ -17,20 +17,6 @@
     let doc = $derived(studioDoc.document);
     let currentResizableWidth = $state(300);
     
-    // breakpoint에 따른 width 계산
-    let containerWidth = $derived(() => {
-        switch (studioDoc.breakPoint) {
-            case 'mobile':
-                return 'w-[375px]';
-            case 'tablet':
-                return 'w-[768px]';
-            case 'desktop':
-                return 'w-[1200px]';
-            default:
-                return 'w-[1200px]';
-        }
-    });
-
 	let screenInfo = $derived(() => {
         return getScreenInfo(studioDoc.breakPoint as BreakPoint);
     });
