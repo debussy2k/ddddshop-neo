@@ -2,6 +2,7 @@
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import { onMount, onDestroy } from "svelte";
+    import { browser } from '$app/environment';
 
 	interface SnapToInfo {
 		width: number;
@@ -146,10 +147,12 @@
 	}
 
 	onDestroy(() => {
-		document.removeEventListener('mousemove', handleMouseMove);
-		document.removeEventListener('mouseup', handleMouseUp);
-		document.body.style.cursor = '';
-		document.body.style.userSelect = '';
+        if (browser) {
+		    document.removeEventListener('mousemove', handleMouseMove);
+		    document.removeEventListener('mouseup', handleMouseUp);
+			document.body.style.cursor = '';
+			document.body.style.userSelect = '';
+		}
 	});
 </script>
 
