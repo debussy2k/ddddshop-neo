@@ -17,7 +17,18 @@
 
     function addSampleSection() {
         cmdSection.addSection({
-            height: '160px'
+            height: '160px',
+			prop: {
+				mobile: {
+					height: '260px'
+				},
+				tablet: {
+					height: '360px'
+				},
+				desktop: {
+					height: '460px'
+				}
+			}
         });
     }
 

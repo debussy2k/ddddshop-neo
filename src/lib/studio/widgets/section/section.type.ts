@@ -1,3 +1,5 @@
+import type { Widget } from "../../types";
+
 export interface Section {
     id: string;
     type: 'section';
@@ -6,6 +8,9 @@ export interface Section {
     children?: Widget[]; // child Widget 객체들
 
     height: string;
+	prop: Record<string, {
+		height: string;
+	}>;
 }
 
 // 섹션 생성시 사용하는 타입 (name은 선택적)

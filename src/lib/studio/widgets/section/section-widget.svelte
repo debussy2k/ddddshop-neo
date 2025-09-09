@@ -66,6 +66,24 @@
 	// 	return classString.split(/\s+/).map(cls => `${sizeVariant}${cls}`).join(' ');
 	// }
 
+	// 범용 섹션 속성 업데이트 헬퍼 함수
+	function updateSectionProperty(property: string, value: any) {
+		cmdSection.updateSection(section.id, { 
+			prop: { 
+				...section.prop,
+				[studioDoc.breakPoint]: { 
+					...section.prop[studioDoc.breakPoint],
+					[property]: value
+				} 
+			} 
+		});
+	}
+
+	// 편의 함수들
+	function updateSectionHeight(newHeight: number) {
+		updateSectionProperty('height', toPixelValue(newHeight));
+	}
+
 	export function getContentHeight() {
 		if (!sectionElement) return 0;
 		
@@ -100,7 +118,7 @@
 <div 
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
-    style:height={section.height}
+    style:height={section.prop[studioDoc.breakPoint].height}
     onclick={handleClick}
     role="button"
     tabindex="0"
@@ -147,13 +165,13 @@
         maxSize={800}
         onStart={(newHeight) => {
             studioDoc.historyManager.setBatchMode();
-            cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+            updateSectionHeight(newHeight);
         }}
         onResize={(newHeight) => {
-            cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+            updateSectionHeight(newHeight);
         }}
         onEnd={(newHeight) => {
-            cmdSection.updateSection(section.id, { height: toPixelValue(newHeight) });
+            updateSectionHeight(newHeight);
             studioDoc.historyManager.commitBatch();
             studioDoc.historyManager.setRecordMode();
         }}
