@@ -40,7 +40,7 @@
 
     function handleWidthChange(newWidth: number) {
         currentResizableWidth = newWidth;
-        console.log('Resizable width changed to:', newWidth);
+        // console.log('Resizable width changed to:', newWidth);
     }
 
 </script>

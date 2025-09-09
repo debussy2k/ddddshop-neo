@@ -38,15 +38,37 @@
 	let startWidth = $state(0);
 	let resizeDirection = $state<'left' | 'right' | null>(null);
 	let showHandles = $state(false);
+	let isSnapped = $state(false);
 
 	// 현재 너비와 매칭되는 snapTo 정보 찾기
 	let matchingSnapInfo = $derived(() => {
 		if (!snapTo || snapTo.length === 0) return null;
 		
-		// 정확히 일치하는 너비를 찾기 (±5px 허용)
+		// 정확히 일치하는 너비를 찾기 (±8px 허용)
 		const tolerance = 8;
 		return snapTo.find(snap => Math.abs(currentWidth - snap.width) <= tolerance) || null;
 	});
+
+	// snap 효과를 위한 함수
+	function applySnapEffect(width: number): number {
+		if (!snapTo || snapTo.length === 0) {
+			isSnapped = false;
+			return width;
+		}
+		
+		const snapTolerance = 4;
+		
+		// 가장 가까운 snap 포인트 찾기
+		for (const snap of snapTo) {
+			if (Math.abs(width - snap.width) <= snapTolerance) {
+				isSnapped = true;
+				return snap.width;
+			}
+		}
+		
+		isSnapped = false;
+		return width;
+	}
 
 	// initialWidth 변경 시 currentWidth 업데이트
 	$effect(() => {
@@ -116,6 +138,10 @@
 		
 		// 최소/최대 값 제한
 		newWidth = Math.min(Math.max(newWidth, minWidth), maxWidth);
+		
+		// snap 효과 적용
+		newWidth = applySnapEffect(newWidth);
+		
 		currentWidth = newWidth;
 		
 		if (containerRef) {
@@ -215,7 +241,7 @@
 
 	<!-- 너비 표시 박스 (드래그 중에만 표시) -->
 	{#if isResizing}
-		<div class="absolute bottom-2 right-2 bg-gray-800 text-white text-sm px-2 py-1 rounded shadow-lg z-20 pointer-events-none">
+		<div class="absolute bottom-2 right-2 text-white text-sm px-2 py-1 rounded shadow-lg z-20 pointer-events-none transition-colors duration-150 bg-gray-800">
 			{currentWidth}px
 		</div>
 	{/if}
