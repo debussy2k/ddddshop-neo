@@ -47,7 +47,18 @@
 
 <div class={cn('relative bg-gray-50', className || '')}>
     <div class='absolute bg-gray-200 border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
-        <div class='absolute top-[0px] bottom-[0px] pointer-events-none'>
+        <div class='@container absolute shadow-lg shadow-gray-400' style="width:{currentResizableWidth}px;">
+            {#each doc.sections as section (section.id)}
+                <SectionWidget section={section} 
+                    bind:this={studioDoc.widgetMap[section.id]}
+                />
+            {/each}
+            <!-- <div class="text-xs">
+                <JsonView json={doc} />
+            </div> -->
+        </div>
+
+        <div class='sticky top-0 h-full inset-0 flex justify-center pointer-events-none '>
             <ResizableDiv 
 				class='h-full'
                 initialWidth={screenInfo().initialWidth} 
@@ -61,18 +72,6 @@
                     <!-- 빈 스니펫 - 리사이즈 핸들만 사용 -->
                 {/snippet}
             </ResizableDiv>
-        </div>        
-
-        <div class='@container shadow-lg shadow-gray-400' style="width:{currentResizableWidth}px;">
-            {#each doc.sections as section (section.id)}
-                <SectionWidget section={section} 
-					bind:this={studioDoc.widgetMap[section.id]}
-				/>
-            {/each}
-			<!-- <div class="text-xs">
-				<JsonView json={doc} />
-			</div> -->
-        </div>
-
+        </div>            
     </div>
 </div>
