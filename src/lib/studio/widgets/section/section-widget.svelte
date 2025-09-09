@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from "./section-actions";
+    import type { Section } from "./section.type";
     import { SandboxWidget } from "$lib/studio/widgets/sandbox";
     import { cmdSection } from "$lib/studio/command";
     import { SimpleImageWidget } from "$lib/studio/widgets/simple-image";
@@ -12,12 +12,21 @@
     let { section }: { section: Section } = $props();
 
     let sectionElement = $state<HTMLElement>();
+    let isHovered = $state(false);
 
     function handleClick() {
         studioDoc.activeId = section.id;
 		// studioDoc.activeWidget에 현재 지금의  svelte component 객체를 넣어줌
 		// studioDoc.activeWidget = section;
 
+    }
+
+    function handleMouseEnter() {
+        isHovered = true;
+    }
+
+    function handleMouseLeave() {
+        isHovered = false;
     }
 
 	function  keydown(e: KeyboardEvent) {
@@ -37,7 +46,7 @@
 
     // 섹션 컨테이너의 클래스를 계산하는 함수
     function getSectionClasses(isActive: boolean): string {
-        const baseClasses = `relative border-b border-blue-500 border-dotted cursor-pointer overflow-visible`;
+        const baseClasses = `relative cursor-pointer overflow-visible`;
 
         const activeClasses = 'bg-blue-200 hover:bg-blue-300 border-solid';
         const inactiveClasses = 'bg-red-100 hover:bg-red-200';
@@ -96,8 +105,22 @@
     role="button"
     tabindex="0"
     onkeydown={keydown}
+    onmouseenter={handleMouseEnter}
+    onmouseleave={handleMouseLeave}
 >
-    <div class="_outer p-2">
+
+    <div class='absolute top-0 bottom-0 left:[-320px] right:[320px] opacity-0 hover:opacity-100 transition-opacity duration-200' 
+        class:opacity-100={isHovered}
+        style="width:100%">
+            <!-- 섹션 왼쪽 빈 공간 -->
+            <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:-320px">
+            </div>
+            <!-- 섹션 오른쪽 빈 공간 -->
+            <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:100%">
+            </div>
+    </div>
+
+    <div class="_outer relative p-2">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
             <div class="_inner {getInnerClass()}">
