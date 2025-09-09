@@ -46,7 +46,7 @@
 </script>
 
 <div class={cn('relative bg-gray-50', className || '')}>
-    <div class='absolute bg-white border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
+    <div class='absolute bg-gray-200 border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
         <div class='absolute top-[0px] bottom-[0px] pointer-events-none'>
             <ResizableDiv 
 				class='h-full'
@@ -63,7 +63,7 @@
             </ResizableDiv>
         </div>        
 
-        <div class='@container' style="width:{currentResizableWidth}px;">
+        <div class='@container shadow-lg shadow-gray-400' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
                 <SectionWidget section={section} 
 					bind:this={studioDoc.widgetMap[section.id]}
