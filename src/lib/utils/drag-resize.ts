@@ -159,11 +159,19 @@ export function setupMouseDetection(options: MouseDetectionOptions): () => void 
 					break;
 			}
 
-			// 마우스가 감지 영역에 있고 요소 내부에도 있는지 확인
-			const isInsideElement = e.clientX >= rect.left && e.clientX <= rect.right && 
-								   e.clientY >= rect.top && e.clientY <= rect.bottom;
+			// 마우스가 감지 영역에 있는지 확인 (요소 바깥쪽으로 나간 부분도 포함)
+			// 리사이즈 핸들이 요소 경계를 벗어날 수 있으므로 더 넓은 영역에서 감지
+			const expandedRect = {
+				left: rect.left - threshold,
+				right: rect.right + threshold,
+				top: rect.top - threshold,
+				bottom: rect.bottom + threshold
+			};
+			
+			const isInExpandedArea = e.clientX >= expandedRect.left && e.clientX <= expandedRect.right && 
+								    e.clientY >= expandedRect.top && e.clientY <= expandedRect.bottom;
 
-			const shouldBeInZone = inDetectionZone && isInsideElement;
+			const shouldBeInZone = inDetectionZone && isInExpandedArea;
 
 			if (shouldBeInZone && !isInZone) {
 				isInZone = true;

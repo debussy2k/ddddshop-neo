@@ -72,6 +72,17 @@
 		});
 	});
 
+	// 리사이즈 핸들에 마우스 이벤트 추가
+	function handleResizeHandleMouseEnter() {
+		showResizeHandle = true;
+	}
+
+	function handleResizeHandleMouseLeave() {
+		if (!isDragging) {
+			showResizeHandle = false;
+		}
+	}
+
 	onMount(() => {
 		return () => {
 			cleanupMouseDetection?.();
@@ -114,15 +125,15 @@
 	let positionClasses = $derived(() => {
 		switch (detectionDirection) {
 			case 'bottom':
-				return 'absolute bottom-0 left-1/6 w-2/3 h-3'; // 바닥라인 중간에 걸치도록
+				return 'absolute bottom-0 left-2/3 w-20 h-3'; // 수평 위치 2/3 지점에 표시
 			case 'top':
-				return 'absolute top-0 left-1/6 w-2/3 h-3';
+				return 'absolute top-0 left-2/3 w-20 h-3';
 			case 'right':
-				return 'absolute right-0 top-1/6 w-3 h-2/3';
+				return 'absolute right-0 top-2/3 w-3 h-20';
 			case 'left':
-				return 'absolute left-0 top-1/6 w-3 h-2/3';
+				return 'absolute left-0 top-2/3 w-3 h-20';
 			default:
-				return 'absolute bottom-0 left-1/6 w-2/3 h-3';
+				return 'absolute bottom-0 left-2/3 w-20 h-3';
 		}
 	});
 
@@ -162,20 +173,14 @@
 			className
 		)}
 		style={positionStyle()}
+		role="button"
+		tabindex="0"
+		aria-label="크기 조절 핸들"
+		on:mouseenter={handleResizeHandleMouseEnter}
+		on:mouseleave={handleResizeHandleMouseLeave}
 	>
 		<!-- 리사이즈 아이콘 -->
-		<div class="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center gap-1 opacity-80 group-hover:opacity-100">
-			<svg 
-				width="12" 
-				height="12" 
-				viewBox="0 0 24 24" 
-				fill="currentColor"
-				style="transform: {iconRotation()};"
-			>
-				<!-- 상하 화살표 아이콘 -->
-				<path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
-				<path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
-			</svg>
+		<div class="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center gap-1 ">
 			<span>크기조절</span>
 		</div>
 	</div>
