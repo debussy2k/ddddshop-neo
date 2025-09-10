@@ -17,8 +17,8 @@
 
 	async function autoUpdateSectionHeight() {
 		let widget = studioDoc.getWidget<SectionWidget>(section.id);
-		let height = widget.getContentHeight();
-		// updateSectionHeight(height);
+		let newHeight = widget.getContentHeight() + 'px';
+        cmdSection.updateSectionProp(section.id, { height: newHeight }, bpm.current);
 	}
 
 </script>
