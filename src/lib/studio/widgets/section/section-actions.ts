@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
 import type { DocState, Widget, Sandbox } from "../../types";
-import type { Section, SectionInput } from "./section.type";
-
+import type { Section, SectionInput, SectionPropValue } from "./section.type";
+import { bpm, type BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 
 export class SectionActions {
@@ -42,13 +42,32 @@ export class SectionActions {
         });
     }
 
-    updateSection(id: string, updates: Partial<Omit<Section, 'id'|'type'>>): DocState {
+    /*
+        id를 넘겨서 해당 section을 업데이트 함
+        prop은 제외
+    */
+    updateSection(id: string, updates: Partial<Omit<Section, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             const sectionIndex = draft.sections.findIndex(s => s.id === id);
             if (sectionIndex !== -1) {
                 draft.sections[sectionIndex] = {
                     ...draft.sections[sectionIndex],
                     ...updates
+                };
+            }
+        });
+    }
+
+    /*
+        breakPoint를 넘겨서 해당 breakPoint의 prop을 업데이트 함
+    */
+    updateSectionProp(id: string, prop: Partial<SectionPropValue>, breakPoint: BreakPoint): DocState {
+        return this.historyManager.execute((draft) => {
+            const sectionIndex = draft.sections.findIndex(s => s.id === id);
+            if (sectionIndex !== -1) {
+                draft.sections[sectionIndex].prop[breakPoint] = {
+                    ...draft.sections[sectionIndex].prop[breakPoint], 
+                    ...prop 
                 };
             }
         });

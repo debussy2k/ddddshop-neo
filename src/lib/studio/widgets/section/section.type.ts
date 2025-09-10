@@ -1,4 +1,5 @@
 import type { Widget } from '../../types';
+import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 
 export interface Section {
     id: string;
@@ -7,11 +8,12 @@ export interface Section {
     content?: any;
     children?: Widget[]; // child Widget 객체들
 
-    height: string;
-	prop: Record<"mobile" | "tablet" | "desktop", {
+	prop: Record<BreakPoint, {
 		height: string;
 	}>;
 }
+
+export type SectionPropValue = Section['prop'][keyof Section['prop']];
 
 // 섹션 생성시 사용하는 타입 (name은 선택적)
 export type SectionInput = Omit<Section, 'id' | 'type' | 'name'> & {

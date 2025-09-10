@@ -5,19 +5,20 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { Button } from "$lib/components/ui/button";
     import type SectionWidget from "./section-widget.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { section }: { section: Section } = $props();
 
     const cmdSection = new SectionActions(studioDoc.historyManager);
 
     async function updateSectionHeight(newHeight: string) {
-        cmdSection.updateSection(section.id, { height: newHeight });
+        cmdSection.updateSectionProp(section.id, { height: newHeight }, bpm.current);
     }
 
 	async function autoUpdateSectionHeight() {
 		let widget = studioDoc.getWidget<SectionWidget>(section.id);
 		let height = widget.getContentHeight();
-		updateSectionHeight(height + 'px');
+		// updateSectionHeight(height);
 	}
 
 </script>
@@ -30,7 +31,7 @@
     <div class='p-2 flex items-center gap-2'>
         <span>높이 :</span>
         <EditableSize 
-            value={section.height} 
+            value={section.prop?.[bpm.current]?.height} 
             onSave={updateSectionHeight}
             placeholder="높이 입력"
             class="w-[70px]"
