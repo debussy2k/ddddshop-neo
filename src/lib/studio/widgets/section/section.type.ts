@@ -1,4 +1,4 @@
-import type { Widget } from "../../types";
+import type { Widget } from '../../types';
 
 export interface Section {
     id: string;
@@ -8,7 +8,7 @@ export interface Section {
     children?: Widget[]; // child Widget 객체들
 
     height: string;
-	prop: Record<string, {
+	prop: Record<"mobile" | "tablet" | "desktop", {
 		height: string;
 	}>;
 }
