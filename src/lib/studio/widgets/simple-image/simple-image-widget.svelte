@@ -1,6 +1,7 @@
 <script lang="ts">
-    import type { SimpleImage } from "./simple-image-actions";
+    import type { SimpleImage } from "./simple-image.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { simpleImage }: { simpleImage: SimpleImage } = $props();
 
@@ -68,7 +69,7 @@
                     src={simpleImage.url} 
                     alt={simpleImage.alt || '이미지'}
                     class="max-w-full max-h-full object-contain rounded"
-                    style="width: {simpleImage.width || '100%'}; height: {simpleImage.height || 'auto'};"
+                    style="width: {simpleImage.prop?.[bpm.current]?.width || '100%'}; height: {simpleImage.prop?.[bpm.current]?.height || 'auto'};"
                     onerror={handleImageError}
                     onload={handleImageLoad}
                 />

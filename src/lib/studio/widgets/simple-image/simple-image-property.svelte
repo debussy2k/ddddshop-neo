@@ -1,9 +1,10 @@
 <script lang="ts">
-    import type { SimpleImage } from "./simple-image-actions";
+    import type { SimpleImage } from "./simple-image.type";
     import { SimpleImageActions } from "./simple-image-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "../../studio-doc.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { simpleImage }: { simpleImage: SimpleImage } = $props();
 
@@ -22,11 +23,11 @@
     }
 
     async function updateSimpleImageWidth(newWidth: string) {
-        cmdSimpleImage.updateSimpleImage(simpleImage.id, { width: newWidth });
+        cmdSimpleImage.updateSimpleImageProp(simpleImage.id, { width: newWidth }, bpm.current);
     }
 
     async function updateSimpleImageHeight(newHeight: string) {
-        cmdSimpleImage.updateSimpleImage(simpleImage.id, { height: newHeight });
+        cmdSimpleImage.updateSimpleImageProp(simpleImage.id, { height: newHeight }, bpm.current);
     }
 </script>
 
@@ -66,7 +67,7 @@
     <div class='p-2 flex items-center gap-2'>
         <span>너비 :</span>
         <EditableSize 
-            value={simpleImage.width || ''} 
+            value={simpleImage.prop?.[bpm.current]?.width || ''} 
             onSave={updateSimpleImageWidth}
             placeholder="예: 300px, 100%"
             class="flex-1"
@@ -76,7 +77,7 @@
     <div class='p-2 flex items-center gap-2'>
         <span>높이 :</span>
         <EditableSize 
-            value={simpleImage.height || ''} 
+            value={simpleImage.prop?.[bpm.current]?.height || ''} 
             onSave={updateSimpleImageHeight}
             placeholder="예: 200px, auto"
             class="flex-1"

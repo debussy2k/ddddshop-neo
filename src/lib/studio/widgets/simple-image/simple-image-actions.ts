@@ -1,7 +1,9 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Section } from "../../types";
-import type { SimpleImage, SimpleImageInput } from "./simple-image.type";
+import type { DocState, Section, Widget } from "../../types";
+import type { SimpleImage, SimpleImageInput, SimpleImagePropValue } from "./simple-image.type";
+import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
+
 export class SimpleImageActions {
 
     constructor(private historyManager: HistoryManager<DocState>) {
@@ -33,8 +35,20 @@ export class SimpleImageActions {
                 name: simpleImageName,
                 url: simpleImage.url || 'https://cdn.sanity.io/images/v6z6vmuj/production/3fbb8957ea4c9f043d3935ed7aab9984d259971f-500x500.png?w=500&h=500&fit=crop&auto=format',
                 alt: simpleImage.alt || '이미지',
-                width: simpleImage.width || '300px',
-                height: simpleImage.height || '200px'
+                prop: {
+                    mobile: {
+                        width: simpleImage.prop?.mobile?.width || '300px',
+                        height: simpleImage.prop?.mobile?.height || '200px'
+                    },
+                    tablet: {
+                        width: simpleImage.prop?.tablet?.width || '300px',
+                        height: simpleImage.prop?.tablet?.height || '200px'
+                    },
+                    desktop: {
+                        width: simpleImage.prop?.desktop?.width || '300px',
+                        height: simpleImage.prop?.desktop?.height || '200px'
+                    }
+                },
             };
 
             // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
@@ -64,12 +78,12 @@ export class SimpleImageActions {
         });
     }
 
-    updateSimpleImage(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'>>): DocState {
+    updateSimpleImage(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 해당 SimpleImage 찾아서 업데이트
             draft.sections.forEach(section => {
                 if (section.children) {
-                    const simpleImageIndex = section.children.findIndex(child => child.id === id);
+                    const simpleImageIndex = section.children.findIndex((child:Widget) => child.id === id);
                     if (simpleImageIndex !== -1) {
                         section.children[simpleImageIndex] = {
                             ...section.children[simpleImageIndex],
@@ -78,6 +92,18 @@ export class SimpleImageActions {
                     }
                 }
             });
+        });
+    }
+
+    updateSimpleImageProp(id: string, prop: Partial<SimpleImagePropValue>, breakPoint: BreakPoint): DocState {
+        return this.historyManager.execute((draft) => {
+            const simpleImageIndex = draft.sections.findIndex(section => section.children?.find((child:Widget) => child.id === id));
+            if (simpleImageIndex !== -1) {
+                draft.sections[simpleImageIndex].children[simpleImageIndex].prop[breakPoint] = {
+                    ...draft.sections[simpleImageIndex].children[simpleImageIndex].prop[breakPoint],
+                    ...prop
+                };
+            }
         });
     }
 }
