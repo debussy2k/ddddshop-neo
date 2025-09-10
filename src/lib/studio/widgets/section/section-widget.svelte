@@ -72,7 +72,7 @@
 			prop: { 
 				...section.prop,
 				[studioDoc.breakPoint]: { 
-					...section.prop[studioDoc.breakPoint],
+					...section.prop?.[studioDoc.breakPoint],
 					[property]: value
 				} 
 			} 
@@ -118,7 +118,7 @@
 <div 
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
-    style:height={section.prop[studioDoc.breakPoint].height}
+    style:height={section.prop?.[studioDoc.breakPoint]?.height || '100px'}
     onclick={handleClick}
     role="button"
     tabindex="0"

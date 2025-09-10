@@ -31,9 +31,9 @@
 
 </script>
 
-<div class={cn('relative bg-gray-50', className || '')}>
-    <div class='absolute bg-gray-200 border border-gray-300 inset-2 overflow-y-scroll flex justify-center'>
-        <div class='@container absolute shadow-lg shadow-gray-400' style="width:{currentResizableWidth}px;">
+<div class={cn('relative bg-gray-100', className || '')} style="box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.15);">
+    <div class='absolute inset-0 overflow-y-scroll flex justify-center' >
+        <div class='canvas @container absolute shadow-lg shadow-gray-400 mt-4 ' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
                 <SectionWidget section={section} 
                     bind:this={studioDoc.widgetMap[section.id]}
@@ -61,3 +61,16 @@
         </div>            
     </div>
 </div>
+
+<style>
+
+/* 캔버스 아래에 shadow가 잘리지 않도록 빈 공간 마련*/
+.canvas::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -16px;        /* 원래 박스 바깥으로 밀어냄 */
+    height: 16px;         /* 추가 높이 */
+}    
+</style>
