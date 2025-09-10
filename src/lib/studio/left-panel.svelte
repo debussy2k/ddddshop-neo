@@ -17,7 +17,6 @@
 
     function addSampleSection() {
         cmdSection.addSection({
-            height: '160px',
 			prop: {
 				mobile: {
 					height: '260px'
