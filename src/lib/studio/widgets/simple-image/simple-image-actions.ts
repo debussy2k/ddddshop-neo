@@ -59,7 +59,7 @@ export class SimpleImageActions {
                         section.children = [];
                     }
                     // 이미 같은 ID의 SimpleImage가 있는지 확인
-                    if (!section.children.find(child => child.id === newSimpleImage.id)) {
+                    if (!section.children.find((child:Widget) => child.id === newSimpleImage.id)) {
                         section.children.push(newSimpleImage);
                     }
                 }
@@ -72,7 +72,7 @@ export class SimpleImageActions {
             // 모든 Section에서 해당 SimpleImage 제거
             draft.sections.forEach(section => {
                 if (section.children) {
-                    section.children = section.children.filter(child => child.id !== id);
+                    section.children = section.children.filter((child:Widget) => child.id !== id);
                 }
             });
         });
