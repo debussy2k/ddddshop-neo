@@ -1,5 +1,6 @@
 import HistoryManager from "./history-manager";
 import type { DocState, Widget } from "./types";
+import { bpm } from "./breakpoint-man.svelte";
 
 export interface HistoryInfo {
     pastCount: number;
@@ -7,8 +8,6 @@ export interface HistoryInfo {
     canUndo: boolean;
     canRedo: boolean;
 }
-
-export type BreakPoint = 'desktop' | 'tablet' | 'mobile';
 
 class StudioDoc {
     private initialDoc: DocState = {
@@ -37,8 +36,6 @@ class StudioDoc {
 	getWidget<T>(id: string): T {
 		return this.widgetMap[id] as T;
 	}
-	
-    breakPoint = $state<BreakPoint>('desktop');
 
     constructor() {
         this.unsub = this.historyManager.subscribe((state) => {
@@ -77,13 +74,13 @@ class StudioDoc {
         if(!this.activeId) return null;
         
         // Section에서 찾기
-        const section = this.doc.sections.find(section => section.id === this.activeId);
+        const section = this.doc.sections.find((section: any) => section.id === this.activeId);
         if (section) return section;
         
         // 모든 Section의 children에서 Sandbox 찾기
         for (const section of this.doc.sections) {
             if (section.children) {
-                const sandbox = section.children.find(child => child.id === this.activeId);
+                const sandbox = section.children.find((child: any) => child.id === this.activeId);
                 if (sandbox) return sandbox;
             }
         }

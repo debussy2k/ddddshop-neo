@@ -8,6 +8,7 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { section }: { section: Section } = $props();
 
@@ -71,8 +72,8 @@
 		cmdSection.updateSection(section.id, { 
 			prop: { 
 				...section.prop,
-				[studioDoc.breakPoint]: { 
-					...section.prop?.[studioDoc.breakPoint],
+				[bpm.current]: { 
+					...section.prop?.[bpm.current],
 					[property]: value
 				} 
 			} 
@@ -118,7 +119,7 @@
 <div 
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
-    style:height={section.prop?.[studioDoc.breakPoint]?.height || '100px'}
+    style:height={section.prop?.[bpm.current]?.height || '100px'}
     onclick={handleClick}
     role="button"
     tabindex="0"

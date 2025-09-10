@@ -7,6 +7,7 @@
     import SectionWidget from "./widgets/section/section-widget.svelte";
     import { ResizableDiv } from "$lib/components/ui/resizable-div";
     import { getScreenInfo, type BreakPoint } from "$lib/config/screen-info.config";
+    import { bpm } from "./breakpoint-man.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -18,7 +19,7 @@
     let currentResizableWidth = $state(300);
     
 	let screenInfo = $derived(() => {
-        return getScreenInfo(studioDoc.breakPoint as BreakPoint);
+        return getScreenInfo(bpm.current as BreakPoint);
     });
 
     onMount(() => {
