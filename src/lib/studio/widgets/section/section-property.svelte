@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from "./section-actions";
+    import type { Section } from "./section.type";
     import { SectionActions } from "./section-actions";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
