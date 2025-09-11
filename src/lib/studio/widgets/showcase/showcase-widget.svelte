@@ -1,8 +1,23 @@
 <script lang="ts">
+	import { onMount } from "svelte";
     import type { Showcase } from "./showcase.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
+    import  { getShopicusAPI }  from '$lib/service/api.config';
 
     let { data: data }: { data: Showcase } = $props();
+
+	let showcaseData:any  = $state<any>({});
+
+	onMount(() => {
+		console.log('SandboxWidget mounted', data);
+		let api = getShopicusAPI();
+		api.productDataApi.shopShowcasesList({
+			code: "for_teacher"
+		}).then((res) => {
+			console.log('SandboxWidget mounted', res);
+			showcaseData = res.data;
+		});
+	});
 
     function handleClick(event: MouseEvent) {
         studioDoc.activeId = data.id;
@@ -17,10 +32,11 @@
         const activeClasses = 'bg-blue-100 hover:bg-blue-200 border-blue-600';
         const inactiveClasses = 'bg-blue-50 hover:bg-blue-100';
 
-        let mobileClass = "w-full h-[100px]";
-        let tabletClass = "@3xl:w-[200px] @3xl:h-[120px]";
+        let mobileClass = "w-full h-auto ";
+        let tabletClass = ""; //"@3xl:w-full @3xl:h-[220px]";
+		let desktopClass = ""; //"@3xl:w-full @3xl:h-auto";
 
-        return `${baseClasses} ${mobileClass} ${tabletClass} ${isActive ? activeClasses : inactiveClasses} `;
+        return `${baseClasses} ${mobileClass} ${tabletClass} ${desktopClass} ${isActive ? activeClasses : inactiveClasses} `;
     }
 
 </script>
@@ -37,9 +53,20 @@
         }
     }}
 >
-    <div class="flex flex-col items-center justify-center ">
-        <div class="text-center text-gray-700 font-medium">
-            {data.text}
-        </div>
+	<div class='text-center text-gray-700 font-medium'>
+		FOR TEACHER
+	</div>
+	<div  class='text-center text-gray-900 text-2xl'>
+		{showcaseData.desc}
+	</div>
+    <div class="grid grid-cols-4 gap-4 mt-6  @3xl:grid-cols-8">
+		{#each showcaseData.categories as item}
+			<div class='flex flex-col items-center'>
+				<div class='aspect-square'>
+					<img src={item.imageUrl} alt={item.promoText} class='object-cover' />
+				</div>
+				<div class='text-sm'>{item.promoText}</div>
+			</div>
+		{/each}
     </div>
 </div>

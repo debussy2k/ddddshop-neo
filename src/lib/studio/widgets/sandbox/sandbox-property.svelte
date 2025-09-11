@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Sandbox } from "./sandbox-actions";
+    import type { Sandbox } from "./sandbox.type";
     import { SandboxActions } from "./sandbox-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
