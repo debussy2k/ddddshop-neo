@@ -29,8 +29,8 @@
     let isActive = $derived(studioDoc.activeId === data.id);
     function getShowcaseClasses(isActive: boolean): string {
         const baseClasses = `border border-blue-400 rounded-lg p-4 cursor-pointer w-[200px] h-[100px]`;
-        const activeClasses = 'bg-blue-100 hover:bg-blue-200 border-blue-600';
-        const inactiveClasses = 'bg-blue-50 hover:bg-blue-100';
+        const activeClasses = 'bg-white border-blue-600';
+        const inactiveClasses = 'bg-white ';
 
         let mobileClass = "w-full h-auto ";
         let tabletClass = ""; //"@3xl:w-full @3xl:h-[220px]";
