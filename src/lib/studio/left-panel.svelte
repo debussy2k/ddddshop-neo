@@ -5,6 +5,7 @@
     import { cmdSection } from './command';
     import { cmdSandbox } from './command';
     import { cmdSimpleImage } from './command';
+    import { cmdShowcase } from './command';
     import LayoutBrowser from './layout-browser.svelte';
     let { width }: { width: string } = $props();
 
@@ -44,7 +45,30 @@
         if (studioDoc.activeId) {
             cmdSimpleImage.addSimpleImage({
                 parentId: studioDoc.activeId,
-                url: ''
+                url: '',
+                prop: {
+                    mobile: {
+                        width: '160px',
+                        height: '160px'
+                    },
+                    tablet: {
+                        width: '160px',
+                        height: '160px'
+                    },
+                    desktop: {
+                        width: '160px',
+                        height: '160px'
+                    }
+                }
+            });
+        }
+    }
+
+    function addShowcase() {
+        if (studioDoc.activeId) {
+            cmdShowcase.addShowcase({
+                parentId: studioDoc.activeId,
+                text: 'Showcase One'
             });
         }
     }
@@ -55,6 +79,7 @@
         <Button variant="outline" onclick={addSampleSection}>Add Section</Button>
         <Button variant="outline" onclick={addSandbox}>Add Sandbox</Button>
         <Button variant="outline" onclick={addSimpleImage}>Add SimpleImage</Button>
+		<Button variant="outline" onclick={addShowcase}>Add Showcase</Button>
     </div>
 
     <div class='p-2 mt-4'>

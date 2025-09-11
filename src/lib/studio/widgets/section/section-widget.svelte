@@ -5,6 +5,8 @@
     import { SimpleImageWidget } from "$lib/studio/widgets/simple-image";
     import type { Sandbox } from "$lib/studio/widgets/sandbox";
     import type { SimpleImage } from "$lib/studio/widgets/simple-image";
+    import type { Showcase } from "$lib/studio/widgets/showcase";
+    import { ShowcaseWidget } from "$lib/studio/widgets/showcase";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
@@ -150,6 +152,8 @@
                         {#key widgetData.id + (widgetData as SimpleImage).url}
                             <SimpleImageWidget simpleImage={widgetData as SimpleImage} />
                         {/key}
+                    {:else if (widgetData as any).type === 'showcase'}
+                        <ShowcaseWidget data={widgetData as Showcase} />
                     {/if}
                 {/each}
             </div>
