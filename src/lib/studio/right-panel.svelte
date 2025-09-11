@@ -4,7 +4,7 @@
     import SectionProperty from "./widgets/section/section-property.svelte";
     import SandboxProperty from "./widgets/sandbox/sandbox-property.svelte";
     import SimpleImageProperty from "./widgets/simple-image/simple-image-property.svelte";
-
+    import ShowcaseProperty from "./widgets/showcase/showcase-property.svelte";
 
     let { width }: { width: string } = $props();
 
@@ -23,6 +23,8 @@
             <SandboxProperty sandbox={item} />
         {:else if item.type === 'simple-image'}
             <SimpleImageProperty simpleImage={item} />
+        {:else if item.type === 'showcase'}
+            <ShowcaseProperty showcase={item} />
         {/if}
     {/if}
 </div>
