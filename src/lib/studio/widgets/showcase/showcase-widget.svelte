@@ -65,7 +65,7 @@
 				<div class='aspect-square'>
 					<img src={item.imageUrl} alt={item.promoText} class='object-cover' />
 				</div>
-				<div class='text-sm'>{item.promoText}</div>
+				<div class='text-sm whitespace-nowrap'>{item.promoText}</div>
 			</div>
 		{/each}
     </div>
