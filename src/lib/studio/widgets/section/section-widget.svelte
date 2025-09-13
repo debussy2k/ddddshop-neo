@@ -147,13 +147,19 @@
             <div class="_inner {getInnerClass()}">
                 {#each childWidgets() as widgetData (widgetData.id)}
                     {#if (widgetData as any).type === 'sandbox'}
-                        <SandboxWidget data={widgetData as Sandbox} />
+                        <SandboxWidget data={widgetData as Sandbox} 
+							bind:this={studioDoc.widgetMap[widgetData.id]}
+						/>
                     {:else if (widgetData as any).type === 'simple-image'}
                         {#key widgetData.id + (widgetData as SimpleImage).url}
-                            <SimpleImageWidget simpleImage={widgetData as SimpleImage} />
+                            <SimpleImageWidget simpleImage={widgetData as SimpleImage} 
+								bind:this={studioDoc.widgetMap[widgetData.id]}
+							/>
                         {/key}
                     {:else if (widgetData as any).type === 'showcase'}
-                        <ShowcaseWidget data={widgetData as Showcase} />
+                        <ShowcaseWidget data={widgetData as Showcase} 
+							bind:this={studioDoc.widgetMap[widgetData.id]}
+						/>
                     {/if}
                 {/each}
             </div>

@@ -8,16 +8,21 @@
 
 	let showcaseData:any  = $state<any>({});
 
-	onMount(() => {
+	onMount(async () => {
 		console.log('SandboxWidget mounted', data);
 		let api = getShopicusAPI();
-		api.productDataApi.shopShowcasesList({
-			code: "for_teacher"
-		}).then((res) => {
-			console.log('SandboxWidget mounted', res);
-			showcaseData = res.data;
-		});
+		await loadShowcaseData();
 	});
+
+	export async function loadShowcaseData () {
+		if (!data.showcaseCode || data.showcaseCode.trim() === "") return;
+
+		let api = getShopicusAPI();
+		let res = await api.productDataApi.shopShowcasesList({
+			code: data.showcaseCode
+		});
+		showcaseData = res.data;
+	}
 
     function handleClick(event: MouseEvent) {
         studioDoc.activeId = data.id;
@@ -54,7 +59,7 @@
     }}
 >
 	<div class='text-center text-gray-700 font-medium'>
-		FOR TEACHER
+		{showcaseData.title}
 	</div>
 	<div  class='text-center text-gray-900 text-2xl'>
 		{showcaseData.desc}

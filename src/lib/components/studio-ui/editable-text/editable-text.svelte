@@ -7,9 +7,10 @@
 		class?: ClassValue;
 		onSave?: (newValue: string) => void | Promise<void>;
 		placeholder?: string;
+		border?: boolean;
 	}
 
-	let { value, class: className, onSave, placeholder = "텍스트를 입력하세요" }: Props = $props();
+	let { value, class: className, onSave, placeholder = "텍스트를 입력하세요", border = false }: Props = $props();
 
 	let isEditing = $state(false);
 	let editValue = $state("");
@@ -70,7 +71,9 @@
 	/>
 {:else}
 	<span
-		class={cn("text-gray-800 truncate font-medium cursor-pointer hover:bg-gray-100 rounded px-1 py-0.5 select-none", className)}
+		class={cn("text-gray-800 truncate font-medium cursor-pointer hover:bg-gray-100 rounded px-1 py-0.5 select-none", 
+		border ? "border border-gray-200" : "",
+		className)}
 		ondblclick={startEdit}
 		role="button"
 		tabindex="0"

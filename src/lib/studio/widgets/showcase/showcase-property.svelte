@@ -3,17 +3,23 @@
     import { ShowcaseActions } from "./showcase-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
+    import type ShowcaseWidget from "./showcase-widget.svelte";
 
     let { showcase }: { showcase: Showcase } = $props();
 
     const cmdShowcase = new ShowcaseActions(studioDoc.historyManager);
 
-    async function updateShowcaseText(newText: string) {
-        cmdShowcase.updateShowcase(showcase.id, { text: newText });
-    }
-
     async function updateShowcaseName(newName: string) {
         cmdShowcase.updateShowcase(showcase.id, { name: newName });
+    }
+
+    async function updateShowcaseCode(newCode: string) {
+		console.log('showcase', showcase);
+		console.log('updateShowcaseCode', newCode);
+        await cmdShowcase.updateShowcase(showcase.id, { showcaseCode: newCode });
+
+		let widget = studioDoc.getWidget<ShowcaseWidget>(showcase.id);
+		widget.loadShowcaseData();
     }
 </script>
 
@@ -30,13 +36,14 @@
         />
     </div>
     
-    <div class='p-2 flex items-center gap-2'>
-        <span>T :</span>
-        <EditableText 
-            value={showcase.text} 
-            onSave={updateShowcaseText}
-            placeholder="표시할 텍스트"
-            class="flex-1"
+    <div class='p-2 flex flex-col gap-2'>
+        <span>쇼케이스 코드:</span>
+        <input 
+            type="text"
+            value={showcase.showcaseCode || ''} 
+            onchange={(e) => updateShowcaseCode((e.target as HTMLInputElement).value)}
+            placeholder="쇼케이스 코드를 입력하세요"
+            class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
         />
     </div>
 </div>

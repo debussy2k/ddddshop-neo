@@ -33,7 +33,7 @@ export class ShowcaseActions {
                 id: nanoid(),
                 type: 'showcase',
                 name: showcaseName,
-                text: showcase.text || '쇼케이스 텍스트'
+                showcaseCode: showcase.showcaseCode || ''
             };
 
             // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
