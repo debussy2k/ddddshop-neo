@@ -27,6 +27,10 @@
 		cmdShowcase.updateShowcaseProp(showcase.id, { titleFontSize: newFontSize }, bpm.current);
 	}
 
+	function updateShowcaseTitleFontWeight(newFontEight: string) {
+		cmdShowcase.updateShowcaseProp(showcase.id, { titleFontWeight: newFontEight }, bpm.current);
+	}
+
 </script>
 
 <div class="bg-white text-sm w-full h-full flex flex-col gap-x-2">
@@ -67,11 +71,11 @@
 				/>
 			</div>
 			<div class=''>
-				<span>폰트 스타일</span>
+				<span>폰트 두께</span>
 				<input
 					type="text"
-					value={showcase.prop?.[bpm.current]?.titleFontStyle || "normal"}
-					onchange={(e) => updateShowcaseCode((e.target as HTMLInputElement).value)}
+					value={showcase.prop?.[bpm.current]?.titleFontWeight || "normal"}
+					onchange={(e) => updateShowcaseTitleFontWeight((e.target as HTMLInputElement).value)}
 					placeholder="폰트 스타일을 입력하세요"
 					class="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
 				/>

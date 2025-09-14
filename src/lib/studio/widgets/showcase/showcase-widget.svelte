@@ -60,7 +60,7 @@
     }}
 >
 	<div class='text-center text-gray-700 font-medium'
-		style={`font-size: ${data.prop?.[bpm.current]?.titleFontSize}px; font-style: ${data.prop?.[bpm.current]?.titleFontStyle};`}
+		style={`font-size: ${data.prop?.[bpm.current]?.titleFontSize}px; font-weight: ${data.prop?.[bpm.current]?.titleFontWeight};`}
 	>
 		{showcaseData.title}
 	</div>

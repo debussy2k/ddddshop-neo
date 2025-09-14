@@ -9,9 +9,9 @@ export interface Showcase {
 	showcaseCode: string;
 	prop: Record<BreakPoint, {
 		titleFontSize: number;
-		titleFontStyle: string;
+		titleFontWeight: string;
 		descFontSize: number;
-		descFontStyle: string;
+		descFontWeight: string;
 	}>;
 }
 
