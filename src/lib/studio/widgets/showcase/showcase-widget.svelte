@@ -3,6 +3,7 @@
     import type { Showcase } from "./showcase.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import  { getShopicusAPI }  from '$lib/service/api.config';
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { data: data }: { data: Showcase } = $props();
 
@@ -58,7 +59,9 @@
         }
     }}
 >
-	<div class='text-center text-gray-700 font-medium'>
+	<div class='text-center text-gray-700 font-medium'
+		style={`font-size: ${data.prop?.[bpm.current]?.titleFontSize}px; font-style: ${data.prop?.[bpm.current]?.titleFontStyle};`}
+	>
 		{showcaseData.title}
 	</div>
 	<div  class='text-center text-gray-900 text-2xl'>

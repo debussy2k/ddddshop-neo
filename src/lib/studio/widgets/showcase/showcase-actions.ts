@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
 import type { Showcase, ShowcaseInput } from "./showcase.type";
+import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 
 export type { Showcase, ShowcaseInput };
 
@@ -28,12 +29,35 @@ export class ShowcaseActions {
             // 모든 Section의 children에서 기존 showcase 이름 검색
             const showcaseName = showcase.name?.trim() || this.generateShowcaseName(draft.sections);
             
+            const defaultProp = {
+                mobile: {
+                    titleFontSize: 16,
+                    titleFontStyle: 'normal',
+                    descFontSize: 16,
+                    descFontStyle: 'normal',
+                },
+                tablet: {
+                    titleFontSize: 16,
+                    titleFontStyle: 'normal',
+                    descFontSize: 16,
+                    descFontStyle: 'normal',
+                },
+                desktop: {
+                    titleFontSize: 16,
+                    titleFontStyle: 'normal',
+                    descFontSize: 16,
+                    descFontStyle: 'normal',
+                }
+            };
+
             const newShowcase: Showcase = {
-                ...showcase,
                 id: nanoid(),
                 type: 'showcase',
                 name: showcaseName,
-                showcaseCode: showcase.showcaseCode || ''
+                ...showcase,
+                parentId: showcase.parentId || '',
+                showcaseCode: showcase.showcaseCode || '',
+                prop: showcase.prop ? { ...defaultProp, ...showcase.prop } : defaultProp,
             };
 
             // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
@@ -63,20 +87,36 @@ export class ShowcaseActions {
         });
     }
 
-    updateShowcase(id: string, updates: Partial<Omit<Showcase, 'id'|'type'>>): DocState {
+    updateShowcase(id: string, updates: Partial<Omit<Showcase, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 해당 Showcase 찾아서 업데이트
             draft.sections.forEach(section => {
                 if (section.children) {
                     const showcaseIndex = section.children.findIndex((child: Widget) => child.id === id);
                     if (showcaseIndex !== -1) {
-                        section.children[showcaseIndex] = {
-                            ...section.children[showcaseIndex],
-                            ...updates
-                        };
+						section.children[showcaseIndex] = {
+							...section.children[showcaseIndex],
+							...updates
+						};
                     }
                 }
             });
         });
     }
+
+	updateShowcaseProp(id: string, updates: Partial<Showcase['prop'][keyof Showcase['prop']]>, breakpoint: BreakPoint): DocState {
+		return this.historyManager.execute((draft) => {
+			draft.sections.forEach(section => {
+				if (section.children) {
+					const showcaseIndex = section.children.findIndex((child: Widget) => child.id === id);
+					if (showcaseIndex !== -1) {
+						section.children[showcaseIndex].prop[breakpoint] = {
+							...section.children[showcaseIndex].prop[breakpoint],
+							...updates
+						};
+					}
+				}
+			});
+		});
+	}
 }

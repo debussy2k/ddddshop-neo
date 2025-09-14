@@ -26,10 +26,10 @@ export class SectionActions {
             const sectionName = section.name?.trim() || this.generateSectionName(draft.sections);
             
             const newSection: Section = {
-                ...section,
                 id: nanoid(),
                 type: 'section',
-                name: sectionName
+                name: sectionName,
+                ...section,
             };
 
             draft.sections.push(newSection);

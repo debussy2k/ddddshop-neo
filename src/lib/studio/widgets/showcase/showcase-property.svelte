@@ -4,6 +4,7 @@
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
     import type ShowcaseWidget from "./showcase-widget.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { showcase }: { showcase: Showcase } = $props();
 
@@ -21,6 +22,11 @@
 		let widget = studioDoc.getWidget<ShowcaseWidget>(showcase.id);
 		widget.loadShowcaseData();
     }
+
+	function updateShowcaseTitleFontSize(newFontSize: number) {
+		cmdShowcase.updateShowcaseProp(showcase.id, { titleFontSize: newFontSize }, bpm.current);
+	}
+
 </script>
 
 <div class="bg-white text-sm w-full h-full flex flex-col gap-x-2">
@@ -37,7 +43,7 @@
     </div>
     
     <div class='p-2 flex flex-col gap-2'>
-        <span>쇼케이스 코드:</span>
+        <span>쇼케이스 코드</span>
         <input 
             type="text"
             value={showcase.showcaseCode || ''} 
@@ -46,4 +52,30 @@
             class="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
         />
     </div>
+
+	<div class='p-2 mt-4 '>
+		<div>쇼케이스 제목</div>
+		<div class='space-y-4'>
+			<div class=''>
+				<span>폰트 크기</span>
+				<input
+					type="number"
+					value={showcase.prop?.[bpm.current]?.titleFontSize || 16}
+					onchange={(e) => updateShowcaseTitleFontSize((e.target as HTMLInputElement).valueAsNumber)}
+					placeholder="폰트 크기를 입력하세요"
+					class="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+				/>
+			</div>
+			<div class=''>
+				<span>폰트 스타일</span>
+				<input
+					type="text"
+					value={showcase.prop?.[bpm.current]?.titleFontStyle || "normal"}
+					onchange={(e) => updateShowcaseCode((e.target as HTMLInputElement).value)}
+					placeholder="폰트 스타일을 입력하세요"
+					class="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+				/>
+			</div>
+		</div>
+	</div>
 </div>

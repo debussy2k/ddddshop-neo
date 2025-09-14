@@ -68,7 +68,7 @@
         if (studioDoc.activeId) {
             cmdShowcase.addShowcase({
                 parentId: studioDoc.activeId,
-                showcaseCode: ""
+                showcaseCode: "for_teacher",
             });
         }
     }
