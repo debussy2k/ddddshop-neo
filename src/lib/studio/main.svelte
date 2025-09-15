@@ -2,6 +2,7 @@
     import { onDestroy, onMount } from 'svelte';
     import { browser } from '$app/environment';
     import { studioDoc } from './studio-doc.svelte';
+    import { bpm } from './breakpoint-man.svelte';
     import TopPanel from './top-panel.svelte';
     import LeftPanel from './left-panel.svelte';
     import RightPanel from './right-panel.svelte';
@@ -21,6 +22,20 @@
         ) {
             event.preventDefault();
             studioDoc.redo();
+        }
+
+        // 숫자 키로 화면 크기 전환
+        else if ((event.ctrlKey || event.metaKey) && event.key === '1') {
+            event.preventDefault();
+            bpm.current = 'desktop';
+        }
+        else if ((event.ctrlKey || event.metaKey) && event.key === '2') {
+            event.preventDefault(); 
+            bpm.current = 'tablet';
+        }
+        else if ((event.ctrlKey || event.metaKey) && event.key === '3') {
+            event.preventDefault();
+            bpm.current = 'mobile';
         }
     }
 
