@@ -24,8 +24,10 @@ export class ShowcaseActions {
         return `쇼케이스 ${maxNumber + 1}`;
     }
 
-    addShowcase(showcase: ShowcaseInput): DocState {
-        return this.historyManager.execute((draft) => {
+    addShowcase(showcase: ShowcaseInput): { id: string } {
+        const newId = nanoid();
+
+        this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 showcase 이름 검색
             const showcaseName = showcase.name?.trim() || this.generateShowcaseName(draft.sections);
             
@@ -51,7 +53,7 @@ export class ShowcaseActions {
             };
 
             const newShowcase: Showcase = {
-                id: nanoid(),
+                id: newId,
                 type: 'showcase',
                 name: showcaseName,
                 ...showcase,
@@ -74,6 +76,10 @@ export class ShowcaseActions {
                 }
             }
         });
+
+        return {
+            id: newId
+        }
     }
 
     removeShowcase(id: string): DocState {

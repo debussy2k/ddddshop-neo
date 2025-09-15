@@ -17,7 +17,7 @@
     });
 
     function addSampleSection() {
-        cmdSection.addSection({
+        const { id } = cmdSection.addSection({
 			prop: {
 				mobile: {
 					height: '260px'
@@ -30,20 +30,22 @@
 				}
 			}
         });
+        studioDoc.activeId = id;
     }
 
     function addSandbox() {
         if (studioDoc.activeId) {
-            cmdSandbox.addSandbox({
+            const { id } = cmdSandbox.addSandbox({
                 parentId: studioDoc.activeId,
                 text: 'Sandbox One'
             });
+            studioDoc.activeId = id;
         }
     }
 
     function addSimpleImage() {
         if (studioDoc.activeId) {
-            cmdSimpleImage.addSimpleImage({
+            const { id } = cmdSimpleImage.addSimpleImage({
                 parentId: studioDoc.activeId,
                 url: '',
                 prop: {
@@ -61,15 +63,17 @@
                     }
                 }
             });
+            studioDoc.activeId = id;
         }
     }
 
     function addShowcase() {
         if (studioDoc.activeId) {
-            cmdShowcase.addShowcase({
+            const { id } = cmdShowcase.addShowcase({
                 parentId: studioDoc.activeId,
                 showcaseCode: "for_teacher",
             });
+            studioDoc.activeId = id;
         }
     }
 </script>

@@ -23,14 +23,16 @@ export class SimpleImageActions {
         return `이미지 ${maxNumber + 1}`;
     }
 
-    addSimpleImage(simpleImage: SimpleImageInput): DocState {
-        return this.historyManager.execute((draft) => {
+    addSimpleImage(simpleImage: SimpleImageInput): { id: string } {
+        const newId = nanoid();
+
+        this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 simple-image 이름 검색
             const simpleImageName = simpleImage.name?.trim() || this.generateSimpleImageName(draft.sections);
             
             const newSimpleImage: SimpleImage = {
                 ...simpleImage,
-                id: nanoid(),
+                id: newId,
                 type: 'simple-image',
                 name: simpleImageName,
                 url: simpleImage.url || 'https://cdn.sanity.io/images/v6z6vmuj/production/3fbb8957ea4c9f043d3935ed7aab9984d259971f-500x500.png?w=500&h=500&fit=crop&auto=format',
@@ -65,6 +67,10 @@ export class SimpleImageActions {
                 }
             }
         });
+
+        return {
+            id: newId
+        }
     }
 
     removeSimpleImage(id: string): DocState {

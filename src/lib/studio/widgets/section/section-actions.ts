@@ -21,12 +21,14 @@ export class SectionActions {
         return `섹션 ${maxNumber + 1}`;
     }
 
-    addSection(section: SectionInput): DocState {
-        return this.historyManager.execute((draft) => {
+    addSection(section: SectionInput): { id: string } {
+        const newId = nanoid();
+
+        this.historyManager.execute((draft) => {
             const sectionName = section.name?.trim() || this.generateSectionName(draft.sections);
             
             const newSection: Section = {
-                id: nanoid(),
+                id: newId,
                 type: 'section',
                 name: sectionName,
                 ...section,
@@ -34,6 +36,10 @@ export class SectionActions {
 
             draft.sections.push(newSection);
         });
+
+        return {
+            id: newId
+        }
     }
 
     removeSection(id: string): DocState {

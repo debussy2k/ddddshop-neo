@@ -21,14 +21,16 @@ export class SandboxActions {
         return `샌드박스 ${maxNumber + 1}`;
     }
 
-    addSandbox(sandbox: SandboxInput): DocState {
-        return this.historyManager.execute((draft) => {
+    addSandbox(sandbox: SandboxInput): { id: string } {
+        const newId = nanoid();
+
+        this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 sandbox 이름 검색
             const sandboxName = sandbox.name?.trim() || this.generateSandboxName(draft.sections);
             
             const newSandbox: Sandbox = {
                 ...sandbox,
-                id: nanoid(),
+                id: newId,
                 type: 'sandbox',
                 name: sandboxName,
                 text: sandbox.text || '샌드박스 텍스트'
@@ -48,6 +50,10 @@ export class SandboxActions {
                 }
             }
         });
+
+        return {
+            id: newId
+        }
     }
 
     removeSandbox(id: string): DocState {
