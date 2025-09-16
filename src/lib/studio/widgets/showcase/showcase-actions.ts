@@ -34,21 +34,21 @@ export class ShowcaseActions {
             const defaultProp = {
                 mobile: {
                     titleFontSize: 16,
-                    titleFontStyle: 'normal',
+                    titleFontWeight: 'normal',
                     descFontSize: 16,
-                    descFontStyle: 'normal',
+                    descFontWeight: 'normal',
                 },
                 tablet: {
                     titleFontSize: 16,
-                    titleFontStyle: 'normal',
+                    titleFontWeight: 'normal',
                     descFontSize: 16,
-                    descFontStyle: 'normal',
+                    descFontWeight: 'normal',
                 },
                 desktop: {
                     titleFontSize: 16,
-                    titleFontStyle: 'normal',
+                    titleFontWeight: 'normal',
                     descFontSize: 16,
-                    descFontStyle: 'normal',
+                    descFontWeight: 'normal',
                 }
             };
 

@@ -1,7 +1,8 @@
 <script lang="ts">
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
-
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    
     let { data: data }: { data: Sandbox } = $props();
 
     function handleClick(event: MouseEvent) {
@@ -17,16 +18,14 @@
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
         const inactiveClasses = 'bg-green-50 hover:bg-green-100';
 
-        let mobileClass = "w-full h-[100px]";
-        let tabletClass = "@3xl:w-[200px] @3xl:h-[120px]";
-
-        return `${baseClasses} ${mobileClass} ${tabletClass} ${isActive ? activeClasses : inactiveClasses} `;
+        return `${baseClasses}  ${isActive ? activeClasses : inactiveClasses} `;
     }
 
 </script>
 
 <div 
     class={getSandboxClasses(isActive)}
+    style="width: {data.prop?.[bpm.current]?.width || '100%'}; height: {data.prop?.[bpm.current]?.height || 'auto'};"
     onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"

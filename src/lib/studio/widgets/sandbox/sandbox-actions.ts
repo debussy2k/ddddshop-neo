@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Section } from "../../types";
+import type { DocState, Section, Widget } from "../../types";
 import type { Sandbox, SandboxInput } from "./sandbox.type";
+import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 
 export class SandboxActions {
 
@@ -21,30 +22,46 @@ export class SandboxActions {
         return `샌드박스 ${maxNumber + 1}`;
     }
 
-    addSandbox(sandbox: SandboxInput): { id: string } {
+    addSandbox(data: SandboxInput): { id: string } {
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 sandbox 이름 검색
-            const sandboxName = sandbox.name?.trim() || this.generateSandboxName(draft.sections);
+            const sandboxName = data.name?.trim() || this.generateSandboxName(draft.sections);
             
+            const defaultProp = {
+                mobile: {
+                    width: '160px',
+                    height: '100px'
+                },
+                tablet: {
+                    width: '160px',
+                    height: '100px'
+                },
+                desktop: {
+                    width: '160px',
+                    height: '100px'
+                }
+            }
+
             const newSandbox: Sandbox = {
-                ...sandbox,
+                ...data,
                 id: newId,
                 type: 'sandbox',
                 name: sandboxName,
-                text: sandbox.text || '샌드박스 텍스트'
+                text: data.text || '샌드박스 텍스트',
+                prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
             };
 
             // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
-            if (sandbox.parentId) {
-                const section = draft.sections.find(s => s.id === sandbox.parentId);
+            if (data.parentId) {
+                const section = draft.sections.find(s => s.id === data.parentId);
                 if (section) {
                     if (!section.children) {
                         section.children = [];
                     }
                     // 이미 같은 ID의 Sandbox가 있는지 확인
-                    if (!section.children.find(child => child.id === newSandbox.id)) {
+                    if (!section.children.find((child:Widget) => child.id === newSandbox.id)) {
                         section.children.push(newSandbox);
                     }
                 }
@@ -61,7 +78,7 @@ export class SandboxActions {
             // 모든 Section에서 해당 Sandbox 제거
             draft.sections.forEach(section => {
                 if (section.children) {
-                    section.children = section.children.filter(child => child.id !== id);
+                    section.children = section.children.filter((child:Widget) => child.id !== id);
                 }
             });
         });
@@ -72,10 +89,26 @@ export class SandboxActions {
             // 모든 Section의 children에서 해당 Sandbox 찾아서 업데이트
             draft.sections.forEach(section => {
                 if (section.children) {
-                    const sandboxIndex = section.children.findIndex(child => child.id === id);
+                    const sandboxIndex = section.children.findIndex((child:Widget) => child.id === id);
                     if (sandboxIndex !== -1) {
                         section.children[sandboxIndex] = {
                             ...section.children[sandboxIndex],
+                            ...updates
+                        };
+                    }
+                }
+            });
+        });
+    }
+
+    updateSandboxProp(id: string, updates: Partial<Sandbox['prop'][keyof Sandbox['prop']]>, breakpoint: BreakPoint): DocState { 
+        return this.historyManager.execute((draft) => {
+            draft.sections.forEach(section => {
+                if (section.children) {
+                    const sandboxIndex = section.children.findIndex((child:Widget) => child.id === id);
+                    if (sandboxIndex !== -1) {
+                        section.children[sandboxIndex].prop[breakpoint] = {
+                            ...section.children[sandboxIndex].prop[breakpoint],
                             ...updates
                         };
                     }
