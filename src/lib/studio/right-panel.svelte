@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
 	import { studioDoc } from "./studio-doc.svelte";
     import SectionProperty from "./widgets/section/section-property.svelte";
+    import FrameProperty from "./widgets/frame/frame-property.svelte";
     import SandboxProperty from "./widgets/sandbox/sandbox-property.svelte";
     import SimpleImageProperty from "./widgets/simple-image/simple-image-property.svelte";
     import ShowcaseProperty from "./widgets/showcase/showcase-property.svelte";
@@ -21,6 +22,8 @@
             <SectionProperty section={item} />
         {:else if item.type === 'sandbox'}
             <SandboxProperty sandbox={item} />
+        {:else if item.type === 'frame'}
+            <FrameProperty frame={item} />
         {:else if item.type === 'simple-image'}
             <SimpleImageProperty simpleImage={item} />
         {:else if item.type === 'showcase'}

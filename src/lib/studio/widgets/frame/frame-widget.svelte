@@ -1,0 +1,54 @@
+<script lang="ts">
+    import type { Frame } from "./frame.type";
+    import { studioDoc } from "$lib/studio/studio-doc.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    
+    let { data: data }: { data: Frame } = $props();
+
+    function handleClick(event: MouseEvent) {
+        studioDoc.activeId = data.id;
+        // 이벤트 버블링 방지
+        event.stopPropagation();
+    }
+
+    // 현재 프레임이 활성화되어 있는지 확인
+    let isActive = $derived(studioDoc.activeId === data.id);
+    function getFrameClasses(isActive: boolean): string {
+        const baseClasses = `cursor-pointer transition-all duration-100 bg-white`;
+        const activeClasses = 'ring-2 ring-blue-500 ring-offset-2';
+        const inactiveClasses = 'hover:ring-1 hover:ring-gray-300';
+
+        return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+    }
+
+    // 현재 breakpoint에 맞는 스타일 가져오기
+    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
+        width: '200px',
+        height: '150px',
+        padding: '16px'
+    });
+
+</script>
+
+<div 
+    class={getFrameClasses(isActive)}
+    style="width: {currentProp.width}; height: {currentProp.height}; padding: {currentProp.padding};"
+    onclick={(e) => handleClick(e as MouseEvent)}
+    role="button"
+    tabindex="0"
+    onkeydown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick(e as unknown as MouseEvent);
+        }
+    }}
+>
+    <div class="flex flex-col items-center justify-center h-full">
+        <div class="text-center text-gray-600 font-medium text-sm">
+            {data.name}
+        </div>
+        <div class="text-center text-gray-400 text-xs mt-1">
+            Frame
+        </div>
+    </div>
+</div>

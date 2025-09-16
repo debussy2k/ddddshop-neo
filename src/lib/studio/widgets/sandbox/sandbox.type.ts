@@ -14,6 +14,6 @@ export interface Sandbox {
 
 export type SandboxPropValue = Sandbox['prop'][keyof Sandbox['prop']];
 // Sandbox 생성시 사용하는 타입 (name은 선택적)
-export type SandboxInput = Omit<Sandbox, 'id' | 'type' | 'name'> & {
+export type SandboxInput = Partial<Omit<Sandbox, 'id' | 'type' | 'name'> & {
     name?: string;
-};
+}>;

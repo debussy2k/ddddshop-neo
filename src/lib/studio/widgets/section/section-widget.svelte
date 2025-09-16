@@ -3,8 +3,10 @@
     import { SandboxWidget } from "$lib/studio/widgets/sandbox";
     import { cmdSection } from "$lib/studio/command";
     import { SimpleImageWidget } from "$lib/studio/widgets/simple-image";
+    import { FrameWidget } from "$lib/studio/widgets/frame";
     import type { Sandbox } from "$lib/studio/widgets/sandbox";
     import type { SimpleImage } from "$lib/studio/widgets/simple-image";
+    import type { Frame } from "$lib/studio/widgets/frame";
     import type { Showcase } from "$lib/studio/widgets/showcase";
     import { ShowcaseWidget } from "$lib/studio/widgets/showcase";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
@@ -146,7 +148,11 @@
         {#if childWidgets().length > 0}
             <div class="_inner {getInnerClass()}">
                 {#each childWidgets() as widgetData (widgetData.id)}
-                    {#if (widgetData as any).type === 'sandbox'}
+                    {#if (widgetData as any).type === 'frame'}
+                        <FrameWidget data={widgetData as Frame} 
+							bind:this={studioDoc.widgetMap[widgetData.id]}
+						/>
+                    {:else if (widgetData as any).type === 'sandbox'}
                         <SandboxWidget data={widgetData as Sandbox} 
 							bind:this={studioDoc.widgetMap[widgetData.id]}
 						/>

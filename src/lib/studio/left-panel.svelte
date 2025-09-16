@@ -2,10 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
     import { onMount } from 'svelte';
     import { studioDoc } from './studio-doc.svelte';
-    import { cmdSection } from './command';
-    import { cmdSandbox } from './command';
-    import { cmdSimpleImage } from './command';
-    import { cmdShowcase } from './command';
+    import { cmdSection, cmdFrame, cmdSandbox, cmdSimpleImage, cmdShowcase } from './command';
     import LayoutBrowser from './layout-browser.svelte';
     let { width }: { width: string } = $props();
 
@@ -33,11 +30,21 @@
         studioDoc.activeId = id;
     }
 
+    function addFrame() {
+
+        if (studioDoc.activeId) {
+            const { id } = cmdFrame.addFrame({
+                parentId: studioDoc.activeId,
+            });
+            studioDoc.activeId = id;
+        }
+    }
+
     function addSandbox() {
         if (studioDoc.activeId) {
             const { id } = cmdSandbox.addSandbox({
                 parentId: studioDoc.activeId,
-                text: 'Sandbox One'
+                text: 'Sandbox One',
             });
             studioDoc.activeId = id;
         }
@@ -80,10 +87,14 @@
 
 <div class="bg-white text-sm h-full flex flex-col" style={style}>
     <div>
-        <Button variant="outline" onclick={addSampleSection}>Add Section</Button>
-        <Button variant="outline" onclick={addSandbox}>Add Sandbox</Button>
-        <Button variant="outline" onclick={addSimpleImage}>Add SimpleImage</Button>
-		<Button variant="outline" onclick={addShowcase}>Add Showcase</Button>
+        생성
+    </div>
+    <div>
+        <Button variant="outline" onclick={addSampleSection}>Section</Button>
+        <Button variant="outline" onclick={addFrame}>Frame</Button>
+        <Button variant="outline" onclick={addSandbox}>Sandbox</Button>
+        <Button variant="outline" onclick={addSimpleImage}>Image</Button>
+		<Button variant="outline" onclick={addShowcase}>Showcase</Button>
     </div>
 
     <div class='p-2 mt-4'>
