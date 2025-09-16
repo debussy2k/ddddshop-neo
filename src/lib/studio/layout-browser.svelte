@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { studioDoc } from "./studio-doc.svelte";
     import type { Section, Widget } from "./types";
-    import { cmdSection, cmdSandbox, cmdSimpleImage } from "./command";
+    import { cmdSection, cmdSandbox, cmdSimpleImage, cmdFrame } from "./command";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 
@@ -20,6 +20,9 @@
     function deleteWidget(widget: Widget) {
         // Widget 타입에 따라 적절한 삭제 함수 호출
         switch ((widget as any).type) {
+			case 'frame':
+				cmdFrame.removeFrame(widget.id);
+				break;
             case 'sandbox':
                 cmdSandbox.removeSandbox(widget.id);
                 break;
@@ -38,6 +41,9 @@
     async function updateWidgetName(widget: Widget, newName: string) {
         // Widget 타입에 따라 적절한 업데이트 함수 호출
         switch ((widget as any).type) {
+			case 'frame':
+				cmdFrame.updateFrame(widget.id, { name: newName });
+				break;
             case 'sandbox':
                 cmdSandbox.updateSandbox(widget.id, { name: newName });
                 break;
