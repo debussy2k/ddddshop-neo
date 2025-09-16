@@ -1,9 +1,44 @@
 <script lang="ts">
+	import { onMount } from "svelte";
     import type { Frame } from "./frame.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-    
+	import interact from 'interactjs'
+	import type { DragEvent } from '@interactjs/types'
+	import { cmdFrame } from "$lib/studio/command";
+	import { util } from "$lib/studio/util";
+
+	let element: HTMLElement;
     let { data: data }: { data: Frame } = $props();
+	let position = {x:0, y:0};
+
+	onMount(() => {
+		setupDraggable();
+	});
+
+	function setupDraggable() {
+		interact(element).draggable({
+			listeners: {
+				start: (event: DragEvent) => {
+					position.x = util.getNumberPart(currentProp.left);
+					position.y = util.getNumberPart(currentProp.top);
+					studioDoc.historyManager.setBatchMode();
+				},
+				move: (event: DragEvent) => {
+					position.x += event.dx;
+					position.y += event.dy;
+					cmdFrame.updateFrameProp(data.id, { 
+							left: position.x + 'px', 
+							top: position.y + 'px' 
+						}
+						, bpm.current);
+				},
+				end: (event: DragEvent) => {
+					studioDoc.historyManager.commitBatch();
+				}
+			}
+		});
+	}
 
     function handleClick(event: MouseEvent) {
         studioDoc.activeId = data.id;
@@ -44,6 +79,7 @@
 </script>
 
 <div 
+	bind:this={element}
     class={getFrameClasses(isActive)}
     style={getCurrentStyle()}
     onclick={(e) => handleClick(e as MouseEvent)}
