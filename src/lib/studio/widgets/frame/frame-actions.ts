@@ -29,18 +29,27 @@ export class FrameActions {
             // 모든 Section의 children에서 기존 frame 이름 검색
             const frameName = data.name?.trim() || this.generateFrameName(draft.sections);
             
-            const defaultProp = {
+            const defaultProp:Frame['prop'] = {
                 mobile: {
+                    layout: 'block',
+                    left: '10px',
+                    top: '10px',
                     width: '200px',
                     height: '150px',
                     padding: '16px'
                 },
                 tablet: {
+                    layout: 'block',
+                    left: '10px',
+                    top: '10px',
                     width: '200px',
                     height: '150px',
                     padding: '16px'
                 },
                 desktop: {
+                    layout: 'block',
+                    left: '10px',
+                    top: '10px',
                     width: '200px',
                     height: '150px',
                     padding: '16px'
@@ -52,10 +61,6 @@ export class FrameActions {
                 id: newId,
                 type: 'frame',
                 name: frameName,
-                backgroundColor: data.backgroundColor || '#ffffff',
-                borderColor: data.borderColor || '#e5e7eb',
-                borderWidth: data.borderWidth || '1px',
-                borderRadius: data.borderRadius || '8px',
                 prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
             };
 

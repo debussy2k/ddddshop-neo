@@ -6,7 +6,9 @@ export interface Frame {
     name: string;
     parentId?: string; // Section의 child로 사용될 때의 부모 ID
     prop: Record<BreakPoint, {
-        layout: "freeform" | "horizontal" | "vertical";
+        layout: "block" | "flex-row" | "flex-col";
+        left: string;
+        top: string;
         width: string;
         height: string;
         padding: string;
