@@ -22,6 +22,7 @@
 		"@sveltejs/kit": "^2.22.0",
 		"@sveltejs/vite-plugin-svelte": "^6.0.0",
 		"@tailwindcss/vite": "^4.0.0",
+		"@types/sortablejs": "^1.15.8",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
@@ -48,14 +49,13 @@
 		]
 	},
 	"dependencies": {
-		"@interactjs/actions": "^1.10.27",
-		"@interactjs/interact": "^1.10.27",
-		"@interactjs/modifiers": "^1.10.27",
 		"@zerodevx/svelte-json-view": "^1.0.11",
 		"clsx": "^2.1.1",
 		"immer": "^10.1.1",
+		"interactjs": "^1.10.27",
 		"nanoid": "^5.1.5",
 		"neverthrow": "^8.2.0",
+		"sortablejs": "^1.15.6",
 		"tailwind-merge": "^3.3.1"
 	}
 }
