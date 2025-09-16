@@ -46,6 +46,11 @@
 
 		interact(element).resizable({
 			edges: { top: true, left: true, bottom: true, right: true },
+			modifiers: [
+				interact.modifiers.restrictSize({
+					min: { width: 10, height: 10 }
+				})
+			],
 			listeners: {
 				start: (event: ResizeEvent) => {
 					studioDoc.historyManager.setBatchMode();
@@ -69,12 +74,7 @@
 				end: (event: ResizeEvent) => {
 					studioDoc.historyManager.commitBatch();
 				}
-			},
-			modifiers: [
-				interact.modifiers.restrictSize({
-					min: { width: 50, height: 50 }
-				})
-			]
+			}
 		});
 	}
 
@@ -131,11 +131,6 @@
     }}
 >
     <div class="flex flex-col items-center justify-center h-full">
-        <div class="text-center text-gray-600 font-medium text-sm">
-            {data.name}
-        </div>
-        <div class="text-center text-gray-400 text-xs mt-1">
-            Frame
-        </div>
+
     </div>
 </div>
