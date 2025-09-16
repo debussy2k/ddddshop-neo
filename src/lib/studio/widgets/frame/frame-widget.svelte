@@ -14,7 +14,7 @@
     // 현재 프레임이 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === data.id);
     function getFrameClasses(isActive: boolean): string {
-        const baseClasses = `cursor-pointer transition-all duration-100 bg-white`;
+        const baseClasses = `es-frame-widget cursor-pointer bg-white`;
         const activeClasses = 'ring-2 ring-blue-500 ring-offset-2';
         const inactiveClasses = 'hover:ring-1 hover:ring-gray-300';
 
@@ -28,11 +28,24 @@
         padding: '16px'
     });
 
+    function getCurrentStyle() {
+        let style = `
+            position: absolute;
+            left: ${currentProp.left};
+            top: ${currentProp.top};
+            width: ${currentProp.width};
+            height: ${currentProp.height};
+            padding: ${currentProp.padding};
+        `;
+
+        return style;
+    }
+
 </script>
 
 <div 
     class={getFrameClasses(isActive)}
-    style="width: {currentProp.width}; height: {currentProp.height}; padding: {currentProp.padding};"
+    style={getCurrentStyle()}
     onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"

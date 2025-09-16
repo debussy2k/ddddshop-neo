@@ -106,7 +106,7 @@
 		}
 		
 		// 하위 위젯들의 실제 높이 계산
-		const childWidgetContainer = contentContainer.querySelector('._inner');
+		const childWidgetContainer = contentContainer.querySelector('.es-section-widget-inner');
 		if (!childWidgetContainer) {
 			return paddingTop + paddingBottom + borderTop + borderBottom + 16; // 기본 패딩
 		}
@@ -146,7 +146,7 @@
     <div class="_outer relative p-2">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class="_inner {getInnerClass()}">
+            <div class="es-section-widget-inner {getInnerClass()}">
                 {#each childWidgets() as widgetData (widgetData.id)}
                     {#if (widgetData as any).type === 'frame'}
                         <FrameWidget data={widgetData as Frame} 

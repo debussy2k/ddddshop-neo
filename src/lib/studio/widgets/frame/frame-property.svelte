@@ -14,6 +14,13 @@
         cmdFrame.updateFrame(frame.id, { name: newName });
     }
 
+    async function updateFrameLeft(newLeft: string) {
+        cmdFrame.updateFrameProp(frame.id, { left: newLeft }, bpm.current);
+    }
+    async function updateFrameTop(newTop: string) {
+        cmdFrame.updateFrameProp(frame.id, { top: newTop }, bpm.current);
+    }
+
     async function updateFrameWidth(newWidth: string) {
         cmdFrame.updateFrameProp(frame.id, { width: newWidth }, bpm.current);
     }
@@ -39,7 +46,36 @@
             class="flex-1"
         />
     </div>
-    
+
+    <!-- <div class='p-2 flex items-center gap-2'>
+        <span>레이아웃 :</span>
+        <EditableSelect 
+            value={frame.prop[bpm.current]?.layout || 'block'}
+            onSave={updateFrameLayout}
+            placeholder="block"
+            class="flex-1"
+        />
+    </div> -->
+
+    <div class='p-2 flex items-center gap-2'>
+        <span>X :</span>
+        <EditableSize 
+            value={frame.prop[bpm.current]?.left || '10px'}
+            onSave={updateFrameLeft}
+            placeholder="10px"
+            class="flex-1"
+        />
+    </div>
+
+    <div class='p-2 flex items-center gap-2'>
+        <span>Y :</span>
+        <EditableSize 
+            value={frame.prop[bpm.current]?.top || '10px'}
+            onSave={updateFrameTop}
+            placeholder="10px"
+            class="flex-1"
+        />
+    </div>
     <div class='p-2 flex items-center gap-2'>
         <span>너비 :</span>
         <EditableSize 
