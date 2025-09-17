@@ -35,17 +35,22 @@ export namespace wui {
                     position.x = util.getNumberPart(currentProp.left);
                     position.y = util.getNumberPart(currentProp.top);
                     studioDoc.historyManager.setBatchMode();
+                    event.stopPropagation();
                 },
                 move: (event: DragEvent) => {
+                    // console.log('move', event);
                     position.x += event.dx;
                     position.y += event.dy;
                     config.updateCallback(config.id, {
                         left: position.x + 'px',
                         top: position.y + 'px'
                     });
+                    // console.log('move', position);
+                    event.stopPropagation();
                 },
                 end: (event: DragEvent) => {
                     studioDoc.historyManager.commitBatch();
+                    event.stopPropagation();
                 }
             }
         });

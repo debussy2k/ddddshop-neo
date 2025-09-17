@@ -157,7 +157,8 @@ class HistoryManager<T extends Record<string, any>> {
 			pastCount: this.history.past.length,
 			futureCount: this.history.future.length,
 			canUndo: this.canUndo(),
-			canRedo: this.canRedo()
+			canRedo: this.canRedo(),
+			currentMode: this.currentMode
 		};
 	}
 
@@ -287,7 +288,7 @@ class HistoryManager<T extends Record<string, any>> {
 		// 배치 상태 초기화
 		this.batchStartState = null;
 		this.currentMode = HistoryMode.RECORD;
-
+		this.notifyListeners();
 
 		return this.history.present;
 	}
@@ -302,11 +303,11 @@ class HistoryManager<T extends Record<string, any>> {
 
 		// 배치 시작점으로 상태 복원
 		this.history.present = this.batchStartState;
-		this.notifyListeners();
 
 		// 배치 상태 초기화
 		this.batchStartState = null;
 		this.currentMode = HistoryMode.RECORD;
+		this.notifyListeners();
 
 		return this.history.present;
 	}
@@ -333,7 +334,7 @@ class HistoryManager<T extends Record<string, any>> {
 				if (!this.redo()) break;
 			}
 		}
-		
+		this.notifyListeners();
 		return this.history.present;
 	}
 }

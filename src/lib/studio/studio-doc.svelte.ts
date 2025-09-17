@@ -1,4 +1,4 @@
-import HistoryManager from "./history-manager";
+import HistoryManager, { HistoryMode } from "./history-manager";
 import type { DocState, Widget } from "./types";
 import { du } from "./widgets/common/doc-util";
 
@@ -7,6 +7,7 @@ export interface HistoryInfo {
     futureCount: number;
     canUndo: boolean;
     canRedo: boolean;
+    currentMode: HistoryMode;
 }
 
 class StudioDoc {
@@ -24,7 +25,8 @@ class StudioDoc {
         pastCount: 0,
         futureCount: 0,
         canUndo: false,
-        canRedo: false
+        canRedo: false,
+        currentMode: HistoryMode.RECORD
     });
 
 	// 현재 활성화 되어있는 항목 id
@@ -55,6 +57,7 @@ class StudioDoc {
         this._historyInfo.futureCount = info.futureCount;
         this._historyInfo.canUndo = info.canUndo;
         this._historyInfo.canRedo = info.canRedo;
+        this._historyInfo.currentMode = info.currentMode;
     }
 
     // 반드시 어디에선가의 onDestory에서 호출되어야 함.
