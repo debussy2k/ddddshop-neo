@@ -88,18 +88,10 @@ export class SandboxActions {
 
     updateSandbox(id: string, updates: Partial<Omit<Sandbox, 'id'|'type'|'prop'|'parentId'>>): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section의 children에서 해당 Sandbox 찾아서 업데이트
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    const sandboxIndex = section.children.findIndex((child:Widget) => child.id === id);
-                    if (sandboxIndex !== -1) {
-                        section.children[sandboxIndex] = {
-                            ...section.children[sandboxIndex],
-                            ...updates
-                        };
-                    }
-                }
-            });
+			const widget = du.findById(id, draft);
+			if (widget) {
+				Object.assign(widget, updates);
+			}
         });
     }
 
