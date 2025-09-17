@@ -38,14 +38,12 @@ export namespace wui {
                     event.stopPropagation();
                 },
                 move: (event: DragEvent) => {
-                    // console.log('move', event);
                     position.x += event.dx;
                     position.y += event.dy;
                     config.updateCallback(config.id, {
                         left: position.x + 'px',
                         top: position.y + 'px'
                     });
-                    // console.log('move', position);
                     event.stopPropagation();
                 },
                 end: (event: DragEvent) => {

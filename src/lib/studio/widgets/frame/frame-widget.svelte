@@ -70,6 +70,7 @@
     });
 
     function getCurrentStyle() {
+        console.log('currentProp', currentProp);
         let style = `
             position: absolute;
             left: ${currentProp.left};

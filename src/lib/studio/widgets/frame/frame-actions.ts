@@ -82,12 +82,6 @@ export class FrameActions {
 
     removeFrame(id: string): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section에서 해당 Frame 제거
-            // draft.sections.forEach(section => {
-            //     if (section.children) {
-            //         section.children = section.children.filter((child:Widget) => child.id !== id);
-            //     }
-            // });
             let widget = du.findById(id, draft);
             if (widget) {
                 let parent = du.findById(widget.parentId, draft);
@@ -100,34 +94,23 @@ export class FrameActions {
 
     updateFrame(id: string, updates: Partial<Omit<Frame, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section의 children에서 해당 Frame 찾아서 업데이트
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    const frameIndex = section.children.findIndex((child:Widget) => child.id === id);
-                    if (frameIndex !== -1) {
-                        section.children[frameIndex] = {
-                            ...section.children[frameIndex],
-                            ...updates
-                        };
-                    }
-                }
-            });
+            let widget = du.findById(id, draft);
+
+            if (widget) {
+                Object.assign(widget, updates);
+            }
         });
     }
 
     updateFrameProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    const frameIndex = section.children.findIndex((child:Widget) => child.id === id);
-                    if (frameIndex !== -1) {
-                        section.children[frameIndex].prop[breakpoint] = {
-                            ...section.children[frameIndex].prop[breakpoint],
-                            ...updates
-                        };
-                    }
-                }
-            });
+            const widget = du.findById(id, draft);
+            if (widget) {
+                widget.prop[breakpoint] = {
+                    ...widget.prop[breakpoint],
+                    ...updates
+                };
+            }
         });
     }
 }
