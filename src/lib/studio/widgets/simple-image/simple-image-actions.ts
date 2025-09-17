@@ -3,17 +3,34 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
 import type { SimpleImage, SimpleImageInput, SimpleImagePropValue } from "./simple-image.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
+import { du } from '../common/doc-util';
 
 export class SimpleImageActions {
 
     constructor(private historyManager: HistoryManager<DocState>) {
     }
 
-    // 자동 SimpleImage 이름 생성 - 모든 Section의 children에서 SimpleImage 검색
-    private generateSimpleImageName(sections: Section[]): string {
-        const allSimpleImages = sections.flatMap(section => section.children || []);
+    // 자동 SimpleImage 이름 생성 - 모든 위젯에서 SimpleImage 검색
+    private generateSimpleImageName(draft: DocState): string {
+        const allSimpleImages: Widget[] = [];
+        
+        // 재귀적으로 모든 위젯에서 simple-image 찾기
+        function findSimpleImages(widgets: Widget[] | undefined) {
+            if (!widgets) return;
+            
+            for (const widget of widgets) {
+                if (widget.type === 'simple-image') {
+                    allSimpleImages.push(widget);
+                }
+                if ('children' in widget && widget.children) {
+                    findSimpleImages(widget.children);
+                }
+            }
+        }
+        
+        findSimpleImages(draft.sections);
+        
         const simpleImageNumbers = allSimpleImages
-            .filter(s => s.type === 'simple-image')
             .map(s => s.name)
             .filter(name => /^이미지 \d+$/.test(name))
             .map(name => parseInt(name.replace('이미지 ', '')))
@@ -23,48 +40,50 @@ export class SimpleImageActions {
         return `이미지 ${maxNumber + 1}`;
     }
 
-    addSimpleImage(simpleImage: SimpleImageInput): { id: string } {
+    addSimpleImage(data: SimpleImageInput): { id: string } {
+        if (!data.parentId) {
+            throw new Error('parentId is required');
+        }
+        
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
-            // 모든 Section의 children에서 기존 simple-image 이름 검색
-            const simpleImageName = simpleImage.name?.trim() || this.generateSimpleImageName(draft.sections);
+            // 모든 위젯에서 기존 simple-image 이름 검색
+            const simpleImageName = data.name?.trim() || this.generateSimpleImageName(draft);
             
             const newSimpleImage: SimpleImage = {
-                ...simpleImage,
+                ...data,
                 id: newId,
                 type: 'simple-image',
                 name: simpleImageName,
-                url: simpleImage.url || 'https://cdn.sanity.io/images/v6z6vmuj/production/3fbb8957ea4c9f043d3935ed7aab9984d259971f-500x500.png?w=500&h=500&fit=crop&auto=format',
-                alt: simpleImage.alt || '이미지',
+                parentId: data.parentId,
+                url: data.url || 'https://cdn.sanity.io/images/v6z6vmuj/production/3fbb8957ea4c9f043d3935ed7aab9984d259971f-500x500.png?w=500&h=500&fit=crop&auto=format',
+                alt: data.alt || '이미지',
                 prop: {
                     mobile: {
-                        width: simpleImage.prop?.mobile?.width || '300px',
-                        height: simpleImage.prop?.mobile?.height || '200px'
+                        left: data.prop?.mobile?.left || '10px',
+                        top: data.prop?.mobile?.top || '10px',
+                        width: data.prop?.mobile?.width || '300px',
+                        height: data.prop?.mobile?.height || '200px'
                     },
                     tablet: {
-                        width: simpleImage.prop?.tablet?.width || '300px',
-                        height: simpleImage.prop?.tablet?.height || '200px'
+                        left: data.prop?.tablet?.left || '10px',
+                        top: data.prop?.tablet?.top || '10px',
+                        width: data.prop?.tablet?.width || '300px',
+                        height: data.prop?.tablet?.height || '200px'
                     },
                     desktop: {
-                        width: simpleImage.prop?.desktop?.width || '300px',
-                        height: simpleImage.prop?.desktop?.height || '200px'
+                        left: data.prop?.desktop?.left || '10px',
+                        top: data.prop?.desktop?.top || '10px',
+                        width: data.prop?.desktop?.width || '300px',
+                        height: data.prop?.desktop?.height || '200px'
                     }
                 },
             };
 
-            // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
-            if (simpleImage.parentId) {
-                const section = draft.sections.find(s => s.id === simpleImage.parentId);
-                if (section) {
-                    if (!section.children) {
-                        section.children = [];
-                    }
-                    // 이미 같은 ID의 SimpleImage가 있는지 확인
-                    if (!section.children.find((child:Widget) => child.id === newSimpleImage.id)) {
-                        section.children.push(newSimpleImage);
-                    }
-                }
+            const widget = du.findById(data.parentId, draft);
+            if (widget && 'children' in widget && widget.children) {
+                widget.children.push(newSimpleImage);
             }
         });
 
@@ -75,39 +94,32 @@ export class SimpleImageActions {
 
     removeSimpleImage(id: string): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section에서 해당 SimpleImage 제거
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    section.children = section.children.filter((child:Widget) => child.id !== id);
+            const widget = du.findById(id, draft);
+            if (widget) {
+                const parent = du.findById(widget.parentId, draft);
+                if (parent && 'children' in parent && parent.children) {
+                    parent.children = parent.children.filter((child: Widget) => child.id !== id);
                 }
-            });
+            }
         });
     }
 
-    updateSimpleImage(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'|'prop'>>): DocState {
+    updateSimpleImage(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'|'prop'|'parentId'>>): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section의 children에서 해당 SimpleImage 찾아서 업데이트
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    const simpleImageIndex = section.children.findIndex((child:Widget) => child.id === id);
-                    if (simpleImageIndex !== -1) {
-                        section.children[simpleImageIndex] = {
-                            ...section.children[simpleImageIndex],
-                            ...updates
-                        };
-                    }
-                }
-            });
+            const widget = du.findById(id, draft);
+            if (widget) {
+                Object.assign(widget, updates);
+            }
         });
     }
 
-    updateSimpleImageProp(id: string, prop: Partial<SimpleImagePropValue>, breakPoint: BreakPoint): DocState {
+    updateSimpleImageProp(id: string, updates: Partial<SimpleImagePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
-            const simpleImageIndex = draft.sections.findIndex(section => section.children?.find((child:Widget) => child.id === id));
-            if (simpleImageIndex !== -1) {
-                draft.sections[simpleImageIndex].children[simpleImageIndex].prop[breakPoint] = {
-                    ...draft.sections[simpleImageIndex].children[simpleImageIndex].prop[breakPoint],
-                    ...prop
+            const widget = du.findById(id, draft);
+            if (widget) {
+                widget.prop[breakpoint] = {
+                    ...widget.prop[breakpoint],
+                    ...updates
                 };
             }
         });

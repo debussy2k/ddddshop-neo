@@ -7,6 +7,8 @@ export interface SimpleImage {
     alt?: string;
     parentId: string; // Section의 child로 사용될 때의 부모 ID
     prop: Record<BreakPoint, {
+        left: string;
+        top: string;
         width: string;
         height: string;
     }>;

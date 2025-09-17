@@ -2,17 +2,55 @@
     import type { SimpleImage } from "./simple-image.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    import { wui } from "$lib/studio/widgets/common/wui";
+    import { onMount } from "svelte";
+    import { cmdSimpleImage } from "$lib/studio/command";
 
-    let { simpleImage }: { simpleImage: SimpleImage } = $props();
+    let element: HTMLElement;
+    let { data: data }: { data: SimpleImage } = $props();
+
+    let isActive = $derived(studioDoc.activeId === data.id);
+
+    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
+        left: '10px',
+        top: '10px',
+        width: '300px',
+        height: '200px'
+    });
+
+    onMount(() => {
+        setupDraggable();
+        setupResizable();
+    });
+
+    function setupDraggable() {
+        wui.setupDraggable({
+            id: data.id,
+            element: element,
+            getCurrentProp: () => currentProp,
+            updateCallback: (id, position) => {
+                console.log('position', position);
+                cmdSimpleImage.updateSimpleImageProp(id, position, bpm.current);
+            }
+        });
+    }
+
+    function setupResizable() {
+        wui.setupResizable({
+            id: data.id,
+            element: element,
+            getCurrentProp: () => currentProp,
+            updateCallback: (id, dimensions) => {
+                cmdSimpleImage.updateSimpleImageProp(id, dimensions, bpm.current);
+            }
+        });
+    }
 
     function handleClick(event: MouseEvent) {
-        studioDoc.activeId = simpleImage.id;
+        studioDoc.activeId = data.id;
         // 이벤트 버블링 방지
         event.stopPropagation();
     }
-
-    // 현재 이미지가 활성화되어 있는지 확인
-    let isActive = $derived(studioDoc.activeId === simpleImage.id);
 
     // 이미지 로드 오류 상태
     let imageError = $state(false);
@@ -29,14 +67,33 @@
     function handleImageLoad() {
         imageError = false;
     }
+
+    function getSimpleImageClasses(isActive: boolean): string {
+        const baseClasses = `border border-blue-400 rounded-lg p-2 cursor-pointer min-w-[200px] min-h-[120px]`;
+        const activeClasses = 'bg-blue-100 hover:bg-blue-200 border-blue-600';
+        const inactiveClasses = 'bg-blue-50 hover:bg-blue-100';
+
+        return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+    }
+
+    function getCurrentStyle() {
+        console.log('currentProp', currentProp);
+        let style = `
+            position: absolute;
+            left: ${currentProp.left || '10px'};
+            top: ${currentProp.top || '10px'};
+            width: ${currentProp.width};
+            height: ${currentProp.height};
+        `;
+
+        return style;
+    }
 </script>
 
 <div 
-    class={`border border-blue-400 rounded-lg p-2 cursor-pointer min-w-[200px] min-h-[120px] ${
-        isActive 
-            ? 'bg-blue-100 hover:bg-blue-200 border-blue-600' 
-            : 'bg-blue-50 hover:bg-blue-100'
-    }`}
+    bind:this={element}
+    class={getSimpleImageClasses(isActive)}
+    style={getCurrentStyle()}
     onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"
@@ -47,9 +104,9 @@
         }
     }}
 >
-    <div class="flex flex-col items-center">
-        {#if !simpleImage.url || simpleImage.url.trim() === ''}
-            <div class="flex flex-col items-center justify-center text-gray-400 p-4">
+    <div class="flex flex-col items-center h-full">
+        {#if !data.url || data.url.trim() === ''}
+            <div class="flex flex-col items-center justify-center text-gray-400 p-4 flex-1">
                 <svg class="w-12 h-12 mb-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                 </svg>
@@ -57,26 +114,25 @@
                 <!-- <span class="text-xs">URL을 입력하세요</span> -->
             </div>
         {:else if imageError}
-            <div class="flex flex-col items-center justify-center text-gray-500 p-4">
+            <div class="flex flex-col items-center justify-center text-gray-500 p-4 flex-1">
                 <svg class="w-8 h-8 mb-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                 </svg>
                 <span class="text-xs">이미지 로드 실패</span>
             </div>
         {:else}
-            <!-- {#key simpleImage.url} -->
+            <div class="flex-1 flex items-center justify-center w-full">
                 <img 
-                    src={simpleImage.url} 
-                    alt={simpleImage.alt || '이미지'}
-                    class="max-w-full max-h-full object-contain rounded"
-                    style="width: {simpleImage.prop?.[bpm.current]?.width || '100%'}; height: {simpleImage.prop?.[bpm.current]?.height || 'auto'};"
+                    src={data.url} 
+                    alt={data.alt || '이미지'}
+                    class="max-w-full max-h-full object-contain rounded user-select-none"
                     onerror={handleImageError}
                     onload={handleImageLoad}
                 />
-            <!-- {/key} -->
+            </div>
         {/if}
-        <div class="text-center text-gray-700 font-medium text-xs mt-2 truncate w-full">
-            {simpleImage.name}
+        <div class="text-center text-gray-700 font-medium text-xs mt-2 truncate w-full user-select-none">
+            {data.name}
         </div>
     </div>
 </div>

@@ -33,7 +33,7 @@
 	{:else if (widgetData as any).type === 'simple-image'}
 		{#key widgetData.id + (widgetData as SimpleImage).url}
 			<SimpleImageWidget 
-				simpleImage={widgetData as SimpleImage} 
+				data={widgetData as SimpleImage} 
 				bind:this={studioDoc.widgetMap[widgetData.id]}
 			/>
 		{/key}
