@@ -8,6 +8,8 @@
 
 	let element: HTMLElement;
     let { data: data }: { data: Frame } = $props();
+    // 현재 프레임이 활성화되어 있는지 확인
+    let isActive = $derived(studioDoc.activeId === data.id);
 
 	onMount(() => {
 		setupDraggable();
@@ -42,8 +44,6 @@
         event.stopPropagation();
     }
 
-    // 현재 프레임이 활성화되어 있는지 확인
-    let isActive = $derived(studioDoc.activeId === data.id);
     function getFrameClasses(isActive: boolean): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white`;
         const activeClasses = 'ring-2 ring-blue-500 ring-offset-2';
