@@ -72,7 +72,7 @@
 
 		<!-- 히스토리 정보 표시 (선택사항) -->
 		<div class="text-xs text-gray-500 ml-2">
-			{historyInfo.pastCount}/{historyInfo.pastCount + historyInfo.futureCount}
+			p:{historyInfo.pastCount} f:{historyInfo.futureCount} -- pf:{historyInfo.pastCount}/{historyInfo.pastCount + historyInfo.futureCount}
 		</div>        
 	</div>
 	

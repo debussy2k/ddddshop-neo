@@ -49,13 +49,17 @@ class HistoryManager<T extends Record<string, any>> {
 		// 변경사항이 있는 경우에만 처리
 		if (patches.length > 0) {
 			this.history.present = nextState;
+			
+			// 새로운 변경사항이 발생하면 모든 모드에서 future를 클리어
+			// (undo 후에 새로운 변경을 하면 이전 future는 무효화됨)
+			this.history.future = [];
+			
 			this.notifyListeners();
 
 			// 현재 기록 모드에 따른 히스토리 처리
 			switch (this.currentMode) {
 				case HistoryMode.RECORD:
 					// 즉시 히스토리에 기록
-					this.history.future = [];
 					this.history.past.push({ patches, inversePatches });
 					
 					if (this.history.past.length > this.maxHistorySize) {
@@ -282,6 +286,8 @@ class HistoryManager<T extends Record<string, any>> {
 
 		// 배치 상태 초기화
 		this.batchStartState = null;
+		this.currentMode = HistoryMode.RECORD;
+
 
 		return this.history.present;
 	}
@@ -300,6 +306,7 @@ class HistoryManager<T extends Record<string, any>> {
 
 		// 배치 상태 초기화
 		this.batchStartState = null;
+		this.currentMode = HistoryMode.RECORD;
 
 		return this.history.present;
 	}
