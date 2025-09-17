@@ -3,8 +3,6 @@
     import type { Frame } from "./frame.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-	import interact from 'interactjs'
-	import type { ResizeEvent } from '@interactjs/types'
 	import { cmdFrame } from "$lib/studio/command";
 	import { util } from "$lib/studio/util";
 	import { wui } from "$lib/studio/widgets/wui";
@@ -29,38 +27,12 @@
 	}
 
 	function setupResizable() {
-		let rect = { width: 0, height: 0, left: 0, top: 0 };
-
-		interact(element).resizable({
-			edges: { top: true, left: true, bottom: true, right: true },
-			modifiers: [
-				interact.modifiers.restrictSize({
-					min: { width: 10, height: 10 }
-				})
-			],
-			listeners: {
-				start: (event: ResizeEvent) => {
-					studioDoc.historyManager.setBatchMode();
-					rect.width = util.getNumberPart(currentProp.width);
-					rect.height = util.getNumberPart(currentProp.height);
-					rect.left = util.getNumberPart(currentProp.left);
-					rect.top = util.getNumberPart(currentProp.top);
-				},
-				move: (event: ResizeEvent) => {
-					rect.width += event.deltaRect?.width || 0;
-					rect.height += event.deltaRect?.height || 0;
-					rect.left += event.deltaRect?.left || 0;
-					rect.top += event.deltaRect?.top || 0;
-					cmdFrame.updateFrameProp(data.id, {
-						width: rect.width + 'px',
-						height: rect.height + 'px',
-						left: rect.left + 'px',
-						top: rect.top + 'px'
-					}, bpm.current);
-				},
-				end: (event: ResizeEvent) => {
-					studioDoc.historyManager.commitBatch();
-				}
+		wui.setupResizable({
+			id: data.id,
+			element: element,
+			getCurrentProp: () => currentProp,
+			updateCallback: (id, dimensions) => {
+				cmdFrame.updateFrameProp(id, dimensions, bpm.current);
 			}
 		});
 	}
