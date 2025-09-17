@@ -12,6 +12,12 @@
     let { data: data }: { data: Frame } = $props();
     // 현재 프레임이 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === data.id);
+    // 현재 breakpoint에 맞는 스타일 가져오기
+    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
+        width: '200px',
+        height: '150px',
+        padding: '16px'
+    });
 
 	onMount(() => {
 		setupDraggable();
@@ -62,12 +68,6 @@
         return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
     }
 
-    // 현재 breakpoint에 맞는 스타일 가져오기
-    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
-        width: '200px',
-        height: '150px',
-        padding: '16px'
-    });
 
     function getCurrentStyle() {
         console.log('currentProp', currentProp);

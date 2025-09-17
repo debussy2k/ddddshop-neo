@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
-import type { Sandbox, SandboxInput } from "./sandbox.type";
+import type { Sandbox, SandboxInput, SandboxPropValue } from "./sandbox.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 import { du } from '../common/doc-util';
 
@@ -35,14 +35,20 @@ export class SandboxActions {
             
             const defaultProp = {
                 mobile: {
+                    left: '10px',
+                    top: '10px',
                     width: '160px',
                     height: '100px'
                 },
                 tablet: {
+                    left: '10px',
+                    top: '10px',
                     width: '160px',
                     height: '100px'
                 },
                 desktop: {
+                    left: '10px',
+                    top: '10px',
                     width: '160px',
                     height: '100px'
                 }
@@ -97,19 +103,15 @@ export class SandboxActions {
         });
     }
 
-    updateSandboxProp(id: string, updates: Partial<Sandbox['prop'][keyof Sandbox['prop']]>, breakpoint: BreakPoint): DocState { 
+    updateSandboxProp(id: string, updates: Partial<SandboxPropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    const sandboxIndex = section.children.findIndex((child:Widget) => child.id === id);
-                    if (sandboxIndex !== -1) {
-                        section.children[sandboxIndex].prop[breakpoint] = {
-                            ...section.children[sandboxIndex].prop[breakpoint],
-                            ...updates
-                        };
-                    }
-                }
-            });
+            const widget = du.findById(id, draft);
+            if (widget) {
+                widget.prop[breakpoint] = {
+                    ...widget.prop[breakpoint],
+                    ...updates
+                };
+            }
         });
     }
 }
