@@ -4,7 +4,6 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
-	import { util } from "$lib/studio/util";
 	import { wui } from "$lib/studio/widgets/wui";
 
 	let element: HTMLElement;
