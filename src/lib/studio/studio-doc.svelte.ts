@@ -1,6 +1,6 @@
 import HistoryManager from "./history-manager";
 import type { DocState, Widget } from "./types";
-import { bpm } from "./breakpoint-man.svelte";
+import { du } from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
     pastCount: number;
@@ -73,19 +73,7 @@ class StudioDoc {
     get activeItem() {
         if(!this.activeId) return null;
         
-        // Section에서 찾기
-        const section = this.doc.sections.find((section: any) => section.id === this.activeId);
-        if (section) return section;
-        
-        // 모든 Section의 children에서 Sandbox 찾기
-        for (const section of this.doc.sections) {
-            if (section.children) {
-                const sandbox = section.children.find((child: any) => child.id === this.activeId);
-                if (sandbox) return sandbox;
-            }
-        }
-        
-        return null;
+        return du.findById(this.activeId, this.doc);
     }
 
     // 편의 메서드들 (화살표 함수로 this 바인딩)

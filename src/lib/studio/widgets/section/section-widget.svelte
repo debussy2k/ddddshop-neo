@@ -60,26 +60,9 @@
 		return `w-full ${mobileClass} ${desktopClass}`;
 	}
 
-	// function prependSizeVariant(classString: string, sizeVariant: string) {
-	// 	return classString.split(/\s+/).map(cls => `${sizeVariant}${cls}`).join(' ');
-	// }
-
-	// 범용 섹션 속성 업데이트 헬퍼 함수
-	function updateSectionProperty(property: string, value: any) {
-		cmdSection.updateSection(section.id, { 
-			prop: { 
-				...section.prop,
-				[bpm.current]: { 
-					...section.prop?.[bpm.current],
-					[property]: value
-				} 
-			} 
-		});
-	}
-
 	// 편의 함수들
 	function updateSectionHeight(newHeight: number) {
-		updateSectionProperty('height', toPixelValue(newHeight));
+        cmdSection.updateSectionProp(section.id, { height: toPixelValue(newHeight) }, bpm.current);
 	}
 
 	export function getContentHeight() {

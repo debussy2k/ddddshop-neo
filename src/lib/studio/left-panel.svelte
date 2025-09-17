@@ -10,23 +10,11 @@
 
     onMount(() => {
         console.log('LeftPanel mounted');
-        addSampleSection();
+        addSection();
     });
 
-    function addSampleSection() {
-        const { id } = cmdSection.addSection({
-			prop: {
-				mobile: {
-					height: '260px'
-				},
-				tablet: {
-					height: '360px'
-				},
-				desktop: {
-					height: '460px'
-				}
-			}
-        });
+    function addSection() {
+        const { id } = cmdSection.addSection({});
         studioDoc.activeId = id;
     }
 
@@ -90,7 +78,7 @@
         생성
     </div>
     <div>
-        <Button variant="outline" onclick={addSampleSection}>Section</Button>
+        <Button variant="outline" onclick={addSection}>Section</Button>
         <Button variant="outline" onclick={addFrame}>Frame</Button>
         <Button variant="outline" onclick={addSandbox}>Sandbox</Button>
         <Button variant="outline" onclick={addSimpleImage}>Image</Button>

@@ -21,17 +21,32 @@ export class SectionActions {
         return `섹션 ${maxNumber + 1}`;
     }
 
-    addSection(section: SectionInput): { id: string } {
+    addSection(data: SectionInput): { id: string } {
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
-            const sectionName = section.name?.trim() || this.generateSectionName(draft.sections);
+            const sectionName = data.name?.trim() || this.generateSectionName(draft.sections);
             
+            let defaultProp:Section['prop'] = {
+				mobile: {
+					height: '260px'
+				},
+				tablet: {
+					height: '360px'
+				},
+				desktop: {
+					height: '460px'
+				}
+            }
+
             const newSection: Section = {
                 id: newId,
                 type: 'section',
                 name: sectionName,
-                ...section,
+                parentId: "",
+                children: [],
+                prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
+                ...data,
             };
 
             draft.sections.push(newSection);

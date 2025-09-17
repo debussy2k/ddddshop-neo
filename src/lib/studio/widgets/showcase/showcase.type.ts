@@ -16,4 +16,6 @@ export interface Showcase {
 }
 
 export type ShowcasePropValue = Showcase['prop'][keyof Showcase['prop']];
-export type ShowcaseInput = Partial<Omit<Showcase, 'id' | 'type'>>;
+export type ShowcaseInput = Partial<Omit<Showcase, 'id' | 'type'>> & {
+    parentId: string;
+};

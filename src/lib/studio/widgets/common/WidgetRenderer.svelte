@@ -10,16 +10,16 @@
 	import type { Frame } from "$lib/studio/widgets/frame";
 	import type { Showcase } from "$lib/studio/widgets/showcase";
 	import { studioDoc } from "$lib/studio/studio-doc.svelte";
-
+	import type { Widget } from "$lib/studio/types";
 	interface Props {
-		widgets: any[];
+		widgets: Widget[] | undefined;
 		class?: ClassValue;
 	}
 
 	let { widgets, class: className }: Props = $props();
 </script>
 
-{#each widgets as widgetData (widgetData.id)}
+{#each widgets || [] as widgetData (widgetData.id)}
 	{#if (widgetData as any).type === 'frame'}
 		<FrameWidget 
 			data={widgetData as Frame} 

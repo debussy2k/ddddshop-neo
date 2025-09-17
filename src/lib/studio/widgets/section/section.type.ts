@@ -6,7 +6,8 @@ export interface Section {
     type: 'section';
     name: string;
     content?: any;
-    children?: Widget[]; // child Widget 객체들
+    parentId: string;
+    children: Widget[]; // child Widget 객체들
 
 	prop: Record<BreakPoint, {
 		height: string;
@@ -16,6 +17,6 @@ export interface Section {
 export type SectionPropValue = Section['prop'][keyof Section['prop']];
 
 // 섹션 생성시 사용하는 타입 (name은 선택적)
-export type SectionInput = Omit<Section, 'id' | 'type' | 'name'> & {
+export type SectionInput = Partial<Omit<Section, 'id' | 'type' | 'name' | 'children' | 'parentId'>> & {
     name?: string;
 };

@@ -3,6 +3,7 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
 import type { Sandbox, SandboxInput } from "./sandbox.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
+import { du } from '../common/doc-util';
 
 export class SandboxActions {
 
@@ -23,8 +24,11 @@ export class SandboxActions {
     }
 
     addSandbox(data: SandboxInput): { id: string } {
+        if (!data.parentId) {
+            throw new Error('parentId is required');
+        }
+        
         const newId = nanoid();
-
         this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 sandbox 이름 검색
             const sandboxName = data.name?.trim() || this.generateSandboxName(draft.sections);
@@ -49,22 +53,14 @@ export class SandboxActions {
                 id: newId,
                 type: 'sandbox',
                 name: sandboxName,
+                parentId: data.parentId,
                 text: data.text || '샌드박스 텍스트',
                 prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
             };
 
-            // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
-            if (data.parentId) {
-                const section = draft.sections.find(s => s.id === data.parentId);
-                if (section) {
-                    if (!section.children) {
-                        section.children = [];
-                    }
-                    // 이미 같은 ID의 Sandbox가 있는지 확인
-                    if (!section.children.find((child:Widget) => child.id === newSandbox.id)) {
-                        section.children.push(newSandbox);
-                    }
-                }
+            const widget = du.findById(data.parentId, draft);
+            if (widget && 'children' in widget && widget.children) {
+                widget.children.push(newSandbox);
             }
         });
 
@@ -84,7 +80,7 @@ export class SandboxActions {
         });
     }
 
-    updateSandbox(id: string, updates: Partial<Omit<Sandbox, 'id'|'type'>>): DocState {
+    updateSandbox(id: string, updates: Partial<Omit<Sandbox, 'id'|'type'|'prop'|'parentId'>>): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 해당 Sandbox 찾아서 업데이트
             draft.sections.forEach(section => {

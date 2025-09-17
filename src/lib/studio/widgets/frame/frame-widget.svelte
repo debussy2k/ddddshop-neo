@@ -4,7 +4,9 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
-	import { wui } from "$lib/studio/widgets/wui";
+	import { wui } from "$lib/studio/widgets/common/wui";
+    import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
+
 
 	let element: HTMLElement;
     let { data: data }: { data: Frame } = $props();
@@ -44,6 +46,14 @@
         event.stopPropagation();
     }
 
+    function handleKeyDown(e: KeyboardEvent) {
+        if (e.key === 'Delete') {
+            e.preventDefault();
+            e.stopPropagation();
+            cmdFrame.removeFrame(data.id);
+        }
+    }
+
     function getFrameClasses(isActive: boolean): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white`;
         const activeClasses = 'ring-2 ring-blue-500 ring-offset-2';
@@ -81,14 +91,9 @@
     onclick={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"
-    onkeydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick(e as unknown as MouseEvent);
-        }
-    }}
+    onkeydown={handleKeyDown}
 >
     <div class="flex flex-col items-center justify-center h-full">
-
+        <WidgetRenderer widgets={data.children} />
     </div>
 </div>

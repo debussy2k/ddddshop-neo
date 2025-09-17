@@ -1,8 +1,9 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
-import type { Frame, FrameInput } from "./frame.type";
+import type { Frame, FrameInput, FramePropValue } from "./frame.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
+import { du } from '../common/doc-util';
 
 export class FrameActions {
 
@@ -61,20 +62,15 @@ export class FrameActions {
                 id: newId,
                 type: 'frame',
                 name: frameName,
+                children: [],
                 prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
             };
 
             // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
             if (data.parentId) {
-                const section = draft.sections.find(s => s.id === data.parentId);
-                if (section) {
-                    if (!section.children) {
-                        section.children = [];
-                    }
-                    // 이미 같은 ID의 Frame이 있는지 확인
-                    if (!section.children.find((child:Widget) => child.id === newFrame.id)) {
-                        section.children.push(newFrame);
-                    }
+                const widget = du.findById(data.parentId, draft);
+                if (widget && 'children' in widget && widget.children) {
+                    widget.children.push(newFrame);
                 }
             }
         });
@@ -87,15 +83,22 @@ export class FrameActions {
     removeFrame(id: string): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section에서 해당 Frame 제거
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    section.children = section.children.filter((child:Widget) => child.id !== id);
+            // draft.sections.forEach(section => {
+            //     if (section.children) {
+            //         section.children = section.children.filter((child:Widget) => child.id !== id);
+            //     }
+            // });
+            let widget = du.findById(id, draft);
+            if (widget) {
+                let parent = du.findById(widget.parentId, draft);
+                if (parent && 'children' in parent && parent.children) {
+                    parent.children = parent.children.filter((child:Widget) => child.id !== id);
                 }
-            });
+            }
         });
     }
 
-    updateFrame(id: string, updates: Partial<Omit<Frame, 'id'|'type'>>): DocState {
+    updateFrame(id: string, updates: Partial<Omit<Frame, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 해당 Frame 찾아서 업데이트
             draft.sections.forEach(section => {
@@ -112,7 +115,7 @@ export class FrameActions {
         });
     }
 
-    updateFrameProp(id: string, updates: Partial<Frame['prop'][keyof Frame['prop']]>, breakpoint: BreakPoint): DocState { 
+    updateFrameProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
             draft.sections.forEach(section => {
                 if (section.children) {
