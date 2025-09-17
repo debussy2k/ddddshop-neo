@@ -77,12 +77,13 @@ export class SandboxActions {
 
     removeSandbox(id: string): DocState {
         return this.historyManager.execute((draft) => {
-            // 모든 Section에서 해당 Sandbox 제거
-            draft.sections.forEach(section => {
-                if (section.children) {
-                    section.children = section.children.filter((child:Widget) => child.id !== id);
+            const widget = du.findById(id, draft);
+            if (widget) {
+                const parent = du.findById(widget.parentId, draft);
+                if (parent && 'children' in parent && parent.children) {
+                    parent.children = parent.children.filter((child: Widget) => child.id !== id);
                 }
-            });
+            }
         });
     }
 
