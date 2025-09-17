@@ -4,9 +4,10 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import interact from 'interactjs'
-	import type { DragEvent, ResizeEvent } from '@interactjs/types'
+	import type { ResizeEvent } from '@interactjs/types'
 	import { cmdFrame } from "$lib/studio/command";
 	import { util } from "$lib/studio/util";
+	import { wui } from "$lib/studio/widgets/wui";
 
 	let element: HTMLElement;
     let { data: data }: { data: Frame } = $props();
@@ -17,26 +18,12 @@
 	});
 
 	function setupDraggable() {
-		let position = {x:0, y:0};
-		interact(element).draggable({
-			listeners: {
-				start: (event: DragEvent) => {
-					position.x = util.getNumberPart(currentProp.left);
-					position.y = util.getNumberPart(currentProp.top);
-					studioDoc.historyManager.setBatchMode();
-				},
-				move: (event: DragEvent) => {
-					position.x += event.dx;
-					position.y += event.dy;
-					cmdFrame.updateFrameProp(data.id, { 
-							left: position.x + 'px', 
-							top: position.y + 'px' 
-						}
-						, bpm.current);
-				},
-				end: (event: DragEvent) => {
-					studioDoc.historyManager.commitBatch();
-				}
+		wui.setupDraggable({
+			id: data.id,
+			element: element,
+            getCurrentProp: () => currentProp,
+			updateCallback: (id, position) => {
+				cmdFrame.updateFrameProp(id, position, bpm.current);
 			}
 		});
 	}
