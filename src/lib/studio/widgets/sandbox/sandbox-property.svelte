@@ -7,7 +7,7 @@
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
-    import ComboBox from "../common/combo-box.svelte";
+    import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
 
     let { sandbox }: { sandbox: Sandbox } = $props();
     const cmdSandbox = new SandboxActions(studioDoc.historyManager);
@@ -22,7 +22,7 @@
     }
 
     async function updateSandboxHorzAlign(newHorzAlign: HorizontalAlign) {
-        // cmdSandbox.updateSandbox(sandbox.id, { horzAlign: newHorzAlign });
+        cmdSandbox.updateSandboxProp(sandbox.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
     async function updateSandboxVertAlign(newVertAlign: VerticalAlign) {
@@ -67,8 +67,8 @@
 
         <div class='flex gap-x-2 mt-2'>
 			<div class='w-1/2 space-y-2'>
-				<ComboBox class='' options={['Left', 'Right',"Left + Right"]} value={currentProp.horzAlign} onChange={updateSandboxHorzAlign}/>
-				<ComboBox class='' options={['Top', 'Bottom',"Top + Bottom"]} value={currentProp.vertAlign} onChange={updateSandboxVertAlign}/>
+				<HorzAlignComboBox value={currentProp.horzAlign} onChange={updateSandboxHorzAlign}/>
+				<!-- <ComboBox class='' options={['Top', 'Bottom',"Top + Bottom"]} value={currentProp.vertAlign} onChange={updateSandboxVertAlign}/> -->
 			</div>
 			<div class='w-1/2'>
 				
