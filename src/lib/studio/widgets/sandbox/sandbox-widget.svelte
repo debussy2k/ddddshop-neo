@@ -82,8 +82,8 @@
         }
     }}
 >
-    <div class="flex flex-col items-center justify-center ">
-        <div class="text-center text-gray-700 font-medium user-select-none">
+    <div class="flex flex-col items-center justify-center select-none">
+        <div class="text-center text-gray-700 font-medium">
             {data.text}
         </div>
     </div>

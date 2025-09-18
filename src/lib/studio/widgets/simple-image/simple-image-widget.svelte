@@ -26,7 +26,6 @@
             element: element,
             getCurrentProp: () => currentProp,
             updateCallback: (id, position) => {
-                console.log('position', position);
                 cmdSimpleImage.updateSimpleImageProp(id, position, bpm.current);
             }
         });
@@ -114,13 +113,13 @@
                 <img 
                     src={data.url} 
                     alt={data.alt || '이미지'}
-                    class="max-w-full max-h-full object-contain rounded user-select-none"
+                    class="max-w-full max-h-full object-contain rounded select-none"
                     onerror={handleImageError}
                     onload={handleImageLoad}
                 />
             </div>
         {/if}
-        <div class="text-center text-gray-700 font-medium text-xs mt-2 truncate w-full user-select-none">
+        <div class="text-center text-gray-700 font-medium text-xs mt-2 truncate w-full select-none">
             {data.name}
         </div>
     </div>
