@@ -20,5 +20,5 @@ export namespace du {
         }
 
         return _find(draft.sections, id);
-    }    
+    }
 }

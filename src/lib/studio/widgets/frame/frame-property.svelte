@@ -5,6 +5,7 @@
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    import LayoutSelector from "../common/layout-selector.svelte";
 
     let { frame }: { frame: Frame } = $props();
 
@@ -105,5 +106,8 @@
             class="flex-1"
         />
     </div>
-    
+
+    <div class='p-2 mt-2'>
+        <LayoutSelector layout={frame.prop[bpm.current]?.layout} />
+    </div>
 </div>
