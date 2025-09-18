@@ -37,13 +37,12 @@
     <div>
         레이아웃
     </div>
-    <div role="radiogroup" class="flex gap-2 w-full">
+    <div role="radiogroup" class="flex gap-2 w-full bg-gray-100 rounded-sm">
         {#each options as option}
             <label
                 class="flex items-center justify-center flex-1 cursor-pointer transition-colors
-            border border-gray-300 bg-white relative
-            hover:bg-blue-50 hover:border-blue-300
-            [&.selected]:bg-blue-100 [&.selected]:border-blue-500"
+                    bg-gray-100 relative rounded-sm box-border
+                    [&.selected]:bg-white border border-gray-100 [&.selected]:border-gray-200"
                 class:selected={layout === option.id}
                 title={option.label}
             >

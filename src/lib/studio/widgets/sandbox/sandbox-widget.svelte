@@ -6,7 +6,7 @@
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
     import { du } from "$lib/studio/widgets/common/doc-util";
-
+    import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     
 	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
@@ -87,5 +87,9 @@
             {data.text}
         </div>
     </div>
+
+    {#if isActive}
+        <SizeTip prop={currentProp} />
+    {/if}
 </div>
 
