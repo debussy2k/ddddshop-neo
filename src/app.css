@@ -118,4 +118,15 @@
   body {
     @apply bg-background text-foreground;
   }
+
+	::selection {
+		@apply bg-blue-300;
+		color: inherit; /* 텍스트 색상은 원래대로 유지 */
+	}
+	  
+	::-moz-selection { /* Firefox를 위한 설정 */
+		@apply bg-blue-300;
+		color: inherit;
+	}
+
 }
