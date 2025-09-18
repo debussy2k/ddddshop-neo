@@ -15,6 +15,7 @@
 		{ label: 'Left', value: 'Left' },
 		{ label: 'Right', value: 'Right' },
 		{ label: 'Left + Right', value: 'Left + Right' },
+		{ label: 'Center', value: 'Center' },
 		{ label: 'Scale', value: 'Scale' },
 	];
 </script>
