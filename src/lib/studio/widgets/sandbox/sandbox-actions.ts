@@ -38,19 +38,25 @@ export class SandboxActions {
                     left: '10px',
                     top: '10px',
                     width: '160px',
-                    height: '100px'
+                    height: '100px',
+                    horzAlign: 'Left',
+                    vertAlign: 'Top'
                 },
                 tablet: {
                     left: '10px',
                     top: '10px',
                     width: '160px',
-                    height: '100px'
+                    height: '100px',
+                    horzAlign: 'Left',
+                    vertAlign: 'Top'
                 },
                 desktop: {
                     left: '10px',
                     top: '10px',
                     width: '160px',
-                    height: '100px'
+                    height: '100px',
+                    horzAlign: 'Left',
+                    vertAlign: 'Top'
                 }
             }
 

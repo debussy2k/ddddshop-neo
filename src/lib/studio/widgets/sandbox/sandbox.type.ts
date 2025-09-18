@@ -11,6 +11,8 @@ export interface Sandbox {
         top: string;
         width: string;
         height: string;
+        horzAlign: string;
+        vertAlign: string;
     }>;
 }
 
