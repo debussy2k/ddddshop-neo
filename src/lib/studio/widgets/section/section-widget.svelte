@@ -12,11 +12,10 @@
     let sectionElement = $state<HTMLElement>();
     let isHovered = $state(false);
 
-    function handleClick() {
+    function handleMoutdown(e?: MouseEvent) {
         studioDoc.activeId = section.id;
 		// studioDoc.activeWidget에 현재 지금의  svelte component 객체를 넣어줌
 		// studioDoc.activeWidget = section;
-
     }
 
     function handleMouseEnter() {
@@ -30,7 +29,7 @@
 	function  keydown(e: KeyboardEvent) {
 		if (e.key === 'Enter' || e.key === ' ') {
 			e.preventDefault();
-			handleClick();
+			handleMoutdown();
 		}
 	}
 
@@ -46,8 +45,8 @@
     function getSectionClasses(isActive: boolean): string {
         const baseClasses = `relative cursor-pointer overflow-visible`;
 
-        const activeClasses = 'bg-blue-200 hover:bg-blue-300 border-solid';
-        const inactiveClasses = 'bg-red-100 hover:bg-red-200';
+        const activeClasses = 'outline outline-blue-400';
+        const inactiveClasses = '';
         
         return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
     }
@@ -100,7 +99,7 @@
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
     style:height={section.prop?.[bpm.current]?.height || '100px'}
-    onclick={handleClick}
+    onmousedown={handleMoutdown}
     role="button"
     tabindex="0"
     onkeydown={keydown}

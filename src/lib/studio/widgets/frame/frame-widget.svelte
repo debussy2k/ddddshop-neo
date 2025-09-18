@@ -49,7 +49,7 @@
 		});
 	}
 
-    function handleClick(event: MouseEvent) {
+    function handleMoutdown(event: MouseEvent) {
         studioDoc.activeId = data.id;
         // 이벤트 버블링 방지
         event.stopPropagation();
@@ -64,9 +64,9 @@
     }
 
     function getFrameClasses(isActive: boolean): string {
-        const baseClasses = `es-frame-widget cursor-pointer bg-white`;
-        const activeClasses = 'ring-2 ring-blue-500 ring-offset-2';
-        const inactiveClasses = 'hover:ring-1 hover:ring-gray-300';
+        const baseClasses = `es-frame-widget cursor-pointer bg-white `;
+        const activeClasses = 'outline outline-blue-400';
+        const inactiveClasses = 'hover:outline hover:outline-gray-200';
 
         return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
     }
@@ -103,7 +103,7 @@
 	bind:this={element}
     class={getFrameClasses(isActive)}
     style={getCurrentStyle()}
-    onclick={(e) => handleClick(e as MouseEvent)}
+    onmousedown={(e) => handleMoutdown(e as MouseEvent)}
     role="button"
     tabindex="0"
     onkeydown={handleKeyDown}

@@ -3,12 +3,12 @@
     import { SandboxActions } from "./sandbox-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
+    import { bpm } from "../../breakpoint-man.svelte";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
-    import { bpm } from "../../breakpoint-man.svelte";
+    import InputVal from "../common/input-val.svelte";
 
     let { sandbox }: { sandbox: Sandbox } = $props();
-
     const cmdSandbox = new SandboxActions(studioDoc.historyManager);
     let currentProp = $derived(sandbox.prop?.[bpm.current]);
 
@@ -25,7 +25,7 @@
     }
 </script>
 
-<div class="bg-white text-sm w-full h-full flex flex-col gap-x-2">
+<div class="relative bg-white text-sm w-full h-full flex flex-col gap-x-2">
     <div class='border-b border-gray-200 py-2 px-4'>샌드박스</div>
     
     <div class='p-2 flex items-center gap-2'>
@@ -50,9 +50,14 @@
 
     <div class='p-2 mt-2 text-xs'>
         <div class="my-2">위치</div>
-        <div class="flex items-center gap-2 w-full">
+        <div class="flex items-center gap-2">
             <HorzAlignSelector align={"left"} class='flex-1'/>
             <VertAlignSelector align={"top"} class='flex-1'/>
+        </div>
+
+        <div class='flex gap-x-2 mt-2'>
+            <InputVal class='' name='X' value={currentProp.left}/>
+            <InputVal class='' name='Y' value={currentProp.top}/>
         </div>
     </div>
     

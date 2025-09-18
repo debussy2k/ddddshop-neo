@@ -54,7 +54,7 @@
     }
 
     function getSandboxClasses(isActive: boolean): string {
-        const baseClasses = `border border-green-400 rounded-lg p-4 cursor-pointer w-[200px] h-[100px]`;
+        const baseClasses = `border border-green-400 p-4 cursor-pointer w-[200px] h-[100px]`;
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
         const inactiveClasses = 'bg-green-50 hover:bg-green-100';
 
@@ -72,15 +72,9 @@
     bind:this={element}
     class={getSandboxClasses(isActive)}
     style={getCurrentStyle()}
-    onclick={(e) => handleClick(e as MouseEvent)}
+    onmousedown={(e) => handleClick(e as MouseEvent)}
     role="button"
     tabindex="0"
-    onkeydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick(e as any);
-        }
-    }}
 >
     <div class="flex flex-col items-center justify-center select-none">
         <div class="text-center text-gray-700 font-medium">

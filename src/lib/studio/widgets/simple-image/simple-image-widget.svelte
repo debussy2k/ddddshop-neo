@@ -42,7 +42,7 @@
         });
     }
 
-    function handleClick(event: MouseEvent) {
+    function handleMoutdown(event: MouseEvent) {
         studioDoc.activeId = data.id;
         // 이벤트 버블링 방지
         event.stopPropagation();
@@ -82,15 +82,9 @@
     bind:this={element}
     class={getSimpleImageClasses(isActive)}
     style={getCurrentStyle()}
-    onclick={(e) => handleClick(e as MouseEvent)}
+    onmousedown={(e) => handleMoutdown(e as MouseEvent)}
     role="button"
     tabindex="0"
-    onkeydown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            handleClick(e as any);
-        }
-    }}
 >
     <div class="flex flex-col items-center h-full">
         {#if !data.url || data.url.trim() === ''}
