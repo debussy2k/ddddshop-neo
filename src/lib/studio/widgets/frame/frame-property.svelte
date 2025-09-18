@@ -9,6 +9,7 @@
     import LayoutSelector from "../common/layout-selector.svelte";
 
     let { frame }: { frame: Frame } = $props();
+    let currentProp = $derived(frame.prop?.[bpm.current]);
 
     const cmdFrame = new FrameActions(studioDoc.historyManager);
 
@@ -113,6 +114,6 @@
     </div>
 
     <div class='p-2 mt-2'>
-        <LayoutSelector layout={frame.prop[bpm.current]?.layout}  onChange={updateFrameLayout}/>
+        <LayoutSelector layout={currentProp?.layout}  onChange={updateFrameLayout}/>
     </div>
 </div>
