@@ -9,6 +9,7 @@
 	}
 	let { value, onChange, class: className }: Props = $props();
 
+	const  iconSvg = "<svg width='24' height='24' fill='none' viewBox='0 0 24 24'><path fill='currentColor' fill-rule='evenodd' d='M16.5 8.5a.5.5 0 0 1 .5.5v5a.5.5 0 1 1-1 0v-2H7v2a.5.5 0 0 1-1 0V9a.5.5 0 0 1 1 0v2h9V9a.5.5 0 0 1 .5-.5' clip-rule='evenodd'></path></svg>";
 	const options = [
 		{ label: 'Left', value: 'Left' },
 		{ label: 'Right', value: 'Right' },
@@ -28,7 +29,7 @@
 		<Popover.Trigger class='w-full'>
 			<div class={cn('flex items-center text-xs bg-white rounded-sm w-full border border-gray-200', className)}>
 				<div class='w-6 text-gray-600 flex-shrink-0'>
-					<svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M16.5 8.5a.5.5 0 0 1 .5.5v5a.5.5 0 1 1-1 0v-2H7v2a.5.5 0 0 1-1 0V9a.5.5 0 0 1 1 0v2h9V9a.5.5 0 0 1 .5-.5" clip-rule="evenodd"></path></svg>
+					{@html iconSvg}
 				</div>
 				<div class='flex-1 min-w-0 text-left text-gray-800 flex-shrink-0 select-none'>
 					{value}
