@@ -22,7 +22,7 @@
 
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
-		console.log('handleKeydown', event, event.key);
+		// console.log('handleKeydown', event, event.key);
 		// Ctrl+Shift+M
 		if ((event.ctrlKey || event.metaKey) && event.key === '0') {
 			console.log('Ctrl+Shift+0');

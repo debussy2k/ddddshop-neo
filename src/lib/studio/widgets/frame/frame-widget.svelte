@@ -108,7 +108,7 @@
     tabindex="0"
     onkeydown={handleKeyDown}
 >
-    <div class={cn(getLayoutClasses(), "h-full")}>
+    <div class={cn(getLayoutClasses(), "relative h-full")}>
         <WidgetRenderer widgets={data.children} />
     </div>
 </div>
