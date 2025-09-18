@@ -29,12 +29,15 @@ export class SectionActions {
             
             let defaultProp:Section['prop'] = {
 				mobile: {
+					layout: 'block',
 					height: '260px'
 				},
 				tablet: {
+					layout: 'block',
 					height: '360px'
 				},
 				desktop: {
+					layout: 'block',
 					height: '460px'
 				}
             }

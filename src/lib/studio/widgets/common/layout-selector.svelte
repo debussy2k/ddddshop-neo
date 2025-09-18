@@ -1,6 +1,12 @@
 <script lang="ts">
-    import type { FrameLayout } from "../frame/frame.type"; 
-	let { layout }: { layout: FrameLayout } = $props();
+    import type { LayoutType } from "../../types"; 
+	
+	interface Props {
+		layout: LayoutType;
+		onChange?: (layout: LayoutType) => void;
+	}
+	
+	let { layout, onChange }: Props = $props();
 
 	const options = [
 		{
@@ -48,6 +54,7 @@
                     value={option.id}
                     class="sr-only h-8"
                     aria-checked={layout === option.id}
+                    on:change={() => onChange?.(option.id as LayoutType)}
                 />
                 <span class="w-6 h-6 flex items-center justify-center" aria-hidden="true">
                     {@html option.icon}

@@ -1,7 +1,5 @@
-import type { Widget } from "../../types";
+import type { Widget, LayoutType } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
-
-export type FrameLayout = "block" | "flex-row" | "flex-col" | "grid";
 
 export interface Frame {
     id: string;
@@ -11,7 +9,7 @@ export interface Frame {
     children: Widget[]; // child Widget 객체들
 
     prop: Record<BreakPoint, {
-        layout: FrameLayout;
+        layout: LayoutType;
         left: string;
         top: string;
         width: string;

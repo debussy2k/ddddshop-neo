@@ -6,6 +6,8 @@
 	import { cmdFrame } from "$lib/studio/command";
 	import { wui } from "$lib/studio/widgets/common/wui";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
+    import { du } from "$lib/studio/widgets/common/doc-util";
+	import { cn } from "$lib/utils";
 
 
 	let element: HTMLElement;
@@ -13,13 +15,14 @@
     // 현재 프레임이 활성화되어 있는지 확인
     let isActive = $derived(studioDoc.activeId === data.id);
     // 현재 breakpoint에 맞는 스타일 가져오기
-    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
-        width: '200px',
-        height: '150px',
-        padding: '16px'
-    });
+    let currentProp = $derived(data.prop?.[bpm.current]);
+    let parent = $derived(studioDoc.getParentById(data.id));
 
 	onMount(() => {
+        if (!parent) {
+            console.error('parent not found', data.id);
+        }
+        
 		setupDraggable();
 		setupResizable();
 	});
@@ -68,19 +71,30 @@
         return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
     }
 
-
     function getCurrentStyle() {
-        console.log('currentProp', currentProp);
-        let style = `
-            position: absolute;
-            left: ${currentProp.left};
-            top: ${currentProp.top};
-            width: ${currentProp.width};
-            height: ${currentProp.height};
+        let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
+        style += `
             padding: ${currentProp.padding};
         `;
-
         return style;
+    }
+
+    function getLayoutClasses(): string {
+        let cls = "";
+        if (currentProp.layout === 'block') {
+            cls += "block";
+        }
+        else if (currentProp.layout === 'flex-row') {
+            cls += "flex flex-row";
+        }
+        else if (currentProp.layout === 'flex-col') {
+            cls += "flex flex-col";
+        }
+        else if (currentProp.layout === 'grid') {
+            cls += "grid";
+        }
+
+        return cls;
     }
 
 </script>
@@ -94,7 +108,7 @@
     tabindex="0"
     onkeydown={handleKeyDown}
 >
-    <div class="flex flex-col items-center justify-center h-full">
+    <div class={cn(getLayoutClasses(), "h-full")}>
         <WidgetRenderer widgets={data.children} />
     </div>
 </div>

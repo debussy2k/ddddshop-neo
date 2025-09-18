@@ -5,20 +5,21 @@
 	import { wui } from "$lib/studio/widgets/common/wui";
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
+    import { du } from "$lib/studio/widgets/common/doc-util";
 
     
 	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
     let isActive = $derived(studioDoc.activeId === data.id);
+    let parent = $derived(studioDoc.getParentById(data.id));
 
-    let currentProp = $derived(data.prop?.[bpm.current] || data.prop?.desktop || {
-        left: '10px',
-        top: '10px',
-        width: '200px',
-        height: '100px',
-    });
+    let currentProp = $derived(data.prop?.[bpm.current]);
 
     onMount(() => {
+        if (!parent) {
+            console.error('parent not found', data.id);
+        }
+        
 		setupDraggable();
 		setupResizable();
     });
@@ -29,7 +30,6 @@
 			element: element,
             getCurrentProp: () => currentProp,
 			updateCallback: (id, position) => {
-                console.log('position', position);
 				cmdSandbox.updateSandboxProp(id, position, bpm.current);
 			}
 		});
@@ -62,15 +62,7 @@
     }
 
     function getCurrentStyle() {
-        console.log('currentProp', currentProp);
-        let style = `
-            position: absolute;
-            left: ${currentProp.left};
-            top: ${currentProp.top};
-            width: ${currentProp.width};
-            height: ${currentProp.height};
-        `;
-
+        let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
         return style;
     }
 
@@ -96,3 +88,4 @@
         </div>
     </div>
 </div>
+

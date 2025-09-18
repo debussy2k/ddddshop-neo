@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, Widget } from "./types";
+import type { DocState, CompositeWidget } from "./types";
 import { du } from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -138,6 +138,10 @@ class StudioDoc {
         } catch (error) {
             return false;
         }
+    }
+
+    getParentById(id: string): Readonly<CompositeWidget> | undefined {
+        return du.getParentById(id, this.doc);
     }
 }
 

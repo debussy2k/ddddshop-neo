@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Frame } from "./frame.type";
+    import type { LayoutType } from "../../types";
     import { FrameActions } from "./frame-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
@@ -32,6 +33,10 @@
 
     async function updateFramePadding(newPadding: string) {
         cmdFrame.updateFrameProp(frame.id, { padding: newPadding }, bpm.current);
+    }
+
+    async function updateFrameLayout(newLayout: LayoutType) {
+        cmdFrame.updateFrameProp(frame.id, { layout: newLayout }, bpm.current);
     }
 </script>
 
@@ -108,6 +113,6 @@
     </div>
 
     <div class='p-2 mt-2'>
-        <LayoutSelector layout={frame.prop[bpm.current]?.layout} />
+        <LayoutSelector layout={frame.prop[bpm.current]?.layout}  onChange={updateFrameLayout}/>
     </div>
 </div>
