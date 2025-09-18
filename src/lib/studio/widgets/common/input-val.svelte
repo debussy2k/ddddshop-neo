@@ -14,8 +14,8 @@
     let { numberPart, unit } = $derived.by(() => { 
         if (!value) return { numberPart: '', unit: '' };
         
-        // 숫자로 시작하는지 확인
-        const match = value.match(/^(\d*\.?\d*)(.*)/);
+        // 숫자로 시작하는지 확인 (음수 포함)
+        const match = value.match(/^(-?\d*\.?\d*)(.*)/);
         if (match) {
             const [, numPart, unitPart] = match;
             // 숫자로 시작하면 unit 분리
