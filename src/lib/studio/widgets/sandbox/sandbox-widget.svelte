@@ -53,6 +53,13 @@
         event.stopPropagation();
     }
 
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Delete') {
+            event.preventDefault();
+            cmdSandbox.removeSandbox(data.id);
+        }
+    }
+
     function getSandboxClasses(isActive: boolean): string {
         const baseClasses = `border border-green-400 p-4 cursor-pointer w-[200px] h-[100px]`;
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
@@ -73,6 +80,7 @@
     class={getSandboxClasses(isActive)}
     style={getCurrentStyle()}
     onmousedown={(e) => handleClick(e as MouseEvent)}
+    onkeydown={(e) => handleKeyDown(e as KeyboardEvent)}
     role="button"
     tabindex="0"
 >
