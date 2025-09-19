@@ -35,9 +35,6 @@
 
 
 <div class="flex flex-col gap-2 text-sm">
-	<div>
-		레이아웃
-	</div>
 	<SegmentedControl
 		{options}
 		value={layout}

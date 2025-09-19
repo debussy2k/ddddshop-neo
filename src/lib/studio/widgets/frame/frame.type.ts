@@ -1,4 +1,4 @@
-import type { Widget, LayoutType } from "../../types";
+import type { Widget, LayoutType, VerticalAlign, HorizontalAlign } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Frame {
@@ -14,6 +14,8 @@ export interface Frame {
         top: string;
         width: string;
         height: string;
+        horzAlign: HorizontalAlign;
+        vertAlign: VerticalAlign;
         padding: string;
     }>;
 }

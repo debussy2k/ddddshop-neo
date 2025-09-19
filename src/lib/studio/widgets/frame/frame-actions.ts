@@ -37,7 +37,9 @@ export class FrameActions {
                     top: '10px',
                     width: '200px',
                     height: '150px',
-                    padding: '16px'
+                    padding: '16px',
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 },
                 tablet: {
                     layout: 'block',
@@ -45,7 +47,9 @@ export class FrameActions {
                     top: '10px',
                     width: '200px',
                     height: '150px',
-                    padding: '16px'
+                    padding: '16px',
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 },
                 desktop: {
                     layout: 'block',
@@ -53,7 +57,9 @@ export class FrameActions {
                     top: '10px',
                     width: '200px',
                     height: '150px',
-                    padding: '16px'
+                    padding: '16px',
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 }
             }
 

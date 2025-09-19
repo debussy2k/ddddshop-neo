@@ -23,11 +23,11 @@
         cmdSandbox.update(sandbox.id, { name: newName });
     }
 
-    async function updateSandboxHorzAlign(newHorzAlign: HorizontalAlign) {
+    async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
         cmdSandbox.updateProp(sandbox.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
-    async function updateSandboxVertAlign(newVertAlign: VerticalAlign) {
+    async function updateVertAlign(newVertAlign: VerticalAlign) {
         cmdSandbox.updateProp(sandbox.id, { vertAlign: newVertAlign }, bpm.current);
     }
 </script>
@@ -56,7 +56,7 @@
     </div> -->
 
     <!-- Position -->
-    <div class='px-3 py-3 text-xs border-b border-gray-200'>
+    <div class='px-3 py-4 text-xs border-b border-gray-200'>
         <div class="mb-3">위치</div>
         <div class="flex flex-col gap-y-2">
             <div class="flex items-center gap-2">
@@ -71,8 +71,8 @@
     
             <div class='flex gap-x-2'>
                 <div class='w-1/2 min-w-0 space-y-2'>
-                    <HorzAlignComboBox value={currentProp.horzAlign} onChange={updateSandboxHorzAlign}/>
-                    <VertAlignComboBox value={currentProp.vertAlign} onChange={updateSandboxVertAlign}/>
+                    <HorzAlignComboBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
+                    <VertAlignComboBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
                 </div>
                 <div class='w-1/2 min-w-0'>
                     
@@ -82,7 +82,7 @@
     </div>
 
     <!-- Layout -->
-    <div class='px-3 py-3 text-xs border-b border-gray-200'>
+    <div class='px-3 py-4 text-xs border-b border-gray-200'>
         <div class="mb-3">레이아웃</div>
         <div class="flex flex-col gap-y-2">
             <div class='flex gap-x-2'>
