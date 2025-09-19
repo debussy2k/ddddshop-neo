@@ -26,7 +26,7 @@
             element: element,
             getCurrentProp: () => currentProp,
             updateCallback: (id, position) => {
-                cmdSimpleImage.updateSimpleImageProp(id, position, bpm.current);
+                cmdSimpleImage.updateProp(id, position, bpm.current);
             }
         });
     }
@@ -37,7 +37,7 @@
             element: element,
             getCurrentProp: () => currentProp,
             updateCallback: (id, dimensions) => {
-                cmdSimpleImage.updateSimpleImageProp(id, dimensions, bpm.current);
+                cmdSimpleImage.updateProp(id, dimensions, bpm.current);
             }
         });
     }

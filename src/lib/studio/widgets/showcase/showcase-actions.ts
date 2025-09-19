@@ -24,7 +24,7 @@ export class ShowcaseActions {
         return `쇼케이스 ${maxNumber + 1}`;
     }
 
-    addShowcase(showcase: ShowcaseInput): { id: string } {
+    add(showcase: ShowcaseInput): { id: string } {
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
@@ -82,7 +82,7 @@ export class ShowcaseActions {
         }
     }
 
-    removeShowcase(id: string): DocState {
+    remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section에서 해당 Showcase 제거
             draft.sections.forEach(section => {
@@ -93,7 +93,7 @@ export class ShowcaseActions {
         });
     }
 
-    updateShowcase(id: string, updates: Partial<Omit<Showcase, 'id'|'type'|'prop'>>): DocState {
+    update(id: string, updates: Partial<Omit<Showcase, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 해당 Showcase 찾아서 업데이트
             draft.sections.forEach(section => {
@@ -110,7 +110,7 @@ export class ShowcaseActions {
         });
     }
 
-	updateShowcaseProp(id: string, updates: Partial<Showcase['prop'][keyof Showcase['prop']]>, breakpoint: BreakPoint): DocState {
+	updateProp(id: string, updates: Partial<Showcase['prop'][keyof Showcase['prop']]>, breakpoint: BreakPoint): DocState {
 		return this.historyManager.execute((draft) => {
 			draft.sections.forEach(section => {
 				if (section.children) {

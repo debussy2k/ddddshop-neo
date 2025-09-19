@@ -40,7 +40,7 @@ export class SimpleImageActions {
         return `이미지 ${maxNumber + 1}`;
     }
 
-    addSimpleImage(data: SimpleImageInput): { id: string } {
+    add(data: SimpleImageInput): { id: string } {
         if (!data.parentId) {
             throw new Error('parentId is required');
         }
@@ -92,7 +92,7 @@ export class SimpleImageActions {
         }
     }
 
-    removeSimpleImage(id: string): DocState {
+    remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {
@@ -104,7 +104,7 @@ export class SimpleImageActions {
         });
     }
 
-    updateSimpleImage(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'|'prop'|'parentId'>>): DocState {
+    update(id: string, updates: Partial<Omit<SimpleImage, 'id'|'type'|'prop'|'parentId'>>): DocState {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {
@@ -113,7 +113,7 @@ export class SimpleImageActions {
         });
     }
 
-    updateSimpleImageProp(id: string, updates: Partial<SimpleImagePropValue>, breakpoint: BreakPoint): DocState { 
+    updateProp(id: string, updates: Partial<SimpleImagePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {

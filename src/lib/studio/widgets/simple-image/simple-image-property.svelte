@@ -11,23 +11,23 @@
     const cmdSimpleImage = new SimpleImageActions(studioDoc.historyManager);
 
     async function updateSimpleImageName(newName: string) {
-        cmdSimpleImage.updateSimpleImage(simpleImage.id, { name: newName });
+        cmdSimpleImage.update(simpleImage.id, { name: newName });
     }
 
     async function updateSimpleImageUrl(newUrl: string) {
-        cmdSimpleImage.updateSimpleImage(simpleImage.id, { url: newUrl });
+        cmdSimpleImage.update(simpleImage.id, { url: newUrl });
     }
 
     async function updateSimpleImageAlt(newAlt: string) {
-        cmdSimpleImage.updateSimpleImage(simpleImage.id, { alt: newAlt });
+        cmdSimpleImage.update(simpleImage.id, { alt: newAlt });
     }
 
     async function updateSimpleImageWidth(newWidth: string) {
-        cmdSimpleImage.updateSimpleImageProp(simpleImage.id, { width: newWidth }, bpm.current);
+        cmdSimpleImage.updateProp(simpleImage.id, { width: newWidth }, bpm.current);
     }
 
     async function updateSimpleImageHeight(newHeight: string) {
-        cmdSimpleImage.updateSimpleImageProp(simpleImage.id, { height: newHeight }, bpm.current);
+        cmdSimpleImage.updateProp(simpleImage.id, { height: newHeight }, bpm.current);
     }
 </script>
 

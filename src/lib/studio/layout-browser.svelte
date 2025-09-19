@@ -27,7 +27,7 @@
                 cmdSandbox.remove(widget.id);
                 break;
             case 'simple-image':
-                cmdSimpleImage.removeSimpleImage(widget.id);
+                cmdSimpleImage.remove(widget.id);
                 break;
             default:
                 console.warn(`Unknown widget type: ${(widget as any).type}. Cannot delete.`);
@@ -48,7 +48,7 @@
                 cmdSandbox.update(widget.id, { name: newName });
                 break;
             case 'simple-image':
-                cmdSimpleImage.updateSimpleImage(widget.id, { name: newName });
+                cmdSimpleImage.update(widget.id, { name: newName });
                 break;
             default:
                 console.warn(`Unknown widget type: ${(widget as any).type}. Cannot update name.`);

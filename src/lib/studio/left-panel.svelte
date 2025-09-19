@@ -40,7 +40,7 @@
 
     function addSimpleImage() {
         if (studioDoc.activeId) {
-            const { id } = cmdSimpleImage.addSimpleImage({
+            const { id } = cmdSimpleImage.add({
                 parentId: studioDoc.activeId,
                 url: '',
                 prop: {
@@ -64,7 +64,7 @@
 
     function addShowcase() {
         if (studioDoc.activeId) {
-            const { id } = cmdShowcase.addShowcase({
+            const { id } = cmdShowcase.add({
                 parentId: studioDoc.activeId,
                 showcaseCode: "for_teacher",
             });

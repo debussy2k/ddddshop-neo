@@ -11,24 +11,24 @@
     const cmdShowcase = new ShowcaseActions(studioDoc.historyManager);
 
     async function updateShowcaseName(newName: string) {
-        cmdShowcase.updateShowcase(showcase.id, { name: newName });
+        cmdShowcase.update(showcase.id, { name: newName });
     }
 
     async function updateShowcaseCode(newCode: string) {
 		console.log('showcase', showcase);
 		console.log('updateShowcaseCode', newCode);
-        await cmdShowcase.updateShowcase(showcase.id, { showcaseCode: newCode });
+        await cmdShowcase.update(showcase.id, { showcaseCode: newCode });
 
 		let widget = studioDoc.getWidget<ShowcaseWidget>(showcase.id);
 		widget.loadShowcaseData();
     }
 
 	function updateShowcaseTitleFontSize(newFontSize: number) {
-		cmdShowcase.updateShowcaseProp(showcase.id, { titleFontSize: newFontSize }, bpm.current);
+		cmdShowcase.updateProp(showcase.id, { titleFontSize: newFontSize }, bpm.current);
 	}
 
 	function updateShowcaseTitleFontWeight(newFontEight: string) {
-		cmdShowcase.updateShowcaseProp(showcase.id, { titleFontWeight: newFontEight }, bpm.current);
+		cmdShowcase.updateProp(showcase.id, { titleFontWeight: newFontEight }, bpm.current);
 	}
 
 </script>
