@@ -19,9 +19,11 @@ export interface DocState {
 // 위젯의 기본 위치/크기 속성을 나타내는 공통 인터페이스
 export interface BaseWidgetProp {
     left: string;
-    top: string;
     width: string;
+    right: string;
+    top: string;
     height: string;
+    bottom: string;
     horzAlign: HorizontalAlign;
     vertAlign: VerticalAlign;
 }
