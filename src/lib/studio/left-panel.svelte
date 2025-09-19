@@ -21,7 +21,7 @@
     function addFrame() {
 
         if (studioDoc.activeId) {
-            const { id } = cmdFrame.addFrame({
+            const { id } = cmdFrame.add({
                 parentId: studioDoc.activeId,
             });
             studioDoc.activeId = id;

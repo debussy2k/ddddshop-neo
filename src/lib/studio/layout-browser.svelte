@@ -21,7 +21,7 @@
         // Widget 타입에 따라 적절한 삭제 함수 호출
         switch ((widget as any).type) {
 			case 'frame':
-				cmdFrame.removeFrame(widget.id);
+				cmdFrame.remove(widget.id);
 				break;
             case 'sandbox':
                 cmdSandbox.remove(widget.id);
@@ -42,7 +42,7 @@
         // Widget 타입에 따라 적절한 업데이트 함수 호출
         switch ((widget as any).type) {
 			case 'frame':
-				cmdFrame.updateFrame(widget.id, { name: newName });
+				cmdFrame.update(widget.id, { name: newName });
 				break;
             case 'sandbox':
                 cmdSandbox.update(widget.id, { name: newName });

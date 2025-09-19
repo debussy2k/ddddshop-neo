@@ -14,30 +14,30 @@
     const cmdFrame = new FrameActions(studioDoc.historyManager);
 
     async function updateFrameName(newName: string) {
-        cmdFrame.updateFrame(frame.id, { name: newName });
+        cmdFrame.update(frame.id, { name: newName });
     }
 
     async function updateFrameLeft(newLeft: string) {
-        cmdFrame.updateFrameProp(frame.id, { left: newLeft }, bpm.current);
+        cmdFrame.updateProp(frame.id, { left: newLeft }, bpm.current);
     }
     async function updateFrameTop(newTop: string) {
-        cmdFrame.updateFrameProp(frame.id, { top: newTop }, bpm.current);
+        cmdFrame.updateProp(frame.id, { top: newTop }, bpm.current);
     }
 
     async function updateFrameWidth(newWidth: string) {
-        cmdFrame.updateFrameProp(frame.id, { width: newWidth }, bpm.current);
+        cmdFrame.updateProp(frame.id, { width: newWidth }, bpm.current);
     }
 
     async function updateFrameHeight(newHeight: string) {
-        cmdFrame.updateFrameProp(frame.id, { height: newHeight }, bpm.current);
+        cmdFrame.updateProp(frame.id, { height: newHeight }, bpm.current);
     }
 
     async function updateFramePadding(newPadding: string) {
-        cmdFrame.updateFrameProp(frame.id, { padding: newPadding }, bpm.current);
+        cmdFrame.updateProp(frame.id, { padding: newPadding }, bpm.current);
     }
 
     async function updateFrameLayout(newLayout: LayoutType) {
-        cmdFrame.updateFrameProp(frame.id, { layout: newLayout }, bpm.current);
+        cmdFrame.updateProp(frame.id, { layout: newLayout }, bpm.current);
     }
 </script>
 

@@ -23,7 +23,7 @@ export class FrameActions {
         return `프레임 ${maxNumber + 1}`;
     }
 
-    addFrame(data: FrameInput): { id: string } {
+    add(data: FrameInput): { id: string } {
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
@@ -80,7 +80,7 @@ export class FrameActions {
         }
     }
 
-    removeFrame(id: string): DocState {
+    remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
             let widget = du.findById(id, draft);
             if (widget) {
@@ -92,7 +92,7 @@ export class FrameActions {
         });
     }
 
-    updateFrame(id: string, updates: Partial<Omit<Frame, 'id'|'type'|'prop'>>): DocState {
+    update(id: string, updates: Partial<Omit<Frame, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
             let widget = du.findById(id, draft);
 
@@ -102,7 +102,7 @@ export class FrameActions {
         });
     }
 
-    updateFrameProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
+    updateProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {

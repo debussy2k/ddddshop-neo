@@ -33,7 +33,7 @@
 			element: element,
             getCurrentProp: () => currentProp,
 			updateCallback: (id, position) => {
-				cmdFrame.updateFrameProp(id, position, bpm.current);
+				cmdFrame.updateProp(id, position, bpm.current);
 			}
 		});
 	}
@@ -44,7 +44,7 @@
 			element: element,
 			getCurrentProp: () => currentProp,
 			updateCallback: (id, dimensions) => {
-				cmdFrame.updateFrameProp(id, dimensions, bpm.current);
+				cmdFrame.updateProp(id, dimensions, bpm.current);
 			}
 		});
 	}
@@ -59,7 +59,7 @@
         if (e.key === 'Delete') {
             e.preventDefault();
             e.stopPropagation();
-            cmdFrame.removeFrame(data.id);
+            cmdFrame.remove(data.id);
         }
     }
 
