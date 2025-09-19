@@ -1,4 +1,4 @@
-import type { HorizontalAlign, VerticalAlign } from "$lib/studio/types";
+import type { BaseWidgetProp } from "$lib/studio/types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Sandbox {
@@ -7,13 +7,7 @@ export interface Sandbox {
     name: string;
     text: string;
     parentId: string; // Section의 child로 사용될 때의 부모 ID
-    prop: Record<BreakPoint, {
-        left: string;
-        top: string;
-        width: string;
-        height: string;
-        horzAlign: HorizontalAlign;
-        vertAlign: VerticalAlign;
+    prop: Record<BreakPoint, BaseWidgetProp & {
     }>;
 }
 
