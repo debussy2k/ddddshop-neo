@@ -62,7 +62,7 @@
 
 	// 편의 함수들
 	function updateSectionHeight(newHeight: number) {
-        cmdSection.updateSectionProp(section.id, { height: toPixelValue(newHeight) }, bpm.current);
+        cmdSection.updateProp(section.id, { height: toPixelValue(newHeight) }, bpm.current);
 	}
 
 	export function getContentHeight() {

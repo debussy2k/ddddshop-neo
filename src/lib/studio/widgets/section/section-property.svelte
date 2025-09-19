@@ -12,13 +12,13 @@
     const cmdSection = new SectionActions(studioDoc.historyManager);
 
     async function updateSectionHeight(newHeight: string) {
-        cmdSection.updateSectionProp(section.id, { height: newHeight }, bpm.current);
+        cmdSection.updateProp(section.id, { height: newHeight }, bpm.current);
     }
 
 	async function autoUpdateSectionHeight() {
 		let widget = studioDoc.getWidget<SectionWidget>(section.id);
 		let newHeight = widget.getContentHeight() + 'px';
-        cmdSection.updateSectionProp(section.id, { height: newHeight }, bpm.current);
+        cmdSection.updateProp(section.id, { height: newHeight }, bpm.current);
 	}
 
 </script>

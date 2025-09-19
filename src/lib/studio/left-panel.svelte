@@ -14,7 +14,7 @@
     });
 
     function addSection() {
-        const { id } = cmdSection.addSection({});
+        const { id } = cmdSection.add({});
         studioDoc.activeId = id;
     }
 

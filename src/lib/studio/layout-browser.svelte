@@ -14,7 +14,7 @@
     }
 
     function deleteSection(section: Section) {
-        cmdSection.removeSection(section.id);
+        cmdSection.remove(section.id);
     }
 
     function deleteWidget(widget: Widget) {
@@ -35,7 +35,7 @@
     }
 
     async function updateSectionName(section: Section, newName: string) {
-        cmdSection.updateSection(section.id, { name: newName });
+        cmdSection.update(section.id, { name: newName });
     }
 
     async function updateWidgetName(widget: Widget, newName: string) {

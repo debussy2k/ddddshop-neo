@@ -40,7 +40,7 @@
                     bind:this={studioDoc.widgetMap[section.id]}
                 />
             {/each}
-            <div class="text-xs">
+            <div class="text-xs mt-4 border-t border-gray-200">
                 <JsonView json={doc} />
             </div>
         </div>
