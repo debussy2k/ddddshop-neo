@@ -1,9 +1,9 @@
 <script lang="ts">
     import type { Frame } from "./frame.type";
     import type { LayoutType } from "../../types";
-    import { FrameActions } from "./frame-actions";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    import { cmdFrame as cmd } from "$lib/studio/command";
     import type { HorizontalAlign, VerticalAlign } from "../../types";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
@@ -12,21 +12,20 @@
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
 
-    let { frame }: { frame: Frame } = $props();
-    let currentProp = $derived(frame.prop?.[bpm.current]);
-
-    const cmdFrame = new FrameActions(studioDoc.historyManager);
+    let { data }: { data: Frame } = $props();
+    let currentProp = $derived(data.prop?.[bpm.current]);
+    let parentProp = $derived(studioDoc.getParentById(data.id)?.prop?.[bpm.current]);
 
     async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-        cmdFrame.updateProp(frame.id, { horzAlign: newHorzAlign }, bpm.current);
+        cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
     async function updateVertAlign(newVertAlign: VerticalAlign) {
-        cmdFrame.updateProp(frame.id, { vertAlign: newVertAlign }, bpm.current);
+        cmd.updateProp(data.id, { vertAlign: newVertAlign }, bpm.current);
     }
 
     async function updateLayout(newLayout: LayoutType) {
-        cmdFrame.updateProp(frame.id, { layout: newLayout }, bpm.current);
+        cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
 </script>
 
@@ -47,15 +46,17 @@
                 <InputVal name='Y' value={currentProp.top}/>
             </div>
     
-            <div class='flex gap-x-2'>
+            {#if parentProp?.layout === 'block'}
+                <div class='flex gap-x-2'>
                 <div class='w-1/2 min-w-0 space-y-2'>
                     <HorzAlignComboBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
                     <VertAlignComboBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
                 </div>
-                <div class='w-1/2 min-w-0'>
-                    
+                    <div class='w-1/2 min-w-0'>
+                        
+                    </div>
                 </div>
-            </div>
+            {/if}
         </div>
     </div>
 

@@ -1,7 +1,5 @@
 <script lang="ts">
     import type { Sandbox } from "./sandbox.type";
-    import { SandboxActions } from "./sandbox-actions";
-    import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
     import type { HorizontalAlign, VerticalAlign } from "../../types";
@@ -10,25 +8,26 @@
     import InputVal from "../common/input-val.svelte";
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
+    import { cmdSandbox as cmd } from "$lib/studio/command";
 
-    let { sandbox }: { sandbox: Sandbox } = $props();
-    const cmdSandbox = new SandboxActions(studioDoc.historyManager);
-    let currentProp = $derived(sandbox.prop?.[bpm.current]);
+    let { data }: { data: Sandbox } = $props();
+    let currentProp = $derived(data.prop?.[bpm.current]);
+    let parentProp = $derived(studioDoc.getParentById(data.id)?.prop?.[bpm.current]);
 
     async function updateSandboxText(newText: string) {
-        cmdSandbox.update(sandbox.id, { text: newText });
+        cmd.update(data.id, { text: newText });
     }
 
     async function updateSandboxName(newName: string) {
-        cmdSandbox.update(sandbox.id, { name: newName });
+        cmd.update(data.id, { name: newName });
     }
 
     async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-        cmdSandbox.updateProp(sandbox.id, { horzAlign: newHorzAlign }, bpm.current);
+        cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
     async function updateVertAlign(newVertAlign: VerticalAlign) {
-        cmdSandbox.updateProp(sandbox.id, { vertAlign: newVertAlign }, bpm.current);
+        cmd.updateProp(data.id, { vertAlign: newVertAlign }, bpm.current);
     }
 </script>
 
@@ -69,15 +68,17 @@
                 <InputVal name='Y' value={currentProp.top}/>
             </div>
     
-            <div class='flex gap-x-2'>
-                <div class='w-1/2 min-w-0 space-y-2'>
-                    <HorzAlignComboBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
-                    <VertAlignComboBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
+            {#if parentProp?.layout === 'block'}
+                <div class='flex gap-x-2'>
+                    <div class='w-1/2 min-w-0 space-y-2'>
+                        <HorzAlignComboBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
+                        <VertAlignComboBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
+                    </div>
+                    <div class='w-1/2 min-w-0'>
+                        
+                    </div>
                 </div>
-                <div class='w-1/2 min-w-0'>
-                    
-                </div>
-            </div>
+            {/if}
         </div>
     </div>
 

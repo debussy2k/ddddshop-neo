@@ -50,9 +50,9 @@
                     {#if item.type === 'section'}
                         <SectionProperty section={item} />
                     {:else if item.type === 'sandbox'}
-                        <SandboxProperty sandbox={item} />
+                        <SandboxProperty data={item} />
                     {:else if item.type === 'frame'}
-                        <FrameProperty frame={item} />
+                        <FrameProperty data={item} />
                     {:else if item.type === 'simple-image'}
                         <SimpleImageProperty simpleImage={item} />
                     {:else if item.type === 'showcase'}

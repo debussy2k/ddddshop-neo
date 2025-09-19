@@ -50,7 +50,10 @@
 			title={option.label}
 		>
 			{#if option.icon}
-				<span class="w-6 h-6 flex items-center justify-center" aria-hidden="true">
+				<span class={cn(
+					"w-6 h-6 flex items-center justify-center",
+					option.disabled && "opacity-30"
+				)} aria-hidden="true">
 					{@html option.icon}
 				</span>
 			{/if}
