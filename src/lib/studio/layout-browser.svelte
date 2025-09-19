@@ -24,7 +24,7 @@
 				cmdFrame.removeFrame(widget.id);
 				break;
             case 'sandbox':
-                cmdSandbox.removeSandbox(widget.id);
+                cmdSandbox.remove(widget.id);
                 break;
             case 'simple-image':
                 cmdSimpleImage.removeSimpleImage(widget.id);
@@ -45,7 +45,7 @@
 				cmdFrame.updateFrame(widget.id, { name: newName });
 				break;
             case 'sandbox':
-                cmdSandbox.updateSandbox(widget.id, { name: newName });
+                cmdSandbox.update(widget.id, { name: newName });
                 break;
             case 'simple-image':
                 cmdSimpleImage.updateSimpleImage(widget.id, { name: newName });

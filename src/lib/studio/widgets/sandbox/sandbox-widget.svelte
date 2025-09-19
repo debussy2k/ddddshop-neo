@@ -30,7 +30,7 @@
 			element: element,
             getCurrentProp: () => currentProp,
 			updateCallback: (id, position) => {
-				cmdSandbox.updateSandboxProp(id, position, bpm.current);
+				cmdSandbox.updateProp(id, position, bpm.current);
 			}
 		});
 	}
@@ -41,7 +41,7 @@
 			element: element,
 			getCurrentProp: () => currentProp,
 			updateCallback: (id, dimensions) => {
-				cmdSandbox.updateSandboxProp(id, dimensions, bpm.current);
+				cmdSandbox.updateProp(id, dimensions, bpm.current);
 			}
 		});
 	}
@@ -55,8 +55,9 @@
 
     function handleKeyDown(event: KeyboardEvent) {
         if (event.key === 'Delete') {
+            cmdSandbox.remove(data.id);
             event.preventDefault();
-            cmdSandbox.removeSandbox(data.id);
+            event.stopPropagation();
         }
     }
 

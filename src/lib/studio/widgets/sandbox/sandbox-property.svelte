@@ -16,19 +16,19 @@
     let currentProp = $derived(sandbox.prop?.[bpm.current]);
 
     async function updateSandboxText(newText: string) {
-        cmdSandbox.updateSandbox(sandbox.id, { text: newText });
+        cmdSandbox.update(sandbox.id, { text: newText });
     }
 
     async function updateSandboxName(newName: string) {
-        cmdSandbox.updateSandbox(sandbox.id, { name: newName });
+        cmdSandbox.update(sandbox.id, { name: newName });
     }
 
     async function updateSandboxHorzAlign(newHorzAlign: HorizontalAlign) {
-        cmdSandbox.updateSandboxProp(sandbox.id, { horzAlign: newHorzAlign }, bpm.current);
+        cmdSandbox.updateProp(sandbox.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
     async function updateSandboxVertAlign(newVertAlign: VerticalAlign) {
-        cmdSandbox.updateSandboxProp(sandbox.id, { vertAlign: newVertAlign }, bpm.current);
+        cmdSandbox.updateProp(sandbox.id, { vertAlign: newVertAlign }, bpm.current);
     }
 </script>
 

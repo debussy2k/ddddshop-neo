@@ -30,7 +30,7 @@
 
     function addSandbox() {
         if (studioDoc.activeId) {
-            const { id } = cmdSandbox.addSandbox({
+            const { id } = cmdSandbox.add({
                 parentId: studioDoc.activeId,
                 text: 'Sandbox One',
             });

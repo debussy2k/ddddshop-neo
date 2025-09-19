@@ -23,7 +23,7 @@ export class SandboxActions {
         return `샌드박스 ${maxNumber + 1}`;
     }
 
-    addSandbox(data: SandboxInput): { id: string } {
+    add(data: SandboxInput): { id: string } {
         if (!data.parentId) {
             throw new Error('parentId is required');
         }
@@ -81,7 +81,7 @@ export class SandboxActions {
         }
     }
 
-    removeSandbox(id: string): DocState {
+    remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {
@@ -93,7 +93,7 @@ export class SandboxActions {
         });
     }
 
-    updateSandbox(id: string, updates: Partial<Omit<Sandbox, 'id'|'type'|'prop'|'parentId'>>): DocState {
+    update(id: string, updates: Partial<Omit<Sandbox, 'id'|'type'|'prop'|'parentId'>>): DocState {
         return this.historyManager.execute((draft) => {
 			const widget = du.findById(id, draft);
 			if (widget) {
@@ -102,7 +102,7 @@ export class SandboxActions {
         });
     }
 
-    updateSandboxProp(id: string, updates: Partial<SandboxPropValue>, breakpoint: BreakPoint): DocState { 
+    updateProp(id: string, updates: Partial<SandboxPropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {
