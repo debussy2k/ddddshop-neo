@@ -55,6 +55,7 @@
         />
     </div> -->
 
+    <!-- Position -->
     <div class='px-3 py-3 text-xs border-b border-gray-200'>
         <div class="mb-3">위치</div>
         <div class="flex flex-col gap-y-2">
@@ -80,6 +81,7 @@
         </div>
     </div>
 
+    <!-- Layout -->
     <div class='px-3 py-3 text-xs border-b border-gray-200'>
         <div class="mb-3">레이아웃</div>
         <div class="flex flex-col gap-y-2">

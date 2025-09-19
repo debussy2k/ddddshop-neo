@@ -33,30 +33,30 @@ export class SandboxActions {
             // 모든 Section의 children에서 기존 sandbox 이름 검색
             const sandboxName = data.name?.trim() || this.generateSandboxName(draft.sections);
             
-            const defaultProp = {
+            const defaultProp:Sandbox['prop'] = {
                 mobile: {
                     left: '10px',
                     top: '10px',
                     width: '160px',
                     height: '100px',
-                    horzAlign: 'Left',
-                    vertAlign: 'Top'
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 },
                 tablet: {
                     left: '10px',
                     top: '10px',
                     width: '160px',
                     height: '100px',
-                    horzAlign: 'Left',
-                    vertAlign: 'Top'
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 },
                 desktop: {
                     left: '10px',
                     top: '10px',
                     width: '160px',
                     height: '100px',
-                    horzAlign: 'Left',
-                    vertAlign: 'Top'
+                    horzAlign: 'left',
+                    vertAlign: 'top'
                 }
             }
 
