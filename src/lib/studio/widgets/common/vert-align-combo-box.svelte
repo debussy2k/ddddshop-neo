@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
 	import ComboBox from "$lib/components/ui/combo-box/index.js";
-
+	import type { VerticalAlign } from "$lib/studio/types";
 	interface Props {
-		value: string;
-		onChange: (value: string) => void;
+		value: VerticalAlign;
+		onChange: (value: VerticalAlign) => void;
 		class?: ClassValue;
 	}
 	let { value, onChange, class: className }: Props = $props();
@@ -12,18 +12,18 @@
 	const iconSvg = "<svg width='24' height='24' fill='none' viewBox='0 0 24 24'><path fill='currentColor' fill-rule='evenodd' d='M8.5 6.5a.5.5 0 0 1 .5-.5h5a.5.5 0 1 1 0 1h-2v9h2a.5.5 0 0 1 0 1H9a.5.5 0 0 1 0-1h2V7H9a.5.5 0 0 1-.5-.5' clip-rule='evenodd'></path></svg>";
 	
 	const options = [
-		{ label: 'Top', value: 'Top' },
-		{ label: 'Bottom', value: 'Bottom' },
-		{ label: 'Top + Bottom', value: 'Top + Bottom' },
-		{ label: 'Center', value: 'Center' },
-		{ label: 'Scale', value: 'Scale' },
+		{ label: 'Top', value: 'top' },
+		{ label: 'Bottom', value: 'bottom' },
+		{ label: 'Top + Bottom', value: 'both' },
+		{ label: 'Center', value: 'center' },
+		{ label: 'Scale', value: 'scale' },
 	];
 </script>
 
 <ComboBox 
 	{value} 
 	{options} 
-	{onChange} 
+	onChange={(value) => onChange(value as VerticalAlign)} 
 	icon={iconSvg}
 	class={className}
 />

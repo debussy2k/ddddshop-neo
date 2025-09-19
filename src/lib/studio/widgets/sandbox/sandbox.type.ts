@@ -1,3 +1,4 @@
+import type { HorizontalAlign, VerticalAlign } from "$lib/studio/types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Sandbox {
@@ -11,8 +12,8 @@ export interface Sandbox {
         top: string;
         width: string;
         height: string;
-        horzAlign: string;
-        vertAlign: string;
+        horzAlign: HorizontalAlign;
+        vertAlign: VerticalAlign;
     }>;
 }
 
