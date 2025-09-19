@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { ButtonGroup } from "$lib/components/ui/button-group";
 	import { cn } from "$lib/utils";
-	
-	type VerticalAlign = "top" | "center" | "bottom";
+	import type { VerticalAlign } from "../../types";
 
 	interface Props {
 		align: VerticalAlign;
