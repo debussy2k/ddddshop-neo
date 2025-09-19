@@ -54,8 +54,8 @@
 						{@html icon}
 					</div>
 				{/if}
-				<div class='flex-1 min-w-0 text-left text-gray-800 flex-shrink-0 select-none'>
-					{displayText}
+				<div class='flex-1 min-w-0 text-left text-gray-800 flex-shrink-0 select-none overflow-x-hidden'>
+					<span class='truncate'>{displayText}</span>
 				</div>
 				<div class='w-6 text-gray-800 flex-shrink-0'>
 					<svg width="24" height="24" fill="none" viewBox="0 0 24 24">

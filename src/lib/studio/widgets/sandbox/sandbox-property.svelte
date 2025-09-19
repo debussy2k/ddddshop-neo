@@ -67,11 +67,11 @@
         </div>
 
         <div class='flex gap-x-2 mt-2'>
-			<div class='w-1/2 space-y-2'>
+			<div class='w-1/2 min-w-0 space-y-2'>
 				<HorzAlignComboBox value={currentProp.horzAlign} onChange={updateSandboxHorzAlign}/>
 				<VertAlignComboBox value={currentProp.vertAlign} onChange={updateSandboxVertAlign}/>
 			</div>
-			<div class='w-1/2'>
+			<div class='w-1/2 min-w-0'>
 				
 			</div>
 		</div>
