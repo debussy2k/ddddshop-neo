@@ -42,7 +42,7 @@
             input.select();
         }}
         value={numberPart}
-        oninput={(event) => {
+        onchange={(event) => {
             const input = event.target as HTMLInputElement;
             // unit이 있는 경우 unit 조합하여 전달
             const finalValue = unit ? input.value + unit : input.value;

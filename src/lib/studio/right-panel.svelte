@@ -48,7 +48,7 @@
                 {#if studioDoc.activeItem}
                     {@const item = studioDoc.activeItem}
                     {#if item.type === 'section'}
-                        <SectionProperty section={item} />
+                        <SectionProperty data={item} />
                     {:else if item.type === 'sandbox'}
                         <SandboxProperty data={item} />
                     {:else if item.type === 'frame'}
