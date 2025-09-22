@@ -19,6 +19,7 @@ export namespace constraintsUtil {
 			obj = {
 				horzAlign: "right",
 				left: 'auto',
+				width: util.getWidthValuePx(currentProp, parentWidth),
 				right: right,
 			}
 		}
