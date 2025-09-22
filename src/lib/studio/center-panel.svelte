@@ -17,6 +17,7 @@
 
     let doc = $derived(studioDoc.document);
     let currentResizableWidth = $state(300);
+    let currentActiveItem = $derived(studioDoc.activeItem);
     
 	let screenInfo = $derived(() => {
         return getScreenInfo(bpm.current as BreakPoint);
@@ -41,7 +42,7 @@
                 />
             {/each}
             <div class="text-xs pt-4 border-t border-gray-200">
-                <JsonView json={doc} />
+                <JsonView json={currentActiveItem} />
             </div>
         </div>
 
