@@ -2,17 +2,18 @@
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
-    import type { HorizontalAlign, VerticalAlign } from "../../types";
+    import type { BaseWidgetProp, HorizontalAlign, VerticalAlign } from "../../types";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import { cmdSandbox as cmd } from "$lib/studio/command";
+    import { util } from "$lib/studio/util";
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
-    let parentProp = $derived(studioDoc.getParentById(data.id)?.prop?.[bpm.current]);
+    let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
 
     async function updateSandboxText(newText: string) {
         cmd.update(data.id, { text: newText });
@@ -23,7 +24,43 @@
     }
 
     async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-        cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);
+		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
+		if (parentComp === null) {
+			console.error(`parent not found for sandbox`, data.id);
+			return;
+		}
+		let parentWidth = parentComp.getWidth();
+		let obj: Partial<BaseWidgetProp> = {};
+
+		if (newHorzAlign === 'left') {
+			let left = util.getLeftValuePx(currentProp, parentWidth);
+			obj = {
+				horzAlign: "left",
+				left: left,
+				right: 'auto',
+			}
+		}
+		else if (newHorzAlign === 'right') {
+			let right = util.getRightValuePx(currentProp, parentWidth);
+			obj = {
+				horzAlign: "right",
+				left: 'auto',
+				right: right,
+			}
+		}
+		else if (newHorzAlign === 'both') {
+			let left = util.getLeftValuePx(currentProp, parentWidth);
+			let right = util.getRightValuePx(currentProp, parentWidth);
+			obj = {
+				horzAlign: "both",
+				left: left,
+				right: right,
+			}
+		}
+		else {
+			console.error(`invalid horz align`, newHorzAlign);
+		}
+		cmd.updateProp(data.id, obj, bpm.current);
     }
 
     async function updateVertAlign(newVertAlign: VerticalAlign) {

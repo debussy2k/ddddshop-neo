@@ -11,14 +11,11 @@
 	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
     let isActive = $derived(studioDoc.activeId === data.id);
-    let parent = $derived(studioDoc.getParentById(data.id));
+    let parent = $derived(studioDoc.getParentByChildId(data.id));
 
     let currentProp = $derived(data.prop?.[bpm.current]);
 
     onMount(() => {
-        if (!parent) {
-            console.error('parent not found', data.id);
-        }
         
 		setupDraggable();
 		setupResizable();
@@ -62,7 +59,7 @@
     }
 
     function getSandboxClasses(isActive: boolean): string {
-        const baseClasses = `border border-green-400 p-4 cursor-pointer w-[200px] h-[100px]`;
+        const baseClasses = `border border-green-400 p-4 cursor-pointer`;
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
         const inactiveClasses = 'bg-green-50 hover:bg-green-100';
 

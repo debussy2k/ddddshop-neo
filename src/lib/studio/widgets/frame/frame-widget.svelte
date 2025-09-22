@@ -16,7 +16,7 @@
     let isActive = $derived(studioDoc.activeId === data.id);
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived(data.prop?.[bpm.current]);
-    let parent = $derived(studioDoc.getParentById(data.id));
+    let parent = $derived(studioDoc.getParentByChildId(data.id));
 
 	onMount(() => {
         if (!parent) {

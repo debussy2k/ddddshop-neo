@@ -11,7 +11,7 @@
     let { data: data }: { data: SimpleImage } = $props();
 
     let isActive = $derived(studioDoc.activeId === data.id);
-    let parent = $derived(studioDoc.getParentById(data.id));
+    let parent = $derived(studioDoc.getParentByChildId(data.id));
 
     let currentProp = $derived(data.prop?.[bpm.current]);
 

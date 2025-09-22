@@ -14,7 +14,7 @@
 
     let { data }: { data: Frame } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
-    let parentProp = $derived(studioDoc.getParentById(data.id)?.prop?.[bpm.current]);
+    let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
 
     async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
         cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);

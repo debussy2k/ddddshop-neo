@@ -22,7 +22,7 @@ export namespace du {
         return _find(draft.sections, id);
     }
 
-    export function getParentById(id: string, draft: DocState): CompositeWidget | undefined {
+    export function getParentByChildId(id: string, draft: DocState): CompositeWidget | undefined {
         const widget = findById(id, draft);
         if (!widget) return undefined;
         
@@ -69,11 +69,37 @@ export namespace du {
         let position = layout === 'block' ? 'absolute' : 'static';
         let styles = `
             position: ${position};
-            left: ${prop.left};
+		`;
+
+		if (prop.horzAlign === 'left') {
+			styles += `
+				left: ${prop.left};
+				width: ${prop.width};
+			`;
+		}
+		else if (prop.horzAlign === 'right') {
+			styles += `
+            	width: ${prop.width};
+            	right: ${prop.right};
+			`
+		}
+		else  if (prop.horzAlign === 'both') {
+			styles += `
+				left: ${prop.left};
+				right: ${prop.right};
+			`;
+		}
+		else {
+			styles += `
+				left: ${prop.left};
+				width: ${prop.width};
+			`;			
+		}
+
+		styles += `
             top: ${prop.top};
-            width: ${prop.width};
-            height: ${prop.height};
-        `;
+			height: ${prop.height};
+		`;
                 
         return styles;
     }

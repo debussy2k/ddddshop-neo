@@ -36,24 +36,30 @@ export class SandboxActions {
             const defaultProp:Sandbox['prop'] = {
                 mobile: {
                     left: '10px',
-                    top: '10px',
+					right: 'auto',
                     width: '160px',
+                    top: '10px',
+					bottom: 'auto',
                     height: '100px',
                     horzAlign: 'left',
                     vertAlign: 'top'
                 },
                 tablet: {
                     left: '10px',
+					right: 'auto',
                     top: '10px',
                     width: '160px',
+					bottom: 'auto',
                     height: '100px',
                     horzAlign: 'left',
                     vertAlign: 'top'
                 },
                 desktop: {
                     left: '10px',
+					right: 'auto',
                     top: '10px',
                     width: '160px',
+					bottom: 'auto',
                     height: '100px',
                     horzAlign: 'left',
                     vertAlign: 'top'

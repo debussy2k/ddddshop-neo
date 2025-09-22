@@ -6,6 +6,7 @@
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
+	import { util } from "$lib/studio/util";
 
     let { section }: { section: Section } = $props();
 
@@ -93,6 +94,13 @@
 		
 		return paddingTop + paddingBottom + borderTop + borderBottom + (containerPadding * 2) + childrenHeight;
 	} 
+
+	export function getWidth() : number {
+		if (!sectionElement) return 0;
+		
+		let w = window.getComputedStyle(sectionElement).width;
+		return util.getNumberPart(w);
+	}
 
 </script>
 

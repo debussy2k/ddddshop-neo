@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, CompositeWidget } from "./types";
+import type { DocState, CompositeWidget, Widget } from "./types";
 import { du } from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -32,11 +32,15 @@ class StudioDoc {
 	// 현재 활성화 되어있는 항목 id
 	activeId = $state<string | null>(null);
 
-	// 현재 활성화 되어있는 위젯
 	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
 	widgetMap: Record<string, any> = {};
 	getWidget<T>(id: string): T {
 		return this.widgetMap[id] as T;
+	}
+	getParentWidgetComponent<T>(id: string): T {
+		let parent = du.getParentByChildId(id, this.doc);
+		if (!parent) return null as T;
+		return this.widgetMap[parent.id] as T;
 	}
 
     constructor() {
@@ -140,8 +144,8 @@ class StudioDoc {
         }
     }
 
-    getParentById(id: string): Readonly<CompositeWidget> | undefined {
-        return du.getParentById(id, this.doc);
+    getParentByChildId(id: string): Readonly<CompositeWidget> | undefined {
+        return du.getParentByChildId(id, this.doc);
     }
 }
 

@@ -2,6 +2,7 @@ import interact from 'interactjs'
 import type { DragEvent, ResizeEvent } from '@interactjs/types'
 import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
+import type { HorizontalAlign } from '$lib/studio/types'
 
 export namespace wui {
 
@@ -11,13 +12,16 @@ export namespace wui {
 
     export interface CurrentPosition {
         left: string;
+		width: string;
+		right: string;
+        horzAlign: HorizontalAlign;
         top: string;
     }
     export interface DraggableConfig {
         id: string;
-        element: HTMLElement;
+        element: HTMLElement|SVGElement;
         getCurrentProp: () => CurrentPosition; // 현재 위치 정보는 reactive하기 때문에 함수로 전달
-        updateCallback: (id: string, position: { left: string; top: string }) => void;
+        updateCallback: (id: string, position: CurrentPosition) => void;
     }
 
     /**
@@ -25,25 +29,17 @@ export namespace wui {
      * @param config 드래그 설정 객체
      */
     export function setupDraggable(config: DraggableConfig): void {
-        let position = { x: 0, y: 0 };
         
         // 기존 draggable 설정 제거 (중복 방지)
         interact(config.element).draggable({
             listeners: {
                 start: (event: DragEvent) => {
-                    const currentProp = config.getCurrentProp();
-                    position.x = util.getNumberPart(currentProp.left);
-                    position.y = util.getNumberPart(currentProp.top);
                     studioDoc.historyManager.setBatchMode();
                     event.stopPropagation();
                 },
                 move: (event: DragEvent) => {
-                    position.x += event.dx;
-                    position.y += event.dy;
-                    config.updateCallback(config.id, {
-                        left: position.x + 'px',
-                        top: position.y + 'px'
-                    });
+					let newPosition = getNewPosition(event);
+                    config.updateCallback(config.id, newPosition as CurrentPosition);
                     event.stopPropagation();
                 },
                 end: (event: DragEvent) => {
@@ -52,6 +48,49 @@ export namespace wui {
                 }
             }
         });
+
+
+		function getNewPosition(event: DragEvent) {
+			const prop = config.getCurrentProp();
+			let horzPos: Partial<CurrentPosition>;
+			let vertPos: Partial<CurrentPosition>;
+
+			// horizontal
+			if (prop.horzAlign === 'left') {
+				horzPos = {
+					left: util.getNumberPart(prop.left) + event.dx + 'px',
+					right: 'auto'
+				}
+			}
+			else if (prop.horzAlign === 'right') {
+				horzPos = {
+					right: util.getNumberPart(prop.right) - event.dx + 'px',
+					left: 'auto'
+				}
+			}
+			else if (prop.horzAlign === 'both') {
+				horzPos = {
+					left: util.getNumberPart(prop.left) + event.dx + 'px',
+					right: util.getNumberPart(prop.right) - event.dx + 'px'
+				}
+			}
+			else {
+				horzPos = {
+					left: util.getNumberPart(prop.left) + event.dx + 'px',
+					right: 'auto'
+				}
+			}
+
+			// vertical
+			vertPos = {
+				top: util.getNumberPart(prop.top) + event.dy + 'px',
+			}
+
+			return {
+				...horzPos,
+				...vertPos
+			}
+		}
     }
 
     // ------------------------------------------------------------
@@ -66,7 +105,7 @@ export namespace wui {
     }
     export interface ResizableConfig {
         id: string;
-        element: HTMLElement;
+        element: HTMLElement|SVGElement;
         getCurrentProp: () => CurrentDimensions; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
         updateCallback: (id: string, dimensions: { width: string; height: string; left: string; top: string }) => void;
         minSize?: { width: number; height: number };
