@@ -21,9 +21,11 @@ export interface BaseWidgetProp {
     left: string;
     width: string;
     right: string;
+	centerOffsetX: number;
     top: string;
     height: string;
     bottom: string;
+	centerOffsetY: number;
     horzAlign: HorizontalAlign;
     vertAlign: VerticalAlign;
 }

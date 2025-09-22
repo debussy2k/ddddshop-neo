@@ -1,7 +1,11 @@
+import type { HorizontalAlign } from "./types";
+
 type HorzProp = {
 	left: string;
 	right: string;
 	width: string;
+	centerOffsetX: number;
+	horzAlign: HorizontalAlign;
 }
 
 export namespace util {
@@ -38,5 +42,11 @@ export namespace util {
 		else {
 			return prop.width;
 		}
+	}
+	export function getCenterOffsetX(prop: HorzProp, parentWidth: number) {
+		let left = getNumberPart(getLeftValuePx(prop, parentWidth));
+		let width = getNumberPart(getWidthValuePx(prop, parentWidth));
+		let centerOffsetX =  (left + width/2) - parentWidth/2;
+		return centerOffsetX + 'px';
 	}
 }

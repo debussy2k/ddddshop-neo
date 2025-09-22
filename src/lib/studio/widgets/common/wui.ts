@@ -14,6 +14,7 @@ export namespace wui {
         left: string;
 		width: string;
 		right: string;
+		centerOffsetX: number;
         horzAlign: HorizontalAlign;
         top: string;
 		bottom: string;
@@ -72,6 +73,12 @@ export namespace wui {
 				horzPos = {
 					left: util.getNumberPart(prop.left) + event.dx + 'px',
 					right: util.getNumberPart(prop.right) - event.dx + 'px'
+				}
+			}
+			else  if (prop.horzAlign === 'center') {
+				horzPos = {
+					left: `calc(50% + ${prop.centerOffsetX}px  - ${util.getNumberPart(prop.width)/2}px)`,
+					centerOffsetX: prop.centerOffsetX + event.dx,
 				}
 			}
 			else {

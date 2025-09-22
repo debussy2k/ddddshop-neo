@@ -33,6 +33,18 @@ export namespace constraintsUtil {
 				width: 'auto',
 			}
 		}
+		else if (newHorzAlign === 'center') {
+			let centerOffsetX = util.getCenterOffsetX(currentProp, parentWidth);
+			let child_width_half = util.getNumberPart(util.getWidthValuePx(currentProp, parentWidth))/2;
+			let left = `calc(50% + ${centerOffsetX} - ${child_width_half}px)`;
+			obj = {
+				horzAlign: "center",
+				left: left,
+				width: util.getWidthValuePx(currentProp, parentWidth),
+				right: 'auto',
+				centerOffsetX: util.getNumberPart(centerOffsetX),
+			}
+		}
 		else {
 			console.error(`invalid horz align`, newHorzAlign);
 		}	

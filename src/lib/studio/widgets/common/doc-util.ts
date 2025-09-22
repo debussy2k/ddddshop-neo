@@ -89,6 +89,12 @@ export namespace du {
 				right: ${prop.right};
 			`;
 		}
+		else if (prop.horzAlign === 'center') {
+			styles += `
+				left: ${prop.left};
+				width: ${prop.width};
+			`;
+		}
 		else {
 			styles += `
 				left: ${prop.left};
