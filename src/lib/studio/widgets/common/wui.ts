@@ -131,16 +131,16 @@ export namespace wui {
                 start: (event: ResizeEvent) => {
                     studioDoc.historyManager.setBatchMode();
                     const currentProp = config.getCurrentProp();
-                    rect.width = util.getNumberPart(currentProp.width);
-                    rect.height = util.getNumberPart(currentProp.height);
                     rect.left = util.getNumberPart(currentProp.left);
+                    rect.width = util.getNumberPart(currentProp.width);
                     rect.top = util.getNumberPart(currentProp.top);
+                    rect.height = util.getNumberPart(currentProp.height);
                 },
                 move: (event: ResizeEvent) => {
-                    rect.width += event.deltaRect?.width || 0;
-                    rect.height += event.deltaRect?.height || 0;
                     rect.left += event.deltaRect?.left || 0;
+                    rect.width += event.deltaRect?.width || 0;
                     rect.top += event.deltaRect?.top || 0;
+                    rect.height += event.deltaRect?.height || 0;
                     config.updateCallback(config.id, {
                         width: rect.width + 'px',
                         height: rect.height + 'px',

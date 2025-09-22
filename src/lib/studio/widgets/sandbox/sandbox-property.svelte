@@ -10,6 +10,7 @@
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import { cmdSandbox as cmd } from "$lib/studio/command";
     import { util } from "$lib/studio/util";
+	import { constraintsUtil } from "../common/constraints-util";
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
@@ -30,36 +31,8 @@
 			return;
 		}
 		let parentWidth = parentComp.getWidth();
-		let obj: Partial<BaseWidgetProp> = {};
+		let obj = constraintsUtil.createHorzAlignProps(newHorzAlign, currentProp, parentWidth);
 
-		if (newHorzAlign === 'left') {
-			let left = util.getLeftValuePx(currentProp, parentWidth);
-			obj = {
-				horzAlign: "left",
-				left: left,
-				right: 'auto',
-			}
-		}
-		else if (newHorzAlign === 'right') {
-			let right = util.getRightValuePx(currentProp, parentWidth);
-			obj = {
-				horzAlign: "right",
-				left: 'auto',
-				right: right,
-			}
-		}
-		else if (newHorzAlign === 'both') {
-			let left = util.getLeftValuePx(currentProp, parentWidth);
-			let right = util.getRightValuePx(currentProp, parentWidth);
-			obj = {
-				horzAlign: "both",
-				left: left,
-				right: right,
-			}
-		}
-		else {
-			console.error(`invalid horz align`, newHorzAlign);
-		}
 		cmd.updateProp(data.id, obj, bpm.current);
     }
 

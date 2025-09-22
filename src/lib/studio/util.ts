@@ -31,4 +31,12 @@ export namespace util {
 			return prop.right;
 		}
 	}
+	export function getWidthValuePx(prop: HorzProp, parentWidth: number) {
+		if (prop.width === 'auto') {
+			return parentWidth - (getNumberPart(prop.left) + getNumberPart(prop.right)) + 'px';
+		}
+		else {
+			return prop.width;
+		}
+	}
 }
