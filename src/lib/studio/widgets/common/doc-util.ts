@@ -71,49 +71,91 @@ export namespace du {
             position: ${position};
 		`;
 
-		if (prop.horzAlign === 'left') {
-			styles += `
-				left: ${prop.left};
-				width: ${prop.width};
-			`;
-		}
-		else if (prop.horzAlign === 'right') {
-			styles += `
-            	width: ${prop.width};
-            	right: ${prop.right};
-			`
-		}
-		else  if (prop.horzAlign === 'both') {
-			styles += `
-				left: ${prop.left};
-				right: ${prop.right};
-			`;
-		}
-		else if (prop.horzAlign === 'center') {
-			styles += `
-				left: ${prop.left};
-				width: ${prop.width};
-			`;
-		}
-        else if (prop.horzAlign === 'scale') {
-			styles += `
-				left: ${prop.left};
-				width: ${prop.width};
-				right: ${prop.right};
-			`;
-		}
-		else {
-			styles += `
-				left: ${prop.left};
-				width: ${prop.width};
-			`;			
-		}
-
-		styles += `
-            top: ${prop.top};
-			height: ${prop.height};
-		`;
+	        // 수평 정렬 스타일 추가
+        styles += getHorizontalStyles(prop);
+		styles += getVerticalStyles(prop);
                 
         return styles;
+    }
+
+    function getHorizontalStyles(prop: BaseWidgetProp): string {
+        if (prop.horzAlign === 'left') {
+            return `
+                left: ${prop.left};
+                width: ${prop.width};
+            `;
+        }
+        else if (prop.horzAlign === 'right') {
+            return `
+                width: ${prop.width};
+                right: ${prop.right};
+            `;
+        }
+        else if (prop.horzAlign === 'both') {
+            return `
+                left: ${prop.left};
+                right: ${prop.right};
+            `;
+        }
+        else if (prop.horzAlign === 'center') {
+            return `
+                left: ${prop.left};
+                width: ${prop.width};
+            `;
+        }
+        else if (prop.horzAlign === 'scale') {
+            return `
+                left: ${prop.left};
+                width: ${prop.width};
+                right: ${prop.right};
+            `;
+        }
+        else {
+            return `
+                left: ${prop.left};
+                width: ${prop.width};
+            `;
+        }
+    }
+
+
+    function getVerticalStyles(prop: BaseWidgetProp): string {
+        if (prop.vertAlign === 'top') {
+            return `
+                top: ${prop.top};
+                height: ${prop.height};
+            `;
+        }
+        else if (prop.vertAlign === 'bottom') {
+            return `
+                height: ${prop.height};
+                bottom: ${prop.bottom};
+            `;
+        }
+        else if (prop.vertAlign === 'both') {
+            return `
+                top: ${prop.top};
+                bottom: ${prop.bottom};
+            `;
+        }
+        else if (prop.vertAlign === 'center') {
+            return `
+                top: ${prop.top};
+                height: ${prop.height};
+            `;
+        }
+        else if (prop.vertAlign === 'scale') {
+            return `
+                top: ${prop.top};
+                height: ${prop.height};
+                bottom: ${prop.bottom};
+            `;
+        }
+        else {
+            return `
+                top: ${prop.top};
+                height: ${prop.height};
+            `;
+        }
     }
 }

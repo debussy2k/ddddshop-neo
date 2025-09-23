@@ -7,14 +7,16 @@
     import { toPixelValue } from "$lib/utils/drag-resize";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { util } from "$lib/studio/util";
+	import { cn } from "$lib/utils";
 
-    let { section }: { section: Section } = $props();
+    let { data }: { data: Section } = $props();
 
     let sectionElement = $state<HTMLElement>();
     let isHovered = $state(false);
+    let currentProp = $derived(data.prop?.[bpm.current]);
 
     function handleMoutdown(e?: MouseEvent) {
-        studioDoc.activeId = section.id;
+        studioDoc.activeId = data.id;
 		// studioDoc.activeWidget에 현재 지금의  svelte component 객체를 넣어줌
 		// studioDoc.activeWidget = section;
     }
@@ -36,11 +38,11 @@
 	}
 
     // 현재 섹션이 활성화되어 있는지 확인
-    let isActive = $derived(studioDoc.activeId === section.id);
+    let isActive = $derived(studioDoc.activeId === data.id);
 
     // Section의 child 위젯들 가져오기
     let childWidgets = $derived(() => {
-        return section.children || [];
+        return data.children || [];
     });
 
     // 섹션 컨테이너의 클래스를 계산하는 함수
@@ -63,7 +65,7 @@
 
 	// 편의 함수들
 	function updateSectionHeight(newHeight: number) {
-        cmdSection.updateProp(section.id, { height: toPixelValue(newHeight) }, bpm.current);
+        cmdSection.updateProp(data.id, { height: toPixelValue(newHeight) }, bpm.current);
 	}
 
 	export function getContentHeight() {
@@ -113,7 +115,7 @@
 <div 
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
-    style:height={section.prop?.[bpm.current]?.height || '100px'}
+    style:height={currentProp.height}
     onmousedown={handleMoutdown}
     role="button"
     tabindex="0"
@@ -133,10 +135,12 @@
             </div>
     </div>
 
-    <div class="_outer relative p-2">
+    <div class="_outer">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class="es-section-widget-inner {getInnerClass()}">
+            <div class={cn("es-section-widget-inner", getInnerClass())}
+                style:height={currentProp.height}
+            >
                 <WidgetRenderer widgets={childWidgets()} />
             </div>
         {/if}

@@ -10,6 +10,7 @@
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import { cmdSandbox as cmd } from "$lib/studio/command";
 	import { constraintsUtilHorz } from "../common/constraints-util-horz";
+    import { constraintsUtilVert } from "../common/constraints-util-vert";
     import { JsonView } from "@zerodevx/svelte-json-view";
 
     let { data }: { data: Sandbox } = $props();
@@ -37,7 +38,15 @@
     }
 
     function updateVertAlign(newVertAlign: VerticalAlign) {
-        cmd.updateProp(data.id, { vertAlign: newVertAlign }, bpm.current);
+        let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
+        if (parentComp === null) {
+            console.error(`parent not found for sandbox`, data.id);
+            return;
+        }
+        let parentHeight = parentComp.getHeight();
+        let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, parentHeight);
+
+        cmd.updateProp(data.id, obj, bpm.current);
     }
 </script>
 

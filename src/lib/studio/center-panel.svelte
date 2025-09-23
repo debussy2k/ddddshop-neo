@@ -37,7 +37,7 @@
     <div class='absolute inset-0 overflow-y-scroll flex justify-center' >
         <div class='canvas @container absolute shadow-lg shadow-gray-400 mt-4 ' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
-                <SectionWidget section={section} 
+                <SectionWidget data={section} 
                     bind:this={studioDoc.widgetMap[section.id]}
                 />
             {/each}
