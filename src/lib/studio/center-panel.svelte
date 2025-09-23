@@ -41,9 +41,9 @@
                     bind:this={studioDoc.widgetMap[section.id]}
                 />
             {/each}
-            <div class="text-xs pt-4 border-t border-gray-200">
+            <!-- <div class="text-xs pt-4 border-t border-gray-200">
                 <JsonView json={currentActiveItem} />
-            </div>
+            </div> -->
         </div>
 
         <div class='sticky top-0 h-full inset-0 flex justify-center pointer-events-none '>
