@@ -34,32 +34,44 @@ export class FrameActions {
                 mobile: {
                     layout: 'block',
                     left: '10px',
-                    top: '10px',
+                    right: 'auto',
                     width: '200px',
+                    centerOffsetX: 0,
+                    top: '10px',
+                    bottom: 'auto',
                     height: '150px',
-                    padding: '16px',
                     horzAlign: 'left',
-                    vertAlign: 'top'
+                    vertAlign: 'top',
+                    centerOffsetY: 0,
+                    padding: '16px',
                 },
                 tablet: {
                     layout: 'block',
                     left: '10px',
-                    top: '10px',
+                    right: 'auto',
                     width: '200px',
+                    centerOffsetX: 0,
+                    top: '10px',
+                    bottom: 'auto',
                     height: '150px',
-                    padding: '16px',
                     horzAlign: 'left',
-                    vertAlign: 'top'
+                    vertAlign: 'top',
+                    centerOffsetY: 0,
+                    padding: '16px',                
                 },
                 desktop: {
                     layout: 'block',
                     left: '10px',
-                    top: '10px',
+                    right: 'auto',
                     width: '200px',
+                    centerOffsetX: 0,
+                    top: '10px',
+                    bottom: 'auto',
                     height: '150px',
-                    padding: '16px',
                     horzAlign: 'left',
-                    vertAlign: 'top'
+                    vertAlign: 'top',
+                    centerOffsetY: 0,
+                    padding: '16px',
                 }
             }
 

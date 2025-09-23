@@ -4,7 +4,8 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
-	import { wui } from "$lib/studio/widgets/common/wui";
+	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
+	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import { du } from "$lib/studio/widgets/common/doc-util";
 	import { cn } from "$lib/utils";
@@ -24,30 +25,30 @@
             console.error('parent not found', data.id);
         }
         
-		setupDraggable();
-		setupResizable();
+		setupDraggableWidget();
+		setupResizableWidget();
 	});
 
-	function setupDraggable() {
-		wui.setupDraggable({
+	function setupDraggableWidget() {
+		setupDraggable({
 			id: data.id,
 			element: element,
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
-			updateCallback: (id, position) => {
-				cmdFrame.updateProp(id, position, bpm.current);
+			updateCallback: (id, updatedProps) => {
+				cmdFrame.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}
 
-	function setupResizable() {
-		wui.setupResizable({
+	function setupResizableWidget() {
+		setupResizable({
 			id: data.id,
 			element: element,
 			getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
-			updateCallback: (id, dimensions) => {
-				cmdFrame.updateProp(id, dimensions, bpm.current);
+			updateCallback: (id, updatedProps) => {
+				cmdFrame.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}

@@ -2,7 +2,8 @@
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-	import { wui } from "$lib/studio/widgets/common/wui";
+	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
+	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
     import { du } from "$lib/studio/widgets/common/doc-util";
@@ -17,30 +18,30 @@
 
     onMount(() => {
         
-		setupDraggable();
-		setupResizable();
+		setupDraggableWidget();
+		setupResizableWidget();
     });
 
-	function setupDraggable() {
-		wui.setupDraggable({
+	function setupDraggableWidget() {
+		setupDraggable({
 			id: data.id,
 			element: element,
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
-			updateCallback: (id, position) => {
-				cmdSandbox.updateProp(id, position, bpm.current);
+			updateCallback: (id, updatedProps) => {
+				cmdSandbox.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}
 
-	function setupResizable() {
-		wui.setupResizable({
+	function setupResizableWidget() {
+		setupResizable({
 			id: data.id,
 			element: element,
 			getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
-			updateCallback: (id, dimensions) => {
-				cmdSandbox.updateProp(id, dimensions, bpm.current);
+			updateCallback: (id, updatedProps) => {
+				cmdSandbox.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}

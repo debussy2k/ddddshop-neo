@@ -1,0 +1,139 @@
+import interact from 'interactjs'
+import type { DragEvent } from '@interactjs/types'
+import { util } from '$lib/studio/util'
+import { studioDoc } from '$lib/studio/studio-doc.svelte'
+import type { BaseWidgetProp } from '$lib/studio/types'
+import { constraintsUtil } from './constraints-util'
+
+export type LayoutProp = Pick<BaseWidgetProp, 
+    'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
+    'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
+
+type ContextInfo = {
+	left: number;
+	right: number;
+	parentWidth: number;
+	parentHeight: number;
+}
+
+export type DraggableConfig = {
+    id: string;
+    element: HTMLElement|SVGElement;
+    getCurrentProp: () => LayoutProp; // 현재 위치 정보는 reactive하기 때문에 함수로 전달
+	getParentSize: () => { width: number; height: number };
+    updateCallback: (id: string, updatedProps: Partial<LayoutProp>) => void;
+}
+
+/**
+ * 요소를 드래그 가능하게 만드는 범용 함수
+ * @param config 드래그 설정 객체
+ */
+export function setupDraggable(config: DraggableConfig): void {
+	let ctx: ContextInfo;
+    interact(config.element).draggable({
+        listeners: {
+            start: (event: DragEvent) => {
+                event.stopPropagation();
+                studioDoc.historyManager.setBatchMode();
+				ctx = newContext(config.getCurrentProp());
+            },
+            move: (event: DragEvent) => {
+				let newPosition = getNewPosition(event, ctx);
+                config.updateCallback(config.id, newPosition);
+                event.stopPropagation();
+            },
+            end: (event: DragEvent) => {
+				let newPosition = getNewPosition(event, ctx);
+                config.updateCallback(config.id, newPosition);
+
+                studioDoc.historyManager.commitBatch();
+                event.stopPropagation();
+            }
+        }
+    });
+
+	function newContext(prop: LayoutProp) : ContextInfo {
+        let parentSize = config.getParentSize();
+
+        // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
+        let ctxInfo: ContextInfo = {
+            left: constraintsUtil.getLeftValue(prop, parentSize.width),
+            right: constraintsUtil.getRightValue(prop, parentSize.width),
+            parentWidth: parentSize.width,
+            parentHeight: parentSize.height
+        };
+		
+
+        if (prop.vertAlign === 'scale') {
+            // TBD
+        }
+
+		return ctxInfo;
+	}
+
+	function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<LayoutProp> {
+		const prop = config.getCurrentProp();
+		let horzPos: Partial<LayoutProp>;
+		let vertPos: Partial<LayoutProp>;
+
+		// horizontal
+		if (prop.horzAlign === 'left') {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
+				right: 'auto'
+			}
+		}
+		else if (prop.horzAlign === 'right') {
+			horzPos = {
+				right: util.getNumberPart(prop.right || '0') - event.dx + 'px',
+				left: 'auto'
+			}
+		}
+		else if (prop.horzAlign === 'both') {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
+				right: util.getNumberPart(prop.right || '0') - event.dx + 'px'
+			}
+		}
+		else if (prop.horzAlign === 'center') {
+			let newCenterOffsetX = (prop.centerOffsetX || 0) + event.dx;
+			horzPos = {
+				left: `calc(50% + ${newCenterOffsetX}px - ${util.getNumberPart(prop.width || '0')/2}px)`,
+				centerOffsetX: newCenterOffsetX,
+			}
+		}
+		else if (prop.horzAlign === 'scale') {
+			if (event.type === 'dragend') {
+				horzPos = {
+					left: 100 * ctx.left / ctx.parentWidth + '%',
+					right: 100 * ctx.right / ctx.parentWidth + '%'
+				}
+			}
+			else {
+				// drag 하는 동안은 px값으로 계산함
+				ctx.left += event.dx;
+				ctx.right -= event.dx;
+				horzPos = {
+					left: ctx.left + 'px',
+					right: ctx.right + 'px'
+				}
+			}
+		}
+		else {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
+				right: 'auto'
+			}
+		}
+
+		// vertical
+		vertPos = {
+			top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+		}
+
+		return {
+			...horzPos,
+			...vertPos
+		}
+	}
+}

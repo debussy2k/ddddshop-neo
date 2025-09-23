@@ -2,7 +2,8 @@
     import type { SimpleImage } from "./simple-image.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-    import { wui } from "$lib/studio/widgets/common/wui";
+    import { setupDraggable } from "$lib/studio/widgets/common/draggable";
+    import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSimpleImage } from "$lib/studio/command";
     import { du } from "$lib/studio/widgets/common/doc-util";
@@ -16,30 +17,41 @@
     let currentProp = $derived(data.prop?.[bpm.current]);
 
     onMount(() => {
-        setupDraggable();
-        setupResizable();
+        setupDraggableWidget();
+        setupResizableWidget();
     });
 
-    function setupDraggable() {
-        wui.setupDraggable({
+    function setupDraggableWidget() {
+        setupDraggable({
             id: data.id,
             element: element,
             getCurrentProp: () => currentProp,
-            updateCallback: (id, position) => {
-                cmdSimpleImage.updateProp(id, position, bpm.current);
+            getParentSize: () => getParentSize(),
+            updateCallback: (id, updatedProps) => {
+                cmdSimpleImage.updateProp(id, updatedProps, bpm.current);
             }
         });
     }
 
-    function setupResizable() {
-        wui.setupResizable({
+    function setupResizableWidget() {
+        setupResizable({
             id: data.id,
             element: element,
             getCurrentProp: () => currentProp,
-            updateCallback: (id, dimensions) => {
-                cmdSimpleImage.updateProp(id, dimensions, bpm.current);
+            getParentSize: () => getParentSize(),
+            updateCallback: (id, updatedProps) => {
+                cmdSimpleImage.updateProp(id, updatedProps, bpm.current);
             }
         });
+    }
+
+    function getParentSize() {
+        let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
+        if (parentComp === null) {
+            console.error(`parent not found for simple-image`, data.id);
+            return { width: 0, height: 0 }
+        }
+        return { width: parentComp.getWidth(), height: parentComp.getHeight() };
     }
 
     function handleMoutdown(event: MouseEvent) {
@@ -73,7 +85,17 @@
     }
 
     function getCurrentStyle() {
-        let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
+        // currentProp을 BaseWidgetProp 타입으로 확장
+        const extendedProp = {
+            ...currentProp,
+            right: 'auto',
+            centerOffsetX: 0,
+            bottom: 'auto',
+            centerOffsetY: 0,
+            horzAlign: 'left' as const,
+            vertAlign: 'top' as const
+        };
+        let style = du.getBaseStyleOfLeafWidget(extendedProp, parent?.prop[bpm.current].layout || 'block');
         return style;
     }
 </script>

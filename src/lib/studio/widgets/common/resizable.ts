@@ -1,0 +1,162 @@
+import interact from 'interactjs'
+import type { ResizeEvent } from '@interactjs/types'
+import { util } from '$lib/studio/util'
+import { studioDoc } from '$lib/studio/studio-doc.svelte'
+import type { BaseWidgetProp } from '$lib/studio/types'
+import { constraintsUtil } from './constraints-util'
+
+export type LayoutProp = Pick<BaseWidgetProp, 
+    'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
+    'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
+
+type ContextInfo = {
+	left: number;
+	right: number;
+	parentWidth: number;
+	parentHeight: number;
+}
+
+export interface ResizableConfig {
+    id: string;
+    element: HTMLElement|SVGElement;
+    getCurrentProp: () => LayoutProp; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
+	getParentSize: () => { width: number; height: number };
+    updateCallback: (id: string, updatedProps: Partial<LayoutProp>) => void;
+    minSize?: { width: number; height: number };
+    edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
+}
+
+/**
+ * 요소를 리사이즈 가능하게 만드는 범용 함수
+ * @param config 리사이즈 설정 객체
+ */
+export function setupResizable(config: ResizableConfig): void {
+	let ctx: ContextInfo;
+    
+    interact(config.element).resizable({
+        edges: config.edges || { top: true, left: true, bottom: true, right: true },
+        modifiers: [
+            interact.modifiers.restrictSize({
+                min: config.minSize || { width: 10, height: 10 }
+            })
+        ],
+        listeners: {
+            start: (event: ResizeEvent) => {
+                event.stopPropagation();
+                studioDoc.historyManager.setBatchMode();
+				ctx = newContext(config.getCurrentProp());
+            },
+            move: (event: ResizeEvent) => {
+				// console.log('move', event.deltaRect);
+				let newPosition = getNewPosition(event, ctx);
+                config.updateCallback(config.id, newPosition);
+            },
+            end: (event: ResizeEvent) => {
+				let newPosition = getNewPosition(event, ctx);
+                config.updateCallback(config.id, newPosition);
+
+                studioDoc.historyManager.commitBatch();
+                event.stopPropagation();
+            }
+        }
+    });
+
+	function newContext(prop: LayoutProp) : ContextInfo {
+        let parentSize = config.getParentSize();
+        // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
+        let ctxInfo: ContextInfo = {
+            left: constraintsUtil.getLeftValue(prop, parentSize.width),
+            right: constraintsUtil.getRightValue(prop, parentSize.width),
+            parentWidth: parentSize.width,
+            parentHeight: parentSize.height
+
+        };
+
+        if (prop.vertAlign === 'scale') {
+            // TBD
+        }
+
+		return ctxInfo;
+	}
+
+	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<LayoutProp> {
+		const prop = config.getCurrentProp();
+		let horzPos: Partial<LayoutProp>;
+		let vertPos: Partial<LayoutProp>;
+
+		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
+
+
+		// horizontal
+		if (prop.horzAlign === 'left' || !prop.horzAlign) {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
+				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				right: 'auto'
+			}
+		}
+		else if (prop.horzAlign === 'right') {
+			horzPos = {
+				right: util.getNumberPart(prop.right || '0') - deltaRect?.right + 'px',
+				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				left: 'auto'
+			}
+		}
+		else if (prop.horzAlign === 'both') {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
+				right: util.getNumberPart(prop.right || '0') - deltaRect?.right + 'px',
+				width: 'auto',
+			}
+		}
+		else if (prop.horzAlign === 'center') {
+			// console.log('center', deltaRect);
+			let newWidth = util.getNumberPart(prop.width || '0') + deltaRect?.width;
+			let newCenterOffsetX = prop.centerOffsetX || 0;
+			if (deltaRect?.left !== 0) {
+				newCenterOffsetX += deltaRect?.left/2
+			}
+			else if (deltaRect?.right !== 0) {
+				newCenterOffsetX += deltaRect?.right/2
+			}
+
+			horzPos = {
+				left: `calc(50% + ${newCenterOffsetX}px  - ${newWidth/2}px)`,
+				width: newWidth + 'px',
+				centerOffsetX: newCenterOffsetX,
+			}
+		}
+		else if (prop.horzAlign === 'scale') {
+			console.log('scale', deltaRect);
+			if (event.type === 'resizeend') {
+				horzPos = {
+					left: 100 * ctx.left / ctx.parentWidth + '%',
+					right: 100 * ctx.right / ctx.parentWidth + '%'
+				}
+			}
+			else {
+				ctx.left += deltaRect?.left;
+				ctx.right -= deltaRect?.right;
+				horzPos = {
+					left: ctx.left + 'px',
+					right: ctx.right + 'px',
+					width: 'auto'
+				}
+			}
+		}
+		else {
+			horzPos = {}
+		}
+
+		// vertical
+		vertPos = {
+			top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
+			height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+		}
+
+		return {
+			...horzPos,
+			...vertPos
+		}
+	}
+}
