@@ -4,6 +4,7 @@ import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { BaseWidgetProp } from '$lib/studio/types'
 import { constraintsUtilHorz } from './constraints-util-horz'
+import { constraintsUtilVert } from './constraints-util-vert'
 
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
@@ -12,6 +13,8 @@ export type LayoutProp = Pick<BaseWidgetProp,
 type ContextInfo = {
 	left: number;
 	right: number;
+	top: number;
+	bottom: number;
 	parentWidth: number;
 	parentHeight: number;
 }
@@ -59,14 +62,11 @@ export function setupDraggable(config: DraggableConfig): void {
         let ctxInfo: ContextInfo = {
             left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
             right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
+            top: constraintsUtilVert.getTopValue(prop, parentSize.height),
+            bottom: constraintsUtilVert.getBottomValue(prop, parentSize.height),
             parentWidth: parentSize.width,
             parentHeight: parentSize.height
         };
-		
-
-        if (prop.vertAlign === 'scale') {
-            // TBD
-        }
 
 		return ctxInfo;
 	}
@@ -168,10 +168,19 @@ export function setupDraggable(config: DraggableConfig): void {
 			}
 		}
 		else if (prop.vertAlign === 'scale') {
-			// TBD - scale alignment not implemented yet
-			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
-				bottom: 'auto'
+			if (event.type === 'dragend') {
+				vertPos = {
+					top: 100 * ctx.top / ctx.parentHeight + '%',
+					bottom: 100 * ctx.bottom / ctx.parentHeight + '%'
+				}
+			}
+			else {
+				ctx.top += event.dy;
+				ctx.bottom -= event.dy;
+				vertPos = {
+					top: ctx.top + 'px',
+					bottom: ctx.bottom + 'px'
+				}
 			}
 		}
 		else {
