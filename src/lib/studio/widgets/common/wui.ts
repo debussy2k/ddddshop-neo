@@ -179,6 +179,23 @@ export namespace wui {
 					width: 'auto',
 				}
 			}
+			else if (prop.horzAlign === 'center') {
+				console.log('center', deltaRect);
+				let newWidth = util.getNumberPart(prop.width) + deltaRect?.width;
+				let newCenterOffsetX = prop.centerOffsetX;
+				if (deltaRect?.left !== 0) {
+					newCenterOffsetX += deltaRect?.left/2
+				}
+				else if (deltaRect?.right !== 0) {
+					newCenterOffsetX += deltaRect?.right/2
+				}
+
+				horzPos = {
+					left: `calc(50% + ${newCenterOffsetX}px  - ${newWidth/2}px)`,
+					width: newWidth + 'px',
+					centerOffsetX: newCenterOffsetX,
+				}
+			}
 			else {
 				horzPos = {}
 			}

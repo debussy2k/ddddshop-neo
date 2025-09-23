@@ -38,29 +38,35 @@ export class SandboxActions {
                     left: '10px',
 					right: 'auto',
                     width: '160px',
+                    centerOffsetX: 0,
                     top: '10px',
 					bottom: 'auto',
                     height: '100px',
+                    centerOffsetY: 0,
                     horzAlign: 'left',
-                    vertAlign: 'top'
+                    vertAlign: 'top',
                 },
                 tablet: {
                     left: '10px',
 					right: 'auto',
+                    centerOffsetX: 0,
                     top: '10px',
                     width: '160px',
 					bottom: 'auto',
                     height: '100px',
+                    centerOffsetY: 0,
                     horzAlign: 'left',
-                    vertAlign: 'top'
+                    vertAlign: 'top',
                 },
                 desktop: {
                     left: '10px',
 					right: 'auto',
+                    centerOffsetX: 0,
                     top: '10px',
                     width: '160px',
 					bottom: 'auto',
                     height: '100px',
+                    centerOffsetY: 0,
                     horzAlign: 'left',
                     vertAlign: 'top'
                 }
