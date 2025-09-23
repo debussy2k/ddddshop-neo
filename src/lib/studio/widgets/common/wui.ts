@@ -76,9 +76,10 @@ export namespace wui {
 				}
 			}
 			else  if (prop.horzAlign === 'center') {
+				let newCenterOffsetX = prop.centerOffsetX + event.dx;
 				horzPos = {
-					left: `calc(50% + ${prop.centerOffsetX}px  - ${util.getNumberPart(prop.width)/2}px)`,
-					centerOffsetX: prop.centerOffsetX + event.dx,
+					left: `calc(50% + ${newCenterOffsetX}px  - ${util.getNumberPart(prop.width)/2}px)`,
+					centerOffsetX: newCenterOffsetX,
 				}
 			}
 			else {
@@ -138,7 +139,7 @@ export namespace wui {
                     event.stopPropagation();
                 },
                 move: (event: ResizeEvent) => {
-					console.log('move', event.deltaRect);
+					// console.log('move', event.deltaRect);
 					let newPosition = getNewPosition(event);
                     config.updateCallback(config.id, newPosition as CurrentPosition);
                 },
@@ -180,7 +181,7 @@ export namespace wui {
 				}
 			}
 			else if (prop.horzAlign === 'center') {
-				console.log('center', deltaRect);
+				// console.log('center', deltaRect);
 				let newWidth = util.getNumberPart(prop.width) + deltaRect?.width;
 				let newCenterOffsetX = prop.centerOffsetX;
 				if (deltaRect?.left !== 0) {

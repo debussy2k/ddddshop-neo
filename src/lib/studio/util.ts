@@ -18,7 +18,11 @@ export namespace util {
 	}	
 
 	export function getLeftValuePx(prop: HorzProp, parentWidth: number) {
-		if (prop.left === 'auto') {
+		if (prop.horzAlign === 'center') {
+			let left = parentWidth/2 + prop.centerOffsetX - getNumberPart(prop.width)/2;
+			return left + 'px';
+		}
+		else if (prop.left === 'auto') {
 			let left = parentWidth - (getNumberPart(prop.width) + getNumberPart(prop.right));
 			return left + 'px';
 		}
@@ -27,7 +31,11 @@ export namespace util {
 		}
 	}
 	export function getRightValuePx(prop: HorzProp, parentWidth: number) {
-		if (prop.right === 'auto') {
+		if (prop.horzAlign === 'center') {
+			 let right = parentWidth/2 - prop.centerOffsetX - getNumberPart(prop.width)/2;
+			 return right + 'px';
+		}
+		else if (prop.right === 'auto') {
 			let right = parentWidth - (getNumberPart(prop.left) + getNumberPart(prop.width));
 			return right + 'px';
 		}

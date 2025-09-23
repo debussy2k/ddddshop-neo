@@ -9,8 +9,8 @@
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import { cmdSandbox as cmd } from "$lib/studio/command";
-    import { util } from "$lib/studio/util";
 	import { constraintsUtil } from "../common/constraints-util";
+    import { JsonView } from "@zerodevx/svelte-json-view";
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
@@ -101,6 +101,13 @@
                 <InputVal name='H' value={currentProp.height}/>
             </div>
 
+        </div>
+    </div>
+
+    <div class='px-3 py-4 text-xs border-b border-gray-200'>
+        <div class="mb-3">정보: {bpm.current}</div>
+        <div class='overflow-x-scroll'>
+            <JsonView json={currentProp}/>
         </div>
     </div>
 </div>
