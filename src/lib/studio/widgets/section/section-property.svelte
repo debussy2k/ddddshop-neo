@@ -13,14 +13,14 @@
     let { data }: { data: Section } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
 
-	async function updateLayout(newLayout: LayoutType) {
+	function updateLayout(newLayout: LayoutType) {
         cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
-    async function updateSectionHeight(newHeight: string) {
+    function updateSectionHeight(newHeight: string) {
         cmd.updateProp(data.id, { height: newHeight }, bpm.current);
     }
 
-	async function autoUpdateSectionHeight() {
+	function autoUpdateSectionHeight() {
 		let widget = studioDoc.getWidget<SectionWidget>(data.id);
 		let newHeight = widget.getContentHeight() + 'px';
         cmd.updateProp(data.id, { height: newHeight }, bpm.current);

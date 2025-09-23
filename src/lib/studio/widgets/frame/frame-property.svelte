@@ -16,15 +16,15 @@
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
 
-    async function updateHorzAlign(newHorzAlign: HorizontalAlign) {
+    function updateHorzAlign(newHorzAlign: HorizontalAlign) {
         cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);
     }
 
-    async function updateVertAlign(newVertAlign: VerticalAlign) {
+    function updateVertAlign(newVertAlign: VerticalAlign) {
         cmd.updateProp(data.id, { vertAlign: newVertAlign }, bpm.current);
     }
 
-    async function updateLayout(newLayout: LayoutType) {
+    function updateLayout(newLayout: LayoutType) {
         cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
 </script>
