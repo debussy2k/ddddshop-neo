@@ -10,7 +10,7 @@ type HorzProp = {
 }
 
 
-export namespace constraintsUtil {
+export namespace constraintsUtilHorz {
 	export function createHorzAlignProps(newHorzAlign: HorizontalAlign, currentProp: BaseWidgetProp, parentWidth: number) {
 		let obj: Partial<BaseWidgetProp> = {};
 		if (newHorzAlign === 'left') {

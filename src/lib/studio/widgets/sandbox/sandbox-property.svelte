@@ -9,7 +9,7 @@
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import { cmdSandbox as cmd } from "$lib/studio/command";
-	import { constraintsUtil } from "../common/constraints-util";
+	import { constraintsUtilHorz } from "../common/constraints-util-horz";
     import { JsonView } from "@zerodevx/svelte-json-view";
 
     let { data }: { data: Sandbox } = $props();
@@ -31,7 +31,7 @@
 			return;
 		}
 		let parentWidth = parentComp.getWidth();
-		let obj = constraintsUtil.createHorzAlignProps(newHorzAlign, currentProp, parentWidth);
+		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, parentWidth);
 
 		cmd.updateProp(data.id, obj, bpm.current);
     }

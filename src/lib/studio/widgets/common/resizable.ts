@@ -3,7 +3,7 @@ import type { ResizeEvent } from '@interactjs/types'
 import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { BaseWidgetProp } from '$lib/studio/types'
-import { constraintsUtil } from './constraints-util'
+import { constraintsUtilHorz } from './constraints-util-horz'
 
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
@@ -65,8 +65,8 @@ export function setupResizable(config: ResizableConfig): void {
         let parentSize = config.getParentSize();
         // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
         let ctxInfo: ContextInfo = {
-            left: constraintsUtil.getLeftValue(prop, parentSize.width),
-            right: constraintsUtil.getRightValue(prop, parentSize.width),
+            left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
+            right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
             parentWidth: parentSize.width,
             parentHeight: parentSize.height
 
