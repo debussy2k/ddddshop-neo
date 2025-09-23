@@ -11,17 +11,35 @@
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
+    import { constraintsUtilHorz } from "../common/constraints-util-horz";
+    import { constraintsUtilVert } from "../common/constraints-util-vert";
 
     let { data }: { data: Frame } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-        cmd.updateProp(data.id, { horzAlign: newHorzAlign }, bpm.current);
+		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
+		if (parentComp === null) {
+			console.error(`parent not found for sandbox`, data.id);
+			return;
+		}
+		let parentWidth = parentComp.getWidth();
+		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, parentWidth);
+
+		cmd.updateProp(data.id, obj, bpm.current);
     }
 
     function updateVertAlign(newVertAlign: VerticalAlign) {
-        cmd.updateProp(data.id, { vertAlign: newVertAlign }, bpm.current);
+        let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
+        if (parentComp === null) {
+            console.error(`parent not found for sandbox`, data.id);
+            return;
+        }
+        let parentHeight = parentComp.getHeight();
+        let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, parentHeight);
+
+        cmd.updateProp(data.id, obj, bpm.current);
     }
 
     function updateLayout(newLayout: LayoutType) {
