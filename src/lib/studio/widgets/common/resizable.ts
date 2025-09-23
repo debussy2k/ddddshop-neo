@@ -134,7 +134,7 @@ export function setupResizable(config: ResizableConfig): void {
 			}
 		}
 		else if (prop.horzAlign === 'scale') {
-			console.log('scale', deltaRect);
+			// console.log('scale', deltaRect);
 			if (event.type === 'resizeend') {
 				horzPos = {
 					left: 100 * ctx.left / ctx.parentWidth + '%',
