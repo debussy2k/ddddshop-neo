@@ -2,7 +2,7 @@ import interact from 'interactjs'
 import type { DragEvent, ResizeEvent } from '@interactjs/types'
 import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
-import type { HorizontalAlign } from '$lib/studio/types'
+import type { BaseWidgetProp, HorizontalAlign, VerticalAlign } from '$lib/studio/types'
 import { constraintsUtil } from './constraints-util'
 
 export namespace wui {
@@ -11,16 +11,9 @@ export namespace wui {
     // for Draggable
     // ------------------------------------------------------------
 
-    export type CurrentPosition = {
-        left: string;
-		width: string;
-		right: string;
-		centerOffsetX: number;
-        horzAlign: HorizontalAlign;
-        top: string;
-		bottom: string;
-		height: string;
-    }
+    export type LayoutProp = Pick<BaseWidgetProp, 
+		'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
+		'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
 	type ContextInfo = {
 		left: number;
 		right: number;
@@ -30,9 +23,9 @@ export namespace wui {
     export type DraggableConfig = {
         id: string;
         element: HTMLElement|SVGElement;
-        getCurrentProp: () => CurrentPosition; // 현재 위치 정보는 reactive하기 때문에 함수로 전달
+        getCurrentProp: () => LayoutProp; // 현재 위치 정보는 reactive하기 때문에 함수로 전달
 		getParentSize: () => { width: number; height: number };
-        updateCallback: (id: string, position: Partial<CurrentPosition>) => void;
+        updateCallback: (id: string, position: Partial<LayoutProp>) => void;
     }
 
     /**
@@ -63,7 +56,7 @@ export namespace wui {
             }
         });
 
-		function newContext(prop: CurrentPosition) : ContextInfo {
+		function newContext(prop: LayoutProp) : ContextInfo {
 			if (prop.horzAlign !== 'scale') {
 				return {} as ContextInfo;
 			}
@@ -77,10 +70,10 @@ export namespace wui {
 			}
 		}
 
-		function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<CurrentPosition> {
+		function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 			const prop = config.getCurrentProp();
-			let horzPos: Partial<CurrentPosition>;
-			let vertPos: Partial<CurrentPosition>;
+			let horzPos: Partial<LayoutProp>;
+			let vertPos: Partial<LayoutProp>;
 
 			// horizontal
 			if (prop.horzAlign === 'left') {
@@ -157,7 +150,7 @@ export namespace wui {
     export interface ResizableConfig {
         id: string;
         element: HTMLElement|SVGElement;
-        getCurrentProp: () => CurrentPosition; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
+        getCurrentProp: () => LayoutProp; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
 		getParentSize: () => { width: number; height: number };
         updateCallback: (id: string, dimensions: { width: string; height: string; left: string; top: string }) => void;
         minSize?: { width: number; height: number };
@@ -187,11 +180,11 @@ export namespace wui {
                 move: (event: ResizeEvent) => {
 					// console.log('move', event.deltaRect);
 					let newPosition = getNewPosition(event, ctx);
-                    config.updateCallback(config.id, newPosition as CurrentPosition);
+                    config.updateCallback(config.id, newPosition as LayoutProp);
                 },
                 end: (event: ResizeEvent) => {
 					let newPosition = getNewPosition(event, ctx);
-                    config.updateCallback(config.id, newPosition as CurrentPosition);
+                    config.updateCallback(config.id, newPosition as LayoutProp);
 
                     studioDoc.historyManager.commitBatch();
                     event.stopPropagation();
@@ -199,7 +192,7 @@ export namespace wui {
             }
         });
 
-		function newContext(prop: CurrentPosition) : ContextInfo {
+		function newContext(prop: LayoutProp) : ContextInfo {
 			if (prop.horzAlign !== 'scale') {
 				return {} as ContextInfo;
 			}
@@ -213,10 +206,10 @@ export namespace wui {
 			}
 		}
 
-		function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<CurrentPosition> {
+		function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 			const prop = config.getCurrentProp();
-			let horzPos: Partial<CurrentPosition>;
-			let vertPos: Partial<CurrentPosition>;
+			let horzPos: Partial<LayoutProp>;
+			let vertPos: Partial<LayoutProp>;
 
 			let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
