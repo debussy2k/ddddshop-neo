@@ -73,8 +73,17 @@ export function setupDraggable(config: DraggableConfig): void {
 
 	function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 		const prop = config.getCurrentProp();
+		let horzPos: Partial<LayoutProp> =  calcHorzProps(event, prop, ctx);
+		let vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
+
+		return {
+			...horzPos,
+			...vertPos
+		}
+	}
+
+    function calcHorzProps(event: DragEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
 		let horzPos: Partial<LayoutProp>;
-		let vertPos: Partial<LayoutProp>;
 
 		// horizontal
 		if (prop.horzAlign === 'left') {
@@ -124,16 +133,54 @@ export function setupDraggable(config: DraggableConfig): void {
 				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
 				right: 'auto'
 			}
-		}
+		}      
+        
+        return horzPos;
+    }
+
+    function calcVertProps(event: DragEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
+		let vertPos: Partial<LayoutProp>;
 
 		// vertical
-		vertPos = {
-			top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+		if (prop.vertAlign === 'top') {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				bottom: 'auto'
+			}
 		}
-
-		return {
-			...horzPos,
-			...vertPos
+		else if (prop.vertAlign === 'bottom') {
+			vertPos = {
+				bottom: util.getNumberPart(prop.bottom || '0') - event.dy + 'px',
+				top: 'auto'
+			}
 		}
+		else if (prop.vertAlign === 'both') {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				bottom: util.getNumberPart(prop.bottom || '0') - event.dy + 'px'
+			}
+		}
+		else if (prop.vertAlign === 'center') {
+			let newCenterOffsetY = (prop.centerOffsetY || 0) + event.dy;
+			vertPos = {
+				top: `calc(50% + ${newCenterOffsetY}px - ${util.getNumberPart(prop.height || '0')/2}px)`,
+				centerOffsetY: newCenterOffsetY,
+			}
+		}
+		else if (prop.vertAlign === 'scale') {
+			// TBD - scale alignment not implemented yet
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				bottom: 'auto'
+			}
+		}
+		else {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				bottom: 'auto'
+			}
+		}      
+        
+        return vertPos;
 	}
 }

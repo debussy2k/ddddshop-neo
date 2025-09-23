@@ -81,14 +81,21 @@ export function setupResizable(config: ResizableConfig): void {
 
 	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 		const prop = config.getCurrentProp();
-		let horzPos: Partial<LayoutProp>;
-		let vertPos: Partial<LayoutProp>;
+		let horzPos: Partial<LayoutProp> = calcHorzProps(event, prop, ctx);
+		let vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
 
+		return {
+			...horzPos,
+			...vertPos
+		}
+	}
+
+    function calcHorzProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
+		let horzPos: Partial<LayoutProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
-
 		// horizontal
-		if (prop.horzAlign === 'left' || !prop.horzAlign) {
+		if (prop.horzAlign === 'left') {
 			horzPos = {
 				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
 				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
@@ -144,19 +151,25 @@ export function setupResizable(config: ResizableConfig): void {
 				}
 			}
 		}
-		else {
-			horzPos = {}
-		}
+        else {
+			horzPos = {
+				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
+				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				right: 'auto'
+			}
+        }
 
-		// vertical
-		vertPos = {
+        return horzPos;
+    }
+
+    function calcVertProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
+		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
+
+		let vertPos = {
 			top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
 			height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
-		}
+		}   
 
-		return {
-			...horzPos,
-			...vertPos
-		}
-	}
+        return vertPos;     
+    }
 }
