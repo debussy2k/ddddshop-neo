@@ -33,6 +33,7 @@
 			id: data.id,
 			element: element,
             getCurrentProp: () => currentProp,
+            getParentSize: () => getParentSize(),
 			updateCallback: (id, position) => {
 				cmdFrame.updateProp(id, position, bpm.current);
 			}
@@ -44,10 +45,21 @@
 			id: data.id,
 			element: element,
 			getCurrentProp: () => currentProp,
+            getParentSize: () => getParentSize(),
 			updateCallback: (id, dimensions) => {
 				cmdFrame.updateProp(id, dimensions, bpm.current);
 			}
 		});
+	}
+
+    
+    function getParentSize() {
+		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
+		if (parentComp === null) {
+			console.error(`parent not found for sandbox`, data.id);
+			return { width: 0,height: 0 }
+		}
+		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 
     function handleMoutdown(event: MouseEvent) {
@@ -75,7 +87,6 @@
     function getCurrentStyle() {
         let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
         style += `
-            padding: ${currentProp.padding};
         `;
         return style;
     }
