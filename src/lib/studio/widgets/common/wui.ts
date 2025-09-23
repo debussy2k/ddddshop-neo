@@ -3,6 +3,7 @@ import type { DragEvent, ResizeEvent } from '@interactjs/types'
 import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { HorizontalAlign } from '$lib/studio/types'
+import { constraintsUtil } from './constraints-util'
 
 export namespace wui {
 
@@ -10,7 +11,7 @@ export namespace wui {
     // for Draggable
     // ------------------------------------------------------------
 
-    export interface CurrentPosition {
+    export type CurrentPosition = {
         left: string;
 		width: string;
 		right: string;
@@ -20,11 +21,18 @@ export namespace wui {
 		bottom: string;
 		height: string;
     }
-    export interface DraggableConfig {
+	type ContextInfo = {
+		left: number;
+		right: number;
+		parentWidth: number;
+		parentHeight: number;
+	}
+    export type DraggableConfig = {
         id: string;
         element: HTMLElement|SVGElement;
         getCurrentProp: () => CurrentPosition; // 현재 위치 정보는 reactive하기 때문에 함수로 전달
-        updateCallback: (id: string, position: CurrentPosition) => void;
+		getParentSize: () => { width: number; height: number };
+        updateCallback: (id: string, position: Partial<CurrentPosition>) => void;
     }
 
     /**
@@ -32,26 +40,44 @@ export namespace wui {
      * @param config 드래그 설정 객체
      */
     export function setupDraggable(config: DraggableConfig): void {
+		let ctx: ContextInfo;
         interact(config.element).draggable({
             listeners: {
                 start: (event: DragEvent) => {
-                    studioDoc.historyManager.setBatchMode();
                     event.stopPropagation();
+                    studioDoc.historyManager.setBatchMode();
+					ctx = newContext(config.getCurrentProp());
                 },
                 move: (event: DragEvent) => {
-					let newPosition = getNewPosition(event);
-                    config.updateCallback(config.id, newPosition as CurrentPosition);
+					let newPosition = getNewPosition(event, ctx);
+                    config.updateCallback(config.id, newPosition);
                     event.stopPropagation();
                 },
                 end: (event: DragEvent) => {
+					let newPosition = getNewPosition(event, ctx);
+                    config.updateCallback(config.id, newPosition);
+
                     studioDoc.historyManager.commitBatch();
                     event.stopPropagation();
                 }
             }
         });
 
+		function newContext(prop: CurrentPosition) : ContextInfo {
+			if (prop.horzAlign !== 'scale') {
+				return {} as ContextInfo;
+			}
 
-		function getNewPosition(event: DragEvent) {
+			let parentSize = config.getParentSize();
+			return {
+				left: constraintsUtil.getLeftValue(prop, parentSize.width),
+				right: constraintsUtil.getRightValue(prop, parentSize.width),
+				parentWidth: parentSize.width,
+				parentHeight: parentSize.height
+			}
+		}
+
+		function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<CurrentPosition> {
 			const prop = config.getCurrentProp();
 			let horzPos: Partial<CurrentPosition>;
 			let vertPos: Partial<CurrentPosition>;
@@ -75,11 +101,28 @@ export namespace wui {
 					right: util.getNumberPart(prop.right) - event.dx + 'px'
 				}
 			}
-			else  if (prop.horzAlign === 'center') {
+			else if (prop.horzAlign === 'center') {
 				let newCenterOffsetX = prop.centerOffsetX + event.dx;
 				horzPos = {
-					left: `calc(50% + ${newCenterOffsetX}px  - ${util.getNumberPart(prop.width)/2}px)`,
+					left: `calc(50% + ${newCenterOffsetX}px - ${util.getNumberPart(prop.width)/2}px)`,
 					centerOffsetX: newCenterOffsetX,
+				}
+			}
+			else if (prop.horzAlign === 'scale') {
+				if (event.type === 'dragend') {
+					horzPos = {
+						left: 100 * ctx.left / ctx.parentWidth + '%',
+						right: 100 * ctx.right / ctx.parentWidth + '%'
+					}
+				}
+				else {
+					// drag 하는 동안은 px값으로 계산함
+					ctx.left += event.dx;
+					ctx.right -= event.dx;
+					horzPos = {
+						left: ctx.left + 'px',
+						right: ctx.right + 'px'
+					}
 				}
 			}
 			else {
@@ -115,6 +158,7 @@ export namespace wui {
         id: string;
         element: HTMLElement|SVGElement;
         getCurrentProp: () => CurrentPosition; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
+		getParentSize: () => { width: number; height: number };
         updateCallback: (id: string, dimensions: { width: string; height: string; left: string; top: string }) => void;
         minSize?: { width: number; height: number };
         edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
@@ -125,7 +169,8 @@ export namespace wui {
      * @param config 리사이즈 설정 객체
      */
     export function setupResizable(config: ResizableConfig): void {
-        // 기존 resizable 설정 제거 (중복 방지)
+		let ctx: ContextInfo;
+        
         interact(config.element).resizable({
             edges: config.edges || { top: true, left: true, bottom: true, right: true },
             modifiers: [
@@ -135,22 +180,40 @@ export namespace wui {
             ],
             listeners: {
                 start: (event: ResizeEvent) => {
-                    studioDoc.historyManager.setBatchMode();
                     event.stopPropagation();
+                    studioDoc.historyManager.setBatchMode();
+					ctx = newContext(config.getCurrentProp());
                 },
                 move: (event: ResizeEvent) => {
 					// console.log('move', event.deltaRect);
-					let newPosition = getNewPosition(event);
+					let newPosition = getNewPosition(event, ctx);
                     config.updateCallback(config.id, newPosition as CurrentPosition);
                 },
                 end: (event: ResizeEvent) => {
+					let newPosition = getNewPosition(event, ctx);
+                    config.updateCallback(config.id, newPosition as CurrentPosition);
+
                     studioDoc.historyManager.commitBatch();
                     event.stopPropagation();
                 }
             }
         });
 
-		function getNewPosition(event: ResizeEvent) {
+		function newContext(prop: CurrentPosition) : ContextInfo {
+			if (prop.horzAlign !== 'scale') {
+				return {} as ContextInfo;
+			}
+
+			let parentSize = config.getParentSize();
+			return {
+				left: constraintsUtil.getLeftValue(prop, parentSize.width),
+				right: constraintsUtil.getRightValue(prop, parentSize.width),
+				parentWidth: parentSize.width,
+				parentHeight: parentSize.height
+			}
+		}
+
+		function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<CurrentPosition> {
 			const prop = config.getCurrentProp();
 			let horzPos: Partial<CurrentPosition>;
 			let vertPos: Partial<CurrentPosition>;
@@ -195,6 +258,24 @@ export namespace wui {
 					left: `calc(50% + ${newCenterOffsetX}px  - ${newWidth/2}px)`,
 					width: newWidth + 'px',
 					centerOffsetX: newCenterOffsetX,
+				}
+			}
+			else if (prop.horzAlign === 'scale') {
+				console.log('scale', deltaRect);
+				if (event.type === 'resizeend') {
+					horzPos = {
+						left: 100 * ctx.left / ctx.parentWidth + '%',
+						right: 100 * ctx.right / ctx.parentWidth + '%'
+					}
+				}
+				else {
+					ctx.left += deltaRect?.left;
+					ctx.right -= deltaRect?.right;
+					horzPos = {
+						left: ctx.left + 'px',
+						right: ctx.right + 'px',
+						width: 'auto'
+					}
 				}
 			}
 			else {

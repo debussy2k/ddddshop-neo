@@ -26,6 +26,7 @@
 			id: data.id,
 			element: element,
             getCurrentProp: () => currentProp,
+            getParentSize: () => getParentSize(),
 			updateCallback: (id, position) => {
 				cmdSandbox.updateProp(id, position, bpm.current);
 			}
@@ -37,10 +38,20 @@
 			id: data.id,
 			element: element,
 			getCurrentProp: () => currentProp,
+            getParentSize: () => getParentSize(),
 			updateCallback: (id, dimensions) => {
 				cmdSandbox.updateProp(id, dimensions, bpm.current);
 			}
 		});
+	}
+
+    function getParentSize() {
+		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
+		if (parentComp === null) {
+			console.error(`parent not found for sandbox`, data.id);
+			return { width: 0,height: 0 }
+		}
+		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 
 

@@ -20,6 +20,7 @@ export namespace constraintsUtil {
 				left: left,
 				width: getWidthValuePx(currentProp, parentWidth),
 				right: 'auto',
+				centerOffsetX: 0
 			}
 		}
 		else if (newHorzAlign === 'right') {
@@ -29,6 +30,7 @@ export namespace constraintsUtil {
 				left: 'auto',
 				width: getWidthValuePx(currentProp, parentWidth),
 				right: right,
+				centerOffsetX: 0
 			}
 		}
 		else if (newHorzAlign === 'both') {
@@ -39,18 +41,30 @@ export namespace constraintsUtil {
 				left: left,
 				right: right,
 				width: 'auto',
+				centerOffsetX: 0
 			}
 		}
 		else if (newHorzAlign === 'center') {
 			let centerOffsetX = getCenterOffsetX(currentProp, parentWidth);
-			let child_width_half = util.getNumberPart(getWidthValuePx(currentProp, parentWidth))/2;
-			let left = `calc(50% + ${centerOffsetX} - ${child_width_half}px)`;
+			let child_width_half = getWidthValue(currentProp, parentWidth)/2;
+			let left = `calc(50% + ${centerOffsetX}px - ${child_width_half}px)`;
 			obj = {
 				horzAlign: "center",
 				left: left,
 				width: getWidthValuePx(currentProp, parentWidth),
 				right: 'auto',
-				centerOffsetX: util.getNumberPart(centerOffsetX),
+				centerOffsetX: centerOffsetX,
+			}
+		}
+		else if (newHorzAlign === 'scale') {
+			let leftPercent = toPercent(getLeftValue(currentProp, parentWidth), parentWidth);
+			let rightPercent = toPercent(getRightValue(currentProp, parentWidth), parentWidth);
+			obj = {
+				horzAlign: "scale",
+				left: leftPercent + '%',
+				width: "auto",
+				right: rightPercent + '%',
+				centerOffsetX: 0
 			}
 		}
 		else {
@@ -61,48 +75,71 @@ export namespace constraintsUtil {
 	}
 
 	export function getNumberPart(param: string) {
-		return parseInt(param.replace('px', ''));
-
+		return Number(param.replace('px', ''));
+	}	
+	export function toPercent(val: number, parentWidth: number, decimal: number = 2) {
+		return Number(val/parentWidth*100).toFixed(decimal);
 	}	
 
-	export function getLeftValuePx(prop: HorzProp, parentWidth: number) {
+	export function getLeftValue(prop: HorzProp, parentWidth: number):number {
 		if (prop.horzAlign === 'center') {
 			let left = parentWidth/2 + prop.centerOffsetX - getNumberPart(prop.width)/2;
-			return left + 'px';
+			return left;
+		}
+		else if (prop.horzAlign === 'scale') {
+			let left = parentWidth * Number(prop.left.replace('%', '')) / 100;
+			return left;
 		}
 		else if (prop.left === 'auto') {
 			let left = parentWidth - (getNumberPart(prop.width) + getNumberPart(prop.right));
-			return left + 'px';
+			return left;
 		}
 		else {
-			return prop.left;
+			return getNumberPart(prop.left);
 		}
+
 	}
-	export function getRightValuePx(prop: HorzProp, parentWidth: number) {
+	export function getLeftValuePx(prop: HorzProp, parentWidth: number) {
+		return getLeftValue(prop, parentWidth) + 'px';
+	}
+	
+	export function getRightValue(prop: HorzProp, parentWidth: number):number {
 		if (prop.horzAlign === 'center') {
-			 let right = parentWidth/2 - prop.centerOffsetX - getNumberPart(prop.width)/2;
-			 return right + 'px';
+			let right = parentWidth/2 - prop.centerOffsetX - getNumberPart(prop.width)/2;
+			return right;
+		}
+		else if (prop.horzAlign === 'scale') {
+			let right = parentWidth * Number(prop.right.replace('%', '')) / 100;
+			return right;
 		}
 		else if (prop.right === 'auto') {
 			let right = parentWidth - (getNumberPart(prop.left) + getNumberPart(prop.width));
-			return right + 'px';
+			return right;
 		}
 		else {
-			return prop.right;
+			return getNumberPart(prop.right);
+		}
+	}
+	export function getRightValuePx(prop: HorzProp, parentWidth: number) {
+		return getRightValue(prop, parentWidth) + 'px';
+	}
+
+	export function getWidthValue(prop: HorzProp, parentWidth: number):number {
+		if (prop.width === 'auto') {
+			return parentWidth - (getLeftValue(prop, parentWidth) + getRightValue(prop, parentWidth));
+		}
+		else {
+			return getNumberPart(prop.width);
 		}
 	}
 	export function getWidthValuePx(prop: HorzProp, parentWidth: number) {
-		if (prop.width === 'auto') {
-			return parentWidth - (getNumberPart(prop.left) + getNumberPart(prop.right)) + 'px';
-		}
-		else {
-			return prop.width;
-		}
+		return getWidthValue(prop, parentWidth) + 'px';
 	}
-	export function getCenterOffsetX(prop: HorzProp, parentWidth: number) {
-		let left = getNumberPart(getLeftValuePx(prop, parentWidth));
-		let width = getNumberPart(getWidthValuePx(prop, parentWidth));
+
+	export function getCenterOffsetX(prop: HorzProp, parentWidth: number):number {
+		let left = getLeftValue(prop, parentWidth);
+		let width = getWidthValue(prop, parentWidth);
 		let centerOffsetX =  (left + width/2) - parentWidth/2;
-		return centerOffsetX + 'px';
+		return centerOffsetX;
 	}	
 }

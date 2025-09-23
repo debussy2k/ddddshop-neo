@@ -95,6 +95,13 @@ export namespace du {
 				width: ${prop.width};
 			`;
 		}
+        else if (prop.horzAlign === 'scale') {
+			styles += `
+				left: ${prop.left};
+				width: ${prop.width};
+				right: ${prop.right};
+			`;
+		}
 		else {
 			styles += `
 				left: ${prop.left};

@@ -8,6 +8,7 @@
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import { du } from "$lib/studio/widgets/common/doc-util";
 	import { cn } from "$lib/utils";
+	import { util } from "$lib/studio/util";
 
 
 	let element: HTMLElement;
@@ -96,6 +97,19 @@
 
         return cls;
     }
+
+	export function getWidth() : number {
+		if (!element) return 0;
+		
+		let w = window.getComputedStyle(element).width;
+		return util.getNumberPart(w);
+	}
+    export function getHeight() : number {
+		if (!element) return 0;
+		
+		let h = window.getComputedStyle(element).height;
+		return util.getNumberPart(h);
+	}    
 
 </script>
 
