@@ -4,6 +4,7 @@ import { util } from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { BaseWidgetProp } from '$lib/studio/types'
 import { constraintsUtilHorz } from './constraints-util-horz'
+import { constraintsUtilVert } from './constraints-util-vert'
 
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
@@ -12,6 +13,8 @@ export type LayoutProp = Pick<BaseWidgetProp,
 type ContextInfo = {
 	left: number;
 	right: number;
+    top: number;
+    bottom: number;
 	parentWidth: number;
 	parentHeight: number;
 }
@@ -67,14 +70,12 @@ export function setupResizable(config: ResizableConfig): void {
         let ctxInfo: ContextInfo = {
             left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
             right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
+            top: constraintsUtilVert.getTopValue(prop, parentSize.height),
+            bottom: constraintsUtilVert.getBottomValue(prop, parentSize.height),
             parentWidth: parentSize.width,
             parentHeight: parentSize.height
 
         };
-
-        if (prop.vertAlign === 'scale') {
-            // TBD
-        }
 
 		return ctxInfo;
 	}
@@ -163,13 +164,72 @@ export function setupResizable(config: ResizableConfig): void {
     }
 
     function calcVertProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
+		let vertPos: Partial<LayoutProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
-		let vertPos = {
-			top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
-			height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
-		}   
+		// vertical
+		if (prop.vertAlign === 'top') {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
+				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				bottom: 'auto'
+			}
+		}
+		else if (prop.vertAlign === 'bottom') {
+			vertPos = {
+				bottom: util.getNumberPart(prop.bottom || '0') - deltaRect?.bottom + 'px',
+				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				top: 'auto'
+			}
+		}
+		else if (prop.vertAlign === 'both') {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
+				bottom: util.getNumberPart(prop.bottom || '0') - deltaRect?.bottom + 'px',
+				height: 'auto',
+			}
+		}
+		else if (prop.vertAlign === 'center') {
+			let newHeight = util.getNumberPart(prop.height || '0') + deltaRect?.height;
+			let newCenterOffsetY = prop.centerOffsetY || 0;
+			if (deltaRect?.top !== 0) {
+				newCenterOffsetY += deltaRect?.top/2
+			}
+			else if (deltaRect?.bottom !== 0) {
+				newCenterOffsetY += deltaRect?.bottom/2
+			}
 
-        return vertPos;     
+			vertPos = {
+				top: `calc(50% + ${newCenterOffsetY}px  - ${newHeight/2}px)`,
+				height: newHeight + 'px',
+				centerOffsetY: newCenterOffsetY,
+			}
+		}
+		else if (prop.vertAlign === 'scale') {
+			if (event.type === 'resizeend') {
+				vertPos = {
+					top: 100 * ctx.top / ctx.parentHeight + '%',
+					bottom: 100 * ctx.bottom / ctx.parentHeight + '%'
+				}
+			}
+			else {
+				ctx.top += deltaRect?.top;
+				ctx.bottom -= deltaRect?.bottom;
+				vertPos = {
+					top: ctx.top + 'px',
+					bottom: ctx.bottom + 'px',
+					height: 'auto'
+				}
+			}
+		}
+        else {
+			vertPos = {
+				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
+				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				bottom: 'auto'
+			}
+        }
+
+        return vertPos;
     }
 }
