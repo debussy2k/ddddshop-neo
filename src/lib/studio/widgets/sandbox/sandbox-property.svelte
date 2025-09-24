@@ -4,7 +4,7 @@
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
     import { canvasManager } from "../../canvas-manager.svelte"; // 추가
-    import type { BaseWidgetProp, CompositeWidget, HorizontalAlign, VerticalAlign } from "../../types";
+    import type { HorizontalAlign, VerticalAlign } from "../../types";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
@@ -17,22 +17,25 @@
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
-    let parentComp: any = studioDoc.getWidget<any>(data.parentId);
     let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
-    let parentSize = $derived.by(() => {
-        console.log("parentSize", canvasManager.currentWidth)
+    let parentComp: any = studioDoc.getWidget<any>(data.parentId);
+    let computedVal = $derived.by(() => {
+        // console.log("parentSize", canvasManager.currentWidth)
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
-        canvasManager.needUpdate;
+        canvasManager.needUpdate;   // 의존성만 추가. 
+
+        let parentWidth = parentComp.getWidth();
+        let parentHeight = parentComp.getHeight();
+        // auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됨.
         return {
-            width: parentComp.getWidth(),
-            height: parentComp.getHeight(),
+            parentWidth: parentWidth,
+            parentHeight: parentHeight,
+            x: constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString(),
+            y: constraintsUtilVert.getTopValue(currentProp, parentHeight).toString(),
+            w: constraintsUtilHorz.getWidthValue(currentProp, parentWidth).toString(),
+            h: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
         }
     })
-
-    let x = $derived(constraintsUtilHorz.getLeftValue(currentProp, parentSize.width).toString())
-    let y = $derived(constraintsUtilVert.getTopValue(currentProp, parentSize.height).toString())
-    let w = $derived(constraintsUtilHorz.getWidthValue(currentProp, parentSize.width).toString())
-    let h = $derived(constraintsUtilVert.getHeightValue(currentProp, parentSize.height).toString())
 
     onMount(() => {
     });
@@ -51,8 +54,7 @@
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
-		let parentWidth = parentComp.getWidth();
-		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, parentWidth);
+		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, computedVal.parentWidth);
 
 		cmd.updateProp(data.id, obj, bpm.current);
     }
@@ -62,8 +64,7 @@
             console.error(`parent not found for sandbox`, data.id);
             return;
         }
-        let parentHeight = parentComp.getHeight();
-        let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, parentHeight);
+        let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, computedVal.parentHeight);
 
         cmd.updateProp(data.id, obj, bpm.current);
     }
@@ -102,8 +103,8 @@
             </div>
     
             <div class='flex gap-x-2'>
-                <InputVal name='X' value={x}/>
-                <InputVal name='Y' value={y}/>
+                <InputVal name='X' value={computedVal.x}/>
+                <InputVal name='Y' value={computedVal.y}/>
             </div>
     
             {#if parentProp?.layout === 'block'}
@@ -125,14 +126,14 @@
         <div class="mb-3">레이아웃</div>
         <div class="flex flex-col gap-y-2">
             <div class='flex gap-x-2'>
-                <InputVal name='W' value={w}/>
-                <InputVal name='H' value={h}/>
+                <InputVal name='W' value={computedVal.w}/>
+                <InputVal name='H' value={computedVal.h}/>
             </div>
         </div>
     </div>
 
     <div class='px-3 py-4 text-xs border-b border-gray-200'>
-        <div class="mb-3">정보: {bpm.current}</div>
+        <div class="mb-3">정보</div>
         <div class='overflow-x-scroll'>
             <JsonView json={currentProp}/>
         </div>
