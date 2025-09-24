@@ -88,20 +88,24 @@ export function setupDraggable(config: DraggableConfig): void {
 		// horizontal
 		if (prop.horzAlign === 'left') {
 			horzPos = {
-				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
+				left: Math.round(util.getNumberPart(prop.left || '0')) + event.dx + 'px',
 				right: 'auto'
 			}
 		}
 		else if (prop.horzAlign === 'right') {
 			horzPos = {
-				right: util.getNumberPart(prop.right || '0') - event.dx + 'px',
+				right: Math.round(util.getNumberPart(prop.right || '0')) - event.dx + 'px',
 				left: 'auto'
 			}
 		}
 		else if (prop.horzAlign === 'both') {
+			// left가 정수값이 되도록 처리. 
+			let val = util.getNumberPart(prop.left || '0');
+			let deciaml = val - Math.floor(val);
+			let dx = event.dx - deciaml;
 			horzPos = {
-				left: util.getNumberPart(prop.left || '0') + event.dx + 'px',
-				right: util.getNumberPart(prop.right || '0') - event.dx + 'px'
+				left: util.getNumberPart(prop.left || '0') + dx + 'px',
+				right: util.getNumberPart(prop.right || '0') - dx + 'px'
 			}
 		}
 		else if (prop.horzAlign === 'center') {
@@ -119,9 +123,14 @@ export function setupDraggable(config: DraggableConfig): void {
 				}
 			}
 			else {
+				// left가 정수값이 되도록 처리. 
+				let val = ctx.left;
+				let deciaml = val - Math.floor(val);
+				let dx = event.dx - deciaml;
+
 				// drag 하는 동안은 px값으로 계산함
-				ctx.left += event.dx;
-				ctx.right -= event.dx;
+				ctx.left += dx;
+				ctx.right -= dx;
 				horzPos = {
 					left: ctx.left + 'px',
 					right: ctx.right + 'px'
@@ -144,20 +153,24 @@ export function setupDraggable(config: DraggableConfig): void {
 		// vertical
 		if (prop.vertAlign === 'top') {
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'bottom') {
 			vertPos = {
-				bottom: util.getNumberPart(prop.bottom || '0') - event.dy + 'px',
+				bottom: Math.round(util.getNumberPart(prop.bottom || '0')) - event.dy + 'px',
 				top: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'both') {
+			let val = util.getNumberPart(prop.top || '0');
+			let deciaml = val - Math.floor(val);
+			let dy = event.dy - deciaml;
+
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
-				bottom: util.getNumberPart(prop.bottom || '0') - event.dy + 'px'
+				top: util.getNumberPart(prop.top || '0') + dy + 'px',
+				bottom: util.getNumberPart(prop.bottom || '0') - dy + 'px'
 			}
 		}
 		else if (prop.vertAlign === 'center') {
@@ -175,8 +188,12 @@ export function setupDraggable(config: DraggableConfig): void {
 				}
 			}
 			else {
-				ctx.top += event.dy;
-				ctx.bottom -= event.dy;
+				let val = ctx.top;
+				let deciaml = val - Math.floor(val);
+				let dy = event.dy - deciaml;
+
+				ctx.top += dy;
+				ctx.bottom -= dy;
 				vertPos = {
 					top: ctx.top + 'px',
 					bottom: ctx.bottom + 'px'
@@ -185,7 +202,7 @@ export function setupDraggable(config: DraggableConfig): void {
 		}
 		else {
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + event.dy + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}      
