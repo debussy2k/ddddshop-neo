@@ -147,6 +147,22 @@ class StudioDoc {
     getParentByChildId(id: string): Readonly<CompositeWidget> | undefined {
         return du.getParentByChildId(id, this.doc);
     }
+
+    hasChild(id: string): boolean {
+        return du.hasChild(id, this.doc);
+    }
+
+    /**
+     * 자식 추가 가능한 부모 id를 반환합니다.
+     * @param id 
+     * @returns 
+     */
+    getAddableParentId(id: string): string {
+        if (this.hasChild(id)) {
+            return id;
+        }
+        return this.getParentByChildId(id)?.id || '';
+    }
 }
 
 export const studioDoc = new StudioDoc();

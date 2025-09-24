@@ -32,6 +32,12 @@ export namespace du {
         return parent as CompositeWidget;
     }
 
+    export function hasChild(id: string, draft: DocState): boolean {
+        const widget = findById(id, draft);
+        if (!widget) return false;
+        return 'children' in widget;
+    }
+
     /**
      * 리프 위젯(자식이 없는 위젯)의 기본 스타일 문자열을 생성합니다.
      * 
