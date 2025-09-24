@@ -87,7 +87,11 @@ export namespace constraintsUtilHorz {
 			return left;
 		}
 		else if (prop.horzAlign === 'scale') {
-			let left = parentWidth * Number(prop.left.replace('%', '')) / 100;
+			let left = 0;
+			if (prop.left.slice(-1) === '%')
+				left = parentWidth * Number(prop.left.replace('%', '')) / 100;
+			else
+				left = getNumberPart(prop.left);
 			return left;
 		}
 		else if (prop.left === 'auto') {
@@ -109,7 +113,11 @@ export namespace constraintsUtilHorz {
 			return right;
 		}
 		else if (prop.horzAlign === 'scale') {
-			let right = parentWidth * Number(prop.right.replace('%', '')) / 100;
+			let right = 0;
+			if (prop.right.slice(-1) === '%')
+				right = parentWidth * Number(prop.right.replace('%', '')) / 100;
+			else
+				right = getNumberPart(prop.right);
 			return right;
 		}
 		else if (prop.right === 'auto') {

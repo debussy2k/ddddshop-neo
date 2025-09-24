@@ -8,6 +8,7 @@
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { util } from "$lib/studio/util";
 	import { cn } from "$lib/utils";
+	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
 
     let { data }: { data: Section } = $props();
 
@@ -66,6 +67,9 @@
 	// 편의 함수들
 	function updateSectionHeight(newHeight: number) {
         cmdSection.updateProp(data.id, { height: toPixelValue(newHeight) }, bpm.current);
+
+        // section을 parent하는 컴포넌트의 수치계산을 다시 할 기회를 제공함
+        canvasManager.updateNeedUpdate();
 	}
 
 	export function getContentHeight() {

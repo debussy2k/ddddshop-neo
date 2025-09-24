@@ -87,7 +87,11 @@ export namespace constraintsUtilVert {
 			return top;
 		}
 		else if (prop.vertAlign === 'scale') {
-			let top = parentHeight * Number(prop.top.replace('%', '')) / 100;
+			let top = 0;
+			if (prop.top.slice(-1) === '%')
+				top = parentHeight * Number(prop.top.replace('%', '')) / 100;
+			else
+				top = getNumberPart(prop.top);
 			return top;
 		}
 		else if (prop.top === 'auto') {
@@ -109,7 +113,11 @@ export namespace constraintsUtilVert {
 			return bottom;
 		}
 		else if (prop.vertAlign === 'scale') {
-			let bottom = parentHeight * Number(prop.bottom.replace('%', '')) / 100;
+			let bottom = 0;
+			if (prop.bottom.slice(-1) === '%')
+				bottom = parentHeight * Number(prop.bottom.replace('%', '')) / 100;
+			else
+				bottom = getNumberPart(prop.bottom);
 			return bottom;
 		}
 		else if (prop.bottom === 'auto') {

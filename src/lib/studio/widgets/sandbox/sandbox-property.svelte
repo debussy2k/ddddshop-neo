@@ -3,6 +3,7 @@
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
+    import { canvasManager } from "../../canvas-manager.svelte"; // 추가
     import type { BaseWidgetProp, CompositeWidget, HorizontalAlign, VerticalAlign } from "../../types";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
@@ -18,11 +19,24 @@
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parentComp: any = studioDoc.getWidget<any>(data.parentId);
     let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
-    let parentWidth = $derived(parentComp.getWidth());
-    let parentHeight = $derived(parentComp.getHeight());
+    let parentSize = $derived.by(() => {
+        console.log("parentSize", canvasManager.currentWidth)
+        canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
+        canvasManager.needUpdate;
+        return {
+            width: parentComp.getWidth(),
+            height: parentComp.getHeight(),
+        }
+    })
+
+    let x = $derived(constraintsUtilHorz.getLeftValue(currentProp, parentSize.width).toString())
+    let y = $derived(constraintsUtilVert.getTopValue(currentProp, parentSize.height).toString())
+    let w = $derived(constraintsUtilHorz.getWidthValue(currentProp, parentSize.width).toString())
+    let h = $derived(constraintsUtilVert.getHeightValue(currentProp, parentSize.height).toString())
 
     onMount(() => {
     });
+
 
     function updateSandboxText(newText: string) {
         cmd.update(data.id, { text: newText });
@@ -33,7 +47,6 @@
     }
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-		// let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, data.id);
 			return;
@@ -45,7 +58,6 @@
     }
 
     function updateVertAlign(newVertAlign: VerticalAlign) {
-        // let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
         if (parentComp === null) {
             console.error(`parent not found for sandbox`, data.id);
             return;
@@ -90,8 +102,8 @@
             </div>
     
             <div class='flex gap-x-2'>
-                <InputVal name='X' value={constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString()}/>
-                <InputVal name='Y' value={constraintsUtilVert.getTopValue(currentProp, parentHeight).toString()}/>
+                <InputVal name='X' value={x}/>
+                <InputVal name='Y' value={y}/>
             </div>
     
             {#if parentProp?.layout === 'block'}
@@ -113,10 +125,9 @@
         <div class="mb-3">레이아웃</div>
         <div class="flex flex-col gap-y-2">
             <div class='flex gap-x-2'>
-                <InputVal name='W' value={currentProp.width}/>
-                <InputVal name='H' value={currentProp.height}/>
+                <InputVal name='W' value={w}/>
+                <InputVal name='H' value={h}/>
             </div>
-
         </div>
     </div>
 

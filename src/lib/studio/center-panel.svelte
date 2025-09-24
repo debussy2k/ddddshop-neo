@@ -8,6 +8,7 @@
     import { ResizableDiv } from "$lib/components/ui/resizable-div";
     import { getScreenInfo, type BreakPoint } from "$lib/config/screen-info.config";
     import { bpm } from "./breakpoint-man.svelte";
+    import { canvasManager } from "./canvas-manager.svelte"; // 추가
 
 	interface Props {
 		class?: ClassValue;
@@ -19,15 +20,14 @@
     let currentResizableWidth = $state(300);
     let currentActiveItem = $derived(studioDoc.activeItem);
     
-	let screenInfo = $derived(() => {
-        return getScreenInfo(bpm.current as BreakPoint);
-    });
+    let screenInfo = $derived(getScreenInfo(bpm.current as BreakPoint));
 
     onMount(() => {
     });
 
     function handleWidthChange(newWidth: number) {
         currentResizableWidth = newWidth;
+        canvasManager.updateWidth(newWidth); // 스토어 업데이트 추가
         // console.log('Resizable width changed to:', newWidth);
     }
 
@@ -49,12 +49,12 @@
         <div class='sticky top-0 h-full inset-0 flex justify-center pointer-events-none '>
             <ResizableDiv 
 				class='h-full'
-                initialWidth={screenInfo().initialWidth} 
-                minWidth={screenInfo().minWidth} 
-                maxWidth={screenInfo().maxWidth}
+                initialWidth={screenInfo.initialWidth} 
+                minWidth={screenInfo.minWidth} 
+                maxWidth={screenInfo.maxWidth}
                 doubleResize={true}
                 onWidthChange={handleWidthChange}
-                snapTo={screenInfo().snapTo}
+                snapTo={screenInfo.snapTo}
             >
                 {#snippet children()}
                     <!-- 빈 스니펫 - 리사이즈 핸들만 사용 -->

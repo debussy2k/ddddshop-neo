@@ -9,7 +9,8 @@
     import { cmdSection as cmd } from "$lib/studio/command";
     import LayoutSelector from "../common/layout-selector.svelte";
     import InputVal from "../common/input-val.svelte";
-
+    import { JsonView } from "@zerodevx/svelte-json-view";
+    
     let { data }: { data: Section } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
 
@@ -68,4 +69,11 @@
             </div>
         </div>
     </div>	
+
+    <div class='px-3 py-4 text-xs border-b border-gray-200'>
+        <div class="mb-3">정보: {bpm.current}</div>
+        <div class='overflow-x-scroll'>
+            <JsonView json={currentProp}/>
+        </div>
+    </div>    
 </div>
