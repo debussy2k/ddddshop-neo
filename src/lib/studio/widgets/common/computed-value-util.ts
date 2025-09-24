@@ -6,10 +6,10 @@ import { constraintsUtilVert } from "./constraints-util-vert";
 export interface ComputedValue {
     parentWidth: number;
     parentHeight: number;
-    left: string;
-    top: string;
-    width: string;
-    height: string;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
 }
 
 export interface WidgetData {
@@ -25,7 +25,7 @@ export function getComputedVal(data: WidgetData, currentProp: BaseWidgetProp): C
     let parentComp = studioDoc.getWidget<any>(data.parentId);
     if (parentComp === null) {
         // console.error(`parent not found for widget`, data.id);
-        return { parentWidth: 0, parentHeight: 0, left: '0', top: '0', width: '0', height: '0' };
+        return { parentWidth: 0, parentHeight: 0, left: 0, top: 0, width: 0, height: 0 };
     }
     
     let parentWidth = parentComp.getWidth();
@@ -34,9 +34,9 @@ export function getComputedVal(data: WidgetData, currentProp: BaseWidgetProp): C
     return {
         parentWidth: parentWidth,
         parentHeight: parentHeight,
-        left: constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString(),
-        top: constraintsUtilVert.getTopValue(currentProp, parentHeight).toString(),
-        width: constraintsUtilHorz.getWidthValue(currentProp, parentWidth).toString(),
-        height: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
+        left: constraintsUtilHorz.getLeftValue(currentProp, parentWidth),
+        top: constraintsUtilVert.getTopValue(currentProp, parentHeight),
+        width: constraintsUtilHorz.getWidthValue(currentProp, parentWidth),
+        height: constraintsUtilVert.getHeightValue(currentProp, parentHeight)
     };
 }

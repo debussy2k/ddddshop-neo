@@ -103,7 +103,7 @@
     </div>
 
     {#if isActive}
-        <SizeTip prop={computedVal} />
+        <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
     {/if}
 </div>
 

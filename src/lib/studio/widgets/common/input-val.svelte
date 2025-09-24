@@ -4,16 +4,22 @@
     interface Props {
         name: string;
         class?: string;
-        value?: string;
-        onChange?: (value: string) => void;
+        value?: string | number;
+        onChange?: (value: string | number) => void;
     }
 
     let { class: className, name, value, onChange }: Props = $props();
     
     // value를 분석하여 숫자 부분과 unit 부분을 분리
     let { numberPart, unit } = $derived.by(() => { 
-        if (!value) return { numberPart: '', unit: '' };
+        if (value === null || value === undefined) return { numberPart: '', unit: '' };
         
+        // number 타입인 경우 그대로 문자열로 변환하여 처리
+        if (typeof value === 'number') {
+            return { numberPart: value.toString(), unit: '' };
+        }
+        
+        // string 타입인 경우 기존 방식대로 처리
         // 숫자로 시작하는지 확인 (음수 포함)
         const match = value.match(/^(-?\d*\.?\d*)(.*)/);
         if (match) {
@@ -44,8 +50,19 @@
         value={numberPart}
         onchange={(event) => {
             const input = event.target as HTMLInputElement;
-            // unit이 있는 경우 unit 조합하여 전달
-            const finalValue = unit ? input.value + unit : input.value;
+            
+            // 원래 value의 타입에 맞게 finalValue 생성
+            let finalValue: string | number;
+            
+            if (typeof value === 'number') {
+                // 원래 number 타입이었다면 number로 변환하여 반환
+                const numValue = parseFloat(input.value);
+                finalValue = isNaN(numValue) ? 0 : numValue;
+            } else {
+                // 원래 string 타입이었다면 unit과 조합하여 string으로 반환
+                finalValue = unit ? input.value + unit : input.value;
+            }
+            
             onChange?.(finalValue);
         }}
     />
