@@ -21,7 +21,5 @@
 
 <div class="bg-white text-sm w-full h-full flex flex-col gap-x-2">
     <div class='border-b border-gray-200 py-2 px-4'>프레임</div>
-
 	<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} />
-
 </div>

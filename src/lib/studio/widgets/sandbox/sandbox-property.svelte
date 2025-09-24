@@ -54,7 +54,5 @@
         />
     </div> -->
 
-
-
 	<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} />
 </div>

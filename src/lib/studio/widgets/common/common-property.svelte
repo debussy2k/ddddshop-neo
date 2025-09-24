@@ -19,7 +19,7 @@
 	interface Props {
 		data: Widget;
 		cmd: Cmd;
-		currentProp: BaseWidgetProp;
+		currentProp: BaseWidgetProp | FramePropValue;
 		parentProp: SectionPropValue | FramePropValue | undefined;
 		computedVal: ComputedValue;
 	}
@@ -88,7 +88,7 @@
 	<div class="flex flex-col gap-y-2">
 		{#if data.type === 'frame'}
 			<div class=''>
-				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout}/>
+				<LayoutSelector layout={(currentProp as FramePropValue).layout}  onChange={updateLayout}/>
 			</div>
 		{/if}
 
