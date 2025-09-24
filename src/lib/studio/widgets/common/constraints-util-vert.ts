@@ -57,8 +57,8 @@ export namespace constraintsUtilVert {
 			}
 		}
 		else if (newVertAlign === 'scale') {
-			let topPercent = toPercent(getTopValue(currentProp, parentHeight), parentHeight);
-			let bottomPercent = toPercent(getBottomValue(currentProp, parentHeight), parentHeight);
+			let topPercent = util.toPercent(getTopValue(currentProp, parentHeight), parentHeight);
+			let bottomPercent = util.toPercent(getBottomValue(currentProp, parentHeight), parentHeight);
 			obj = {
 				vertAlign: "scale",
 				top: topPercent + '%',
@@ -74,71 +74,73 @@ export namespace constraintsUtilVert {
 		return obj;
 	}
 
-	export function getNumberPart(param: string) {
-		return Number(param.replace('px', ''));
-	}	
-	export function toPercent(val: number, parentHeight: number, decimal: number = 2) {
-		return Number(val/parentHeight*100).toFixed(decimal);
-	}	
 
 	export function getTopValue(prop: VertProp, parentHeight: number):number {
+		let val = 0;
 		if (prop.vertAlign === 'center') {
-			let top = parentHeight/2 + prop.centerOffsetY - getNumberPart(prop.height)/2;
-			return top;
+			let top = parentHeight/2 + prop.centerOffsetY - util.getNumberPart(prop.height)/2;
+			val = top;
 		}
 		else if (prop.vertAlign === 'scale') {
 			let top = 0;
 			if (prop.top.slice(-1) === '%')
 				top = parentHeight * Number(prop.top.replace('%', '')) / 100;
 			else
-				top = getNumberPart(prop.top);
-			return top;
+				top = util.getNumberPart(prop.top);
+			val = top;
 		}
 		else if (prop.top === 'auto') {
-			let top = parentHeight - (getNumberPart(prop.height) + getNumberPart(prop.bottom));
-			return top;
+			let top = parentHeight - (util.getNumberPart(prop.height) + util.getNumberPart(prop.bottom));
+			val = top;
 		}
 		else {
-			return getNumberPart(prop.top);
+			val = util.getNumberPart(prop.top);
 		}
 
+		return util.round(val, 2);
 	}
 	export function getTopValuePx(prop: VertProp, parentHeight: number) {
 		return getTopValue(prop, parentHeight) + 'px';
 	}
 	
 	export function getBottomValue(prop: VertProp, parentHeight: number):number {
+		let val = 0;
 		if (prop.vertAlign === 'center') {
-			let bottom = parentHeight/2 - prop.centerOffsetY - getNumberPart(prop.height)/2;
-			return bottom;
+			let bottom = parentHeight/2 - prop.centerOffsetY - util.getNumberPart(prop.height)/2;
+			val = bottom;
 		}
 		else if (prop.vertAlign === 'scale') {
 			let bottom = 0;
 			if (prop.bottom.slice(-1) === '%')
 				bottom = parentHeight * Number(prop.bottom.replace('%', '')) / 100;
 			else
-				bottom = getNumberPart(prop.bottom);
-			return bottom;
+				bottom = util.getNumberPart(prop.bottom);
+			val = bottom;
 		}
 		else if (prop.bottom === 'auto') {
-			let bottom = parentHeight - (getNumberPart(prop.top) + getNumberPart(prop.height));
-			return bottom;
+			let bottom = parentHeight - (util.getNumberPart(prop.top) + util.getNumberPart(prop.height));
+			val = bottom;
 		}
 		else {
-			return getNumberPart(prop.bottom);
+			val = util.getNumberPart(prop.bottom);
 		}
+
+		return util.round(val, 2);
 	}
 	export function getBottomValuePx(prop: VertProp, parentHeight: number) {
 		return getBottomValue(prop, parentHeight) + 'px';
 	}
 
 	export function getHeightValue(prop: VertProp, parentHeight: number):number {
+		let val = 0;
 		if (prop.height === 'auto') {
-			return parentHeight - (getTopValue(prop, parentHeight) + getBottomValue(prop, parentHeight));
+			val = parentHeight - (getTopValue(prop, parentHeight) + getBottomValue(prop, parentHeight));
 		}
 		else {
-			return getNumberPart(prop.height);
+			val = util.getNumberPart(prop.height);
 		}
+
+		return util.round(val, 2);
 	}
 	export function getHeightValuePx(prop: VertProp, parentHeight: number) {
 		return getHeightValue(prop, parentHeight) + 'px';
@@ -148,6 +150,6 @@ export namespace constraintsUtilVert {
 		let top = getTopValue(prop, parentHeight);
 		let height = getHeightValue(prop, parentHeight);
 		let centerOffsetY =  (top + height/2) - parentHeight/2;
-		return centerOffsetY;
+		return util.round(centerOffsetY, 2);
 	}	
 }
