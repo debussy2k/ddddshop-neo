@@ -125,7 +125,7 @@
 	let positionClasses = $derived(() => {
 		switch (detectionDirection) {
 			case 'bottom':
-				return 'absolute bottom-0 left-2/3 w-20 h-3'; // 수평 위치 2/3 지점에 표시
+				return 'absolute bottom-0 left-2/3 w-[180px] h-3'; // 수평 위치 2/3 지점에 표시
 			case 'top':
 				return 'absolute top-0 left-2/3 w-20 h-3';
 			case 'right':
@@ -176,8 +176,8 @@
 		role="button"
 		tabindex="0"
 		aria-label="크기 조절 핸들"
-		on:mouseenter={handleResizeHandleMouseEnter}
-		on:mouseleave={handleResizeHandleMouseLeave}
+		onmouseenter={handleResizeHandleMouseEnter}
+		onmouseleave={handleResizeHandleMouseLeave}
 	>
 		<!-- 리사이즈 아이콘 -->
 		<div class="bg-blue-600 text-white px-2 py-1 rounded text-xs flex items-center gap-1 ">
