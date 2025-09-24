@@ -1,8 +1,7 @@
 <script lang="ts">
     import type { BaseWidgetProp } from "../../types";
-    import { onMount } from "svelte";
 
-    let { prop }: { prop: BaseWidgetProp } = $props();
+    let { prop }: { prop: { width: string, height: string } } = $props();
 
     function stripUnit(value: string) {
         return value.replace('px', '');

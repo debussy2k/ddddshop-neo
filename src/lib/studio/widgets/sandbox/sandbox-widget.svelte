@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Sandbox } from "./sandbox.type";
+    import type { Sandbox, SandboxPropValue } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
@@ -8,13 +8,39 @@
     import { cmdSandbox } from "$lib/studio/command";
     import { du } from "$lib/studio/widgets/common/doc-util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
+    import { canvasManager } from "../../canvas-manager.svelte"; // 추가
+    import { constraintsUtilHorz } from "../common/constraints-util-horz";
+    import { constraintsUtilVert } from "../common/constraints-util-vert";
     
 	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
     let isActive = $derived(studioDoc.activeId === data.id);
-    let parent = $derived(studioDoc.getParentByChildId(data.id));
-
     let currentProp = $derived(data.prop?.[bpm.current]);
+    let parent = $derived(studioDoc.getParentByChildId(data.id));
+    let computedVal = $derived.by(() => {
+        canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
+        canvasManager.needUpdate;   // 의존성만 추가. 
+        return getComputedVal(data, currentProp);
+    })
+
+    function getComputedVal(data: Sandbox, currentProp: SandboxPropValue) {
+        let parentComp = studioDoc.getWidget<any>(data.parentId);
+        if (parentComp === null) {
+            // console.error(`parent not found for sandbox`, data.id);
+            return { parentWidth: 0, parentHeight: 0, x: '0', y: '0', w: '0', h: '0' }
+        }
+        let parentWidth = parentComp.getWidth();
+        let parentHeight = parentComp.getHeight();
+        // auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됨.
+        return {
+            parentWidth: parentWidth,
+            parentHeight: parentHeight,
+            x: constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString(),
+            y: constraintsUtilVert.getTopValue(currentProp, parentHeight).toString(),
+            w: constraintsUtilHorz.getWidthValue(currentProp, parentWidth).toString(),
+            h: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
+        }        
+    }
 
     onMount(() => {
         
@@ -47,11 +73,7 @@
 	}
 
     function getParentSize() {
-		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
-		if (parentComp === null) {
-			console.error(`parent not found for sandbox`, data.id);
-			return { width: 0,height: 0 }
-		}
+        let parentComp = studioDoc.getWidget<any>(data.parentId);
 		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 
@@ -101,7 +123,7 @@
     </div>
 
     {#if isActive}
-        <SizeTip prop={currentProp} />
+        <SizeTip prop={{width: computedVal.w || '0', height: computedVal.h || '0'}} />
     {/if}
 </div>
 

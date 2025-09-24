@@ -36,8 +36,9 @@
             h: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
         }
     })
-
+  
     onMount(() => {
+        parentComp = studioDoc.getWidget<any>(data.parentId);
     });
 
 

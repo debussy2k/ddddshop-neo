@@ -68,7 +68,7 @@
 	function updateSectionHeight(newHeight: number) {
         cmdSection.updateProp(data.id, { height: toPixelValue(newHeight) }, bpm.current);
 
-        // section을 parent하는 컴포넌트의 수치계산을 다시 할 기회를 제공함
+        // section을 parent로 가지는 컴포넌트의 수치계산을 다시 할 기회를 제공함
         canvasManager.updateNeedUpdate();
 	}
 
