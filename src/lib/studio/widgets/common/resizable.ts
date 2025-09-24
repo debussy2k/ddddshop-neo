@@ -103,22 +103,22 @@ export function setupResizable(config: ResizableConfig): void {
 		// horizontal
 		if (prop.horzAlign === 'left') {
 			horzPos = {
-				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
-				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				left: Math.round(util.getNumberPart(prop.left || '0')) + deltaRect?.left + 'px',
+				width: Math.round(util.getNumberPart(prop.width || '0')) + deltaRect?.width + 'px',
 				right: 'auto'
 			}
 		}
 		else if (prop.horzAlign === 'right') {
 			horzPos = {
-				right: util.getNumberPart(prop.right || '0') - deltaRect?.right + 'px',
-				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				right: Math.round(util.getNumberPart(prop.right || '0')) - deltaRect?.right + 'px',
+				width: Math.round(util.getNumberPart(prop.width || '0')) + deltaRect?.width + 'px',
 				left: 'auto'
 			}
 		}
 		else if (prop.horzAlign === 'both') {
 			horzPos = {
-				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
-				right: util.getNumberPart(prop.right || '0') - deltaRect?.right + 'px',
+				left: Math.round(util.getNumberPart(prop.left || '0')) + deltaRect?.left + 'px',
+				right: Math.round(util.getNumberPart(prop.right || '0')) - deltaRect?.right + 'px',
 				width: 'auto',
 			}
 		}
@@ -148,8 +148,8 @@ export function setupResizable(config: ResizableConfig): void {
 				}
 			}
 			else {
-				ctx.left += deltaRect?.left;
-				ctx.right -= deltaRect?.right;
+				ctx.left = Math.round(ctx.left) + deltaRect?.left;
+				ctx.right = Math.round(ctx.right) - deltaRect?.right;
 				horzPos = {
 					left: ctx.left + 'px',
 					right: ctx.right + 'px',
@@ -159,8 +159,8 @@ export function setupResizable(config: ResizableConfig): void {
 		}
         else {
 			horzPos = {
-				left: util.getNumberPart(prop.left || '0') + deltaRect?.left + 'px',
-				width: util.getNumberPart(prop.width || '0') + deltaRect?.width + 'px',
+				left: Math.round(util.getNumberPart(prop.left || '0')) + deltaRect?.left + 'px',
+				width: Math.round(util.getNumberPart(prop.width || '0')) + deltaRect?.width + 'px',
 				right: 'auto'
 			}
         }
@@ -175,22 +175,22 @@ export function setupResizable(config: ResizableConfig): void {
 		// vertical
 		if (prop.vertAlign === 'top') {
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
-				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + deltaRect?.top + 'px',
+				height: Math.round(util.getNumberPart(prop.height || '0')) + deltaRect?.height + 'px',
 				bottom: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'bottom') {
 			vertPos = {
-				bottom: util.getNumberPart(prop.bottom || '0') - deltaRect?.bottom + 'px',
-				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				bottom: Math.round(util.getNumberPart(prop.bottom || '0')) - deltaRect?.bottom + 'px',
+				height: Math.round(util.getNumberPart(prop.height || '0')) + deltaRect?.height + 'px',
 				top: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'both') {
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
-				bottom: util.getNumberPart(prop.bottom || '0') - deltaRect?.bottom + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + deltaRect?.top + 'px',
+				bottom: Math.round(util.getNumberPart(prop.bottom || '0')) - deltaRect?.bottom + 'px',
 				height: 'auto',
 			}
 		}
@@ -218,8 +218,8 @@ export function setupResizable(config: ResizableConfig): void {
 				}
 			}
 			else {
-				ctx.top += deltaRect?.top;
-				ctx.bottom -= deltaRect?.bottom;
+				ctx.top = Math.round(ctx.top) + deltaRect?.top;
+				ctx.bottom = Math.round(ctx.bottom) - deltaRect?.bottom;
 				vertPos = {
 					top: ctx.top + 'px',
 					bottom: ctx.bottom + 'px',
@@ -229,8 +229,8 @@ export function setupResizable(config: ResizableConfig): void {
 		}
         else {
 			vertPos = {
-				top: util.getNumberPart(prop.top || '0') + deltaRect?.top + 'px',
-				height: util.getNumberPart(prop.height || '0') + deltaRect?.height + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + deltaRect?.top + 'px',
+				height: Math.round(util.getNumberPart(prop.height || '0')) + deltaRect?.height + 'px',
 				bottom: 'auto'
 			}
         }
