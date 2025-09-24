@@ -1,8 +1,9 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
-    import type { BaseWidgetProp, HorizontalAlign, VerticalAlign } from "../../types";
+    import type { BaseWidgetProp, CompositeWidget, HorizontalAlign, VerticalAlign } from "../../types";
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
@@ -15,7 +16,13 @@
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
+    let parentComp: any = studioDoc.getWidget<any>(data.parentId);
     let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
+    let parentWidth = $derived(parentComp.getWidth());
+    let parentHeight = $derived(parentComp.getHeight());
+
+    onMount(() => {
+    });
 
     function updateSandboxText(newText: string) {
         cmd.update(data.id, { text: newText });
@@ -26,7 +33,7 @@
     }
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-		let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
+		// let parentComp  = studioDoc.getParentWidgetComponent<any>(data.id);
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, data.id);
 			return;
@@ -38,7 +45,7 @@
     }
 
     function updateVertAlign(newVertAlign: VerticalAlign) {
-        let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
+        // let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
         if (parentComp === null) {
             console.error(`parent not found for sandbox`, data.id);
             return;
@@ -83,8 +90,8 @@
             </div>
     
             <div class='flex gap-x-2'>
-                <InputVal name='X' value={currentProp.left}/>
-                <InputVal name='Y' value={currentProp.top}/>
+                <InputVal name='X' value={constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString()}/>
+                <InputVal name='Y' value={constraintsUtilVert.getTopValue(currentProp, parentHeight).toString()}/>
             </div>
     
             {#if parentProp?.layout === 'block'}
