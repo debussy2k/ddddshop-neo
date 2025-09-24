@@ -1,5 +1,4 @@
-
-import type { Widget, LayoutType, BaseWidgetProp } from "../../types";
+import type { Widget, BaseWidgetProp, LayoutType } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Frame {
