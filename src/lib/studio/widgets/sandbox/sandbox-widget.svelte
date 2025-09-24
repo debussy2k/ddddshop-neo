@@ -8,9 +8,8 @@
     import { cmdSandbox } from "$lib/studio/command";
     import { du } from "$lib/studio/widgets/common/doc-util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
-    import { canvasManager } from "../../canvas-manager.svelte"; // 추가
-    import { constraintsUtilHorz } from "../common/constraints-util-horz";
-    import { constraintsUtilVert } from "../common/constraints-util-vert";
+    import { canvasManager } from "../../canvas-manager.svelte";
+    import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     
 	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
@@ -22,25 +21,6 @@
         canvasManager.needUpdate;   // 의존성만 추가. 
         return getComputedVal(data, currentProp);
     })
-
-    function getComputedVal(data: Sandbox, currentProp: SandboxPropValue) {
-        let parentComp = studioDoc.getWidget<any>(data.parentId);
-        if (parentComp === null) {
-            // console.error(`parent not found for sandbox`, data.id);
-            return { parentWidth: 0, parentHeight: 0, x: '0', y: '0', w: '0', h: '0' }
-        }
-        let parentWidth = parentComp.getWidth();
-        let parentHeight = parentComp.getHeight();
-        // auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됨.
-        return {
-            parentWidth: parentWidth,
-            parentHeight: parentHeight,
-            x: constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString(),
-            y: constraintsUtilVert.getTopValue(currentProp, parentHeight).toString(),
-            w: constraintsUtilHorz.getWidthValue(currentProp, parentWidth).toString(),
-            h: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
-        }        
-    }
 
     onMount(() => {
         
@@ -123,7 +103,7 @@
     </div>
 
     {#if isActive}
-        <SizeTip prop={{width: computedVal.w || '0', height: computedVal.h || '0'}} />
+        <SizeTip prop={computedVal} />
     {/if}
 </div>
 

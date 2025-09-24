@@ -1,6 +1,4 @@
 <script lang="ts">
-    import type { BaseWidgetProp } from "../../types";
-
     let { prop }: { prop: { width: string, height: string } } = $props();
 
     function stripUnit(value: string) {

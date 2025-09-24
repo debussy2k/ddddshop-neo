@@ -14,6 +14,7 @@
 	import { constraintsUtilHorz } from "../common/constraints-util-horz";
     import { constraintsUtilVert } from "../common/constraints-util-vert";
     import { JsonView } from "@zerodevx/svelte-json-view";
+    import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
     let { data }: { data: Sandbox } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
@@ -23,18 +24,7 @@
         // console.log("parentSize", canvasManager.currentWidth)
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
-
-        let parentWidth = parentComp.getWidth();
-        let parentHeight = parentComp.getHeight();
-        // auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됨.
-        return {
-            parentWidth: parentWidth,
-            parentHeight: parentHeight,
-            x: constraintsUtilHorz.getLeftValue(currentProp, parentWidth).toString(),
-            y: constraintsUtilVert.getTopValue(currentProp, parentHeight).toString(),
-            w: constraintsUtilHorz.getWidthValue(currentProp, parentWidth).toString(),
-            h: constraintsUtilVert.getHeightValue(currentProp, parentHeight).toString()
-        }
+        return getComputedVal(data, currentProp);
     })
   
     onMount(() => {
@@ -104,8 +94,8 @@
             </div>
     
             <div class='flex gap-x-2'>
-                <InputVal name='X' value={computedVal.x}/>
-                <InputVal name='Y' value={computedVal.y}/>
+                <InputVal name='X' value={computedVal.left}/>
+                <InputVal name='Y' value={computedVal.top}/>
             </div>
     
             {#if parentProp?.layout === 'block'}
@@ -127,8 +117,8 @@
         <div class="mb-3">레이아웃</div>
         <div class="flex flex-col gap-y-2">
             <div class='flex gap-x-2'>
-                <InputVal name='W' value={computedVal.w}/>
-                <InputVal name='H' value={computedVal.h}/>
+                <InputVal name='W' value={computedVal.width}/>
+                <InputVal name='H' value={computedVal.height}/>
             </div>
         </div>
     </div>
