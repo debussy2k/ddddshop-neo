@@ -10,3 +10,5 @@ export let cmdFrame = new FrameActions(studioDoc.historyManager)
 export let cmdSandbox = new SandboxActions(studioDoc.historyManager)
 export let cmdSimpleImage = new SimpleImageActions(studioDoc.historyManager)
 export let cmdShowcase = new ShowcaseActions(studioDoc.historyManager)
+
+export type Cmd = SectionActions | FrameActions | SandboxActions | SimpleImageActions | ShowcaseActions;

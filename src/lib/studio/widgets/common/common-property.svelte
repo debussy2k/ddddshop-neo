@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { JsonView } from "@zerodevx/svelte-json-view";
     import { studioDoc } from "../../studio-doc.svelte";
-    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign } from "../../types";
+    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign, LayoutType } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
 	import type { ComputedValue } from "./computed-value-util";
@@ -10,18 +10,20 @@
     import InputVal from "../common/input-val.svelte";
     import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
     import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
+    import LayoutSelector from "../common/layout-selector.svelte";
 	import { constraintsUtilHorz } from "../common/constraints-util-horz";
     import { constraintsUtilVert } from "../common/constraints-util-vert";
-    import { cmdSandbox as cmd } from "$lib/studio/command";
+    import type { Cmd } from "$lib/studio/command";
     import { bpm } from "../../breakpoint-man.svelte";
 
 	interface Props {
 		data: Widget;
+		cmd: Cmd;
 		currentProp: BaseWidgetProp;
 		parentProp: SectionPropValue | FramePropValue | undefined;
 		computedVal: ComputedValue;
 	}
-	let {data, currentProp, parentProp, computedVal	}: Props = $props();	
+	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
 
     let parentComp: any = studioDoc.getWidget<any>(data.parentId);
 
@@ -43,6 +45,10 @@
         let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, computedVal.parentHeight);
 
         cmd.updateProp(data.id, obj, bpm.current);
+    }
+
+	function updateLayout(newLayout: LayoutType) {
+        cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
 </script>
 
@@ -78,10 +84,19 @@
 <!-- Layout -->
 <div class='px-3 py-4 text-xs border-b border-gray-200'>
 	<div class="mb-3">레이아웃</div>
+
 	<div class="flex flex-col gap-y-2">
-		<div class='flex gap-x-2'>
-			<InputVal name='W' value={computedVal.width}/>
-			<InputVal name='H' value={computedVal.height}/>
+		{#if data.type === 'frame'}
+			<div class=''>
+				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout}/>
+			</div>
+		{/if}
+
+		<div class="flex flex-col gap-y-2">
+			<div class='flex gap-x-2'>
+				<InputVal name='W' value={computedVal.width}/>
+				<InputVal name='H' value={computedVal.height}/>
+			</div>
 		</div>
 	</div>
 </div>
