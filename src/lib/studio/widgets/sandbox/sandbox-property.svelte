@@ -4,7 +4,6 @@
     import { studioDoc } from "../../studio-doc.svelte";
     import { bpm } from "../../breakpoint-man.svelte";
     import { canvasManager } from "../../canvas-manager.svelte"; // 추가
-    import type { BaseWidgetProp } from "../../types";
     import { cmdSandbox as cmd } from "$lib/studio/command";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 	import CommonProperty from "../common/common-property.svelte";
