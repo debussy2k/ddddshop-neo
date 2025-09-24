@@ -41,7 +41,12 @@ export function setupResizable(config: ResizableConfig): void {
         modifiers: [
             interact.modifiers.restrictSize({
                 min: config.minSize || { width: 10, height: 10 }
-            })
+            }),
+			// 향후 필요시 사용할 것.
+			// interact.modifiers.aspectRatio({
+			// 	ratio: 'preserve',   // 현재 비율 유지
+			// 	// ratio: 16 / 9,     // 고정된 비율 (예: 16:9)
+			//   }),			
         ],
         listeners: {
             start: (event: ResizeEvent) => {
