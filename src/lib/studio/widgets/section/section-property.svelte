@@ -1,10 +1,6 @@
 <script lang="ts">
     import type { Section } from "./section.type";
     import type { LayoutType } from "../../types";
-    import { EditableSize } from "$lib/components/studio-ui/editable-size";
-    import { studioDoc } from "$lib/studio/studio-doc.svelte";
-    import { Button } from "$lib/components/ui/button";
-    import type SectionWidget from "./section-widget.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
     import { cmdSection as cmd } from "$lib/studio/command";
     import LayoutSelector from "../common/layout-selector.svelte";
