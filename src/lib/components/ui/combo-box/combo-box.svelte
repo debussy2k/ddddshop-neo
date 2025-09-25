@@ -64,7 +64,7 @@
 				</div>	
 			</div>
 		</Popover.Trigger>
-		<Popover.Content class='w-full px-2 py-0' side='bottom' align='start'>
+		<Popover.Content class='w-full px-2 py-2' side='bottom' align='start'>
 			<div class='flex flex-col text-xs'>
 				{#each options as option}
 					<button 

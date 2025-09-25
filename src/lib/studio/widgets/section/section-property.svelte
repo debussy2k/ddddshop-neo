@@ -10,6 +10,9 @@
     import LayoutSelector from "../common/layout-selector.svelte";
     import InputVal from "../common/input-val.svelte";
     import { JsonView } from "@zerodevx/svelte-json-view";
+    import { canvasManager } from "$lib/studio/canvas-manager.svelte";
+    import { MiniButton } from "$lib/components/ui/min-button";
+    import ResizeToFitIcon from "$lib/components/ui/min-button/resize-to-fit.svg?raw";
     
     let { data }: { data: Section } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
@@ -17,45 +20,25 @@
 	function updateLayout(newLayout: LayoutType) {
         cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
-    function updateSectionHeight(newHeight: string) {
-        cmd.updateProp(data.id, { height: newHeight }, bpm.current);
+    
+    function resizeToFit() {
+        console.log("resize to fit");
     }
 
-	function autoUpdateSectionHeight() {
-		let widget = studioDoc.getWidget<SectionWidget>(data.id);
-		let newHeight = widget.getContentHeight() + 'px';
-        cmd.updateProp(data.id, { height: newHeight }, bpm.current);
-	}
 
 </script>
 
 <div class="bg-white text-sm w-full h-full flex flex-col gap-x-2">
     <div class='border-b border-gray-200 py-2 px-4'>섹션</div>
-    <div class='p-2'>
-        이름 : {data.name}
-    </div>
-    <div class='p-2 flex items-center gap-2'>
-        <span>높이 :</span>
-        <EditableSize 
-            value={data.prop?.[bpm.current]?.height} 
-            onSave={updateSectionHeight}
-            placeholder="높이 입력"
-            class="w-[70px]"
-        />
-    </div>
-
-	<div>
-		<Button variant="outline" size="sm" onclick={() => {
-			autoUpdateSectionHeight();
-		}}>
-			높이 맞추기
-		</Button>
-	</div>
-
 
     <!-- Layout -->
     <div class='px-3 py-4 text-xs border-b border-gray-200'>
-        <div class="mb-3">레이아웃</div>
+        <div class="mb-3 flex justify-between">
+            <div>레이아웃</div>
+            <div>
+                <MiniButton icon={ResizeToFitIcon} title="resize to fit" onClick={resizeToFit}/>
+            </div>
+        </div>
 
         <div class="flex flex-col gap-y-2">
             <div class=''>
@@ -64,7 +47,8 @@
         
             <div class="flex flex-col gap-y-2">
                 <div class='flex gap-x-2'>
-                    <InputVal class="w-1/2" name='H' value={currentProp.height} onChange={updateSectionHeight}/>
+				<InputVal name='W' value={canvasManager.currentWidth}/> <!-- read only -->
+                <InputVal name='H' value={currentProp.height}/>
                 </div>
             </div>
         </div>
