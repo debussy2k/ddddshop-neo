@@ -61,7 +61,7 @@ export function setupResizable(config: ResizableConfig): void {
             },
             end: (event: ResizeEvent) => {
 				let newPosition = getNewPosition(event, ctx);
-                config.updateCallback(config.id, newPosition);
+				config.updateCallback(config.id, newPosition);
 
                 studioDoc.historyManager.commitBatch();
                 event.stopPropagation();
@@ -99,6 +99,10 @@ export function setupResizable(config: ResizableConfig): void {
     function calcHorzProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
 		let horzPos: Partial<LayoutProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
+
+		// resizeend에 deltaRect의 right나 width가 0이 아닌 값이 있어 오작동하는 것을 방지하기 위해 초기화
+		if (event.type === 'resizeend')
+			deltaRect = { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
 		// horizontal
 		if (prop.horzAlign === 'left') {
@@ -172,6 +176,10 @@ export function setupResizable(config: ResizableConfig): void {
 		let vertPos: Partial<LayoutProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
+		// resizeend에 deltaRect의 right나 width가 0이 아닌 값이 있어 오작동하는 것을 방지하기 위해 초기화
+		if (event.type === 'resizeend')
+			deltaRect = { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
+		
 		// vertical
 		if (prop.vertAlign === 'top') {
 			vertPos = {
