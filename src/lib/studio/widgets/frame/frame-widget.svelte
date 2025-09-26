@@ -10,6 +10,9 @@
     import { du } from "$lib/studio/widgets/common/doc-util";
 	import { cn } from "$lib/utils";
 	import { util } from "$lib/studio/util";
+    import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
+    import { canvasManager } from "../../canvas-manager.svelte";
+    import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
 
 	let element: HTMLElement;
@@ -19,6 +22,11 @@
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parent = $derived(studioDoc.getParentByChildId(data.id));
+    let computedVal = $derived.by(() => {
+        canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
+        canvasManager.needUpdate;   // 의존성만 추가. 
+        return getComputedVal(data, currentProp);
+    })
 
 	onMount(() => {
         if (!parent) {
@@ -137,4 +145,10 @@
     <div class={cn(getLayoutClasses(), "relative h-full")}>
         <WidgetRenderer widgets={data.children} />
     </div>
+
+    {#if isActive}
+        <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
+    {/if}    
 </div>
+
+
