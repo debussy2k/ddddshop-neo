@@ -8,8 +8,8 @@
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
-    import HorzAlignComboBox from "../common/horz-align-combo-box.svelte";
-    import VertAlignComboBox from "../common/vert-align-combo-box.svelte";
+    import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
+    import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
 	import { constraintsUtilHorz } from "../common/constraints-util-horz";
     import { constraintsUtilVert } from "../common/constraints-util-vert";
@@ -74,8 +74,8 @@
 		{#if parentProp?.layout === 'block'}
 			<div class='flex gap-x-2'>
 				<div class='w-1/2 min-w-0 space-y-2'>
-					<HorzAlignComboBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
-					<VertAlignComboBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
+					<HorzAlignDropdownBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
+					<VertAlignDropdownBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
 				</div>
 				<div class='w-1/2 min-w-0'>
 					

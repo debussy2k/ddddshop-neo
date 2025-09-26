@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
-	import ComboBox from "$lib/components/ui/combo-box/index.js";
+	import DropdownBox from "$lib/components/ui/dropdown-box/index.js";
 	import type { VerticalAlign } from "$lib/studio/types";
 	interface Props {
 		value: VerticalAlign;
@@ -20,7 +20,7 @@
 	];
 </script>
 
-<ComboBox 
+<DropdownBox 
 	{value} 
 	{options} 
 	onChange={(value) => onChange(value as VerticalAlign)} 

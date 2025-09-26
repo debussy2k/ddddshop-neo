@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { HorizontalAlign } from "../../types";
 	import type { ClassValue } from "svelte/elements";
-	import ComboBox from "$lib/components/ui/combo-box/index.js";
+	import DropdownBox from "$lib/components/ui/dropdown-box/index.js";
 
 	interface Props {
 		value: HorizontalAlign;
@@ -21,7 +21,7 @@
 	];
 </script>
 
-<ComboBox 
+<DropdownBox 
 	{value} 
 	{options} 
 	onChange={(value) => onChange(value as HorizontalAlign)} 
