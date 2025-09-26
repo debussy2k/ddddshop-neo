@@ -66,8 +66,8 @@
 		</div>
 
 		<div class='flex gap-x-2'>
-			<InputVal name='X' value={computedVal.left}/>
-			<InputVal name='Y' value={computedVal.top}/>
+			<InputVal name='X' value={computedVal.left} onChange={value =>updateProp({ left: value + 'px' })}/>
+			<InputVal name='Y' value={computedVal.top} onChange={value =>updateProp({ top: value + 'px' })}/>
 		</div>
 
 		<!-- 부모가 block인 경우만 보여줌 -->
