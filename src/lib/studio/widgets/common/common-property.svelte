@@ -118,7 +118,7 @@
 						<AlignItemsDropdownBox class='flex-1' value={(currentProp as FramePropValue | SectionPropValue).alignItems}/>
 					</div>
 					<div class='w-1/2 space-y-2'>
-						gap-x
+						<!-- gap 조정 공간 -->
 					</div>
 				</div>
 			</div>
