@@ -29,16 +29,22 @@ export class SectionActions {
             
             let defaultProp:Section['prop'] = {
 				mobile: {
+					height: '260px',
 					layout: 'block',
-					height: '260px'
+                    justifyContent: 'start',
+                    alignItems: 'start',
 				},
 				tablet: {
+					height: '360px',
 					layout: 'block',
-					height: '360px'
+                    justifyContent: 'start',
+                    alignItems: 'start',
 				},
 				desktop: {
+					height: '460px',
 					layout: 'block',
-					height: '460px'
+                    justifyContent: 'start',
+                    alignItems: 'start',
 				}
             }
 

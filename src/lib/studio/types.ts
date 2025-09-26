@@ -30,6 +30,8 @@ export type BaseWidgetProp = {
     vertAlign: VerticalAlign;
 }
 
-export type LayoutType = "block" | "flex-row" | "flex-col" | "grid";
 export type HorizontalAlign = "left" | "right" | "both" | "center" | "scale";
 export type VerticalAlign = "top" | "bottom" | "both" | "center" | "scale";
+export type LayoutType = "block" | "flex-row" | "flex-col" | "grid";
+export type JustifyContent = "start" | "end" | "center" | "space-between";
+export type AlignItems = "start" | "end" | "center";

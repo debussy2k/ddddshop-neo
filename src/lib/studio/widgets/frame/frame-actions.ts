@@ -43,7 +43,8 @@ export class FrameActions {
                     horzAlign: 'left',
                     vertAlign: 'top',
                     centerOffsetY: 0,
-                    padding: '16px',
+                    justifyContent: 'start',
+                    alignItems: 'start',
                 },
                 tablet: {
                     layout: 'block',
@@ -57,7 +58,8 @@ export class FrameActions {
                     horzAlign: 'left',
                     vertAlign: 'top',
                     centerOffsetY: 0,
-                    padding: '16px',                
+                    justifyContent: 'start',
+                    alignItems: 'start',
                 },
                 desktop: {
                     layout: 'block',
@@ -71,7 +73,8 @@ export class FrameActions {
                     horzAlign: 'left',
                     vertAlign: 'top',
                     centerOffsetY: 0,
-                    padding: '16px',
+                    justifyContent: 'start',
+                    alignItems: 'start',
                 }
             }
 

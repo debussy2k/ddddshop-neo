@@ -1,4 +1,4 @@
-import type { Widget, BaseWidgetProp, LayoutType } from "../../types";
+import type { Widget, BaseWidgetProp, LayoutType, JustifyContent, AlignItems } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Frame {
@@ -10,7 +10,8 @@ export interface Frame {
 
     prop: Record<BreakPoint, BaseWidgetProp & {
         layout: LayoutType;
-        padding: string;
+        justifyContent: JustifyContent;
+        alignItems: AlignItems;
     }>;
 }
 

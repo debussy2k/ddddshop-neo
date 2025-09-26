@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { JsonView } from "@zerodevx/svelte-json-view";
     import { studioDoc } from "../../studio-doc.svelte";
+    import type { Cmd } from "$lib/studio/command";
+    import { bpm } from "../../breakpoint-man.svelte";
     import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign, LayoutType } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
@@ -13,19 +15,24 @@
     import LayoutSelector from "../common/layout-selector.svelte";
 	import { constraintsUtilHorz } from "../common/constraints-util-horz";
     import { constraintsUtilVert } from "../common/constraints-util-vert";
-    import type { Cmd } from "$lib/studio/command";
-    import { bpm } from "../../breakpoint-man.svelte";
+    import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
+    import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
 
 	interface Props {
 		data: Widget;
 		cmd: Cmd;
-		currentProp: BaseWidgetProp | FramePropValue;
+		currentProp: BaseWidgetProp | FramePropValue; // Section은 common-property를 사용하지 않음
 		parentProp: SectionPropValue | FramePropValue | undefined;
 		computedVal: ComputedValue;
 	}
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
 
     let parentComp: any = studioDoc.getWidget<any>(data.parentId);
+
+	// 타입 가드 함수 추가
+	function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+		return 'layout' in prop;
+	}	
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
 		if (parentComp === null) {
@@ -90,9 +97,9 @@
 	<div class="mb-3">레이아웃</div>
 
 	<div class="flex flex-col gap-y-2">
-		{#if data.type === 'frame'}
+		{#if isContainerProps(currentProp)}
 			<div class=''>
-				<LayoutSelector layout={(currentProp as FramePropValue).layout}  onChange={updateLayout}/>
+				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout}/>
 			</div>
 		{/if}
 
@@ -102,6 +109,20 @@
 				<InputVal name='H' value={computedVal.height} onChange={value =>updateProp({ height: value + 'px' })}/>
 			</div>
 		</div>
+
+		{#if isContainerProps(currentProp)}
+			<div class="flex flex-col gap-y-2">
+				<div class='flex gap-x-2'>
+					<div class='w-1/2 space-y-2'>
+						<JustifyContentDropdownBox class='flex-1' value={(currentProp as FramePropValue | SectionPropValue).justifyContent}/>
+						<AlignItemsDropdownBox class='flex-1' value={(currentProp as FramePropValue | SectionPropValue).alignItems}/>
+					</div>
+					<div class='w-1/2 space-y-2'>
+						gap-x
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
 </div>
 

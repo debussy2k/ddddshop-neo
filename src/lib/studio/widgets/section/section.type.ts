@@ -1,4 +1,4 @@
-import type { Widget, LayoutType } from '../../types';
+import type { Widget, LayoutType, JustifyContent, AlignItems } from '../../types';
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 
 export interface Section {
@@ -10,8 +10,10 @@ export interface Section {
     children: Widget[]; // child Widget 객체들
 
 	prop: Record<BreakPoint, {
+		height: string; // frame에는 없는 속성.
 		layout: LayoutType;
-		height: string;
+        justifyContent: JustifyContent;
+        alignItems: AlignItems;        
 	}>;
 }
 
