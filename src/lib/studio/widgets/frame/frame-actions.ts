@@ -45,6 +45,7 @@ export class FrameActions {
                     centerOffsetY: 0,
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
                 },
                 tablet: {
                     layout: 'block',
@@ -60,6 +61,7 @@ export class FrameActions {
                     centerOffsetY: 0,
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
                 },
                 desktop: {
                     layout: 'block',
@@ -75,6 +77,7 @@ export class FrameActions {
                     centerOffsetY: 0,
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
                 }
             }
 

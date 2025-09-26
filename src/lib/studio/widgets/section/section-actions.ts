@@ -33,18 +33,21 @@ export class SectionActions {
 					layout: 'block',
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
 				},
 				tablet: {
 					height: '360px',
 					layout: 'block',
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
 				},
 				desktop: {
 					height: '460px',
 					layout: 'block',
                     justifyContent: 'start',
                     alignItems: 'start',
+					gap: 10,
 				}
             }
 

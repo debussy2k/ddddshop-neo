@@ -58,7 +58,7 @@
         cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
 
-	function updateProp(newProp: Partial<BaseWidgetProp>) {
+	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
 		cmd.updateProp(data.id, newProp, bpm.current);
 	}
 </script>
@@ -105,20 +105,21 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				<InputVal name='W' value={computedVal.width} onChange={value =>updateProp({ width: value + 'px' })}/>
-				<InputVal name='H' value={computedVal.height} onChange={value =>updateProp({ height: value + 'px' })}/>
+				<InputVal name='W' value={computedVal.width} onChange={value => updateProp({ width: value + 'px' })}/>
+				<InputVal name='H' value={computedVal.height} onChange={value => updateProp({ height: value + 'px' })}/>
 			</div>
 		</div>
 
 		{#if isContainerProps(currentProp)}
 			<div class="flex flex-col gap-y-2">
 				<div class='flex gap-x-2'>
-					<div class='w-1/2 space-y-2'>
-						<JustifyContentDropdownBox class='flex-1' value={(currentProp as FramePropValue | SectionPropValue).justifyContent}/>
-						<AlignItemsDropdownBox class='flex-1' value={(currentProp as FramePropValue | SectionPropValue).alignItems}/>
+					<div class='w-1/2 min-w-0 space-y-2'>
+						<JustifyContentDropdownBox class='flex-1' value={currentProp.justifyContent} onChange={value =>updateProp({ justifyContent: value })}/>
+						<AlignItemsDropdownBox class='flex-1' value={currentProp.alignItems} onChange={value =>updateProp({ alignItems: value })}/>
 					</div>
-					<div class='w-1/2 space-y-2'>
+					<div class='w-1/2 min-w-0'>
 						<!-- gap 조정 공간 -->
+						 <InputVal name='G' value={currentProp.gap} min={0} onChange={value =>updateProp({ gap: value as number })}/>
 					</div>
 				</div>
 			</div>

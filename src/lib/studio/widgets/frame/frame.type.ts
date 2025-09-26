@@ -12,6 +12,7 @@ export interface Frame {
         layout: LayoutType;
         justifyContent: JustifyContent;
         alignItems: AlignItems;
+        gap: number;
     }>;
 }
 

@@ -13,7 +13,8 @@ export interface Section {
 		height: string; // frame에는 없는 속성.
 		layout: LayoutType;
         justifyContent: JustifyContent;
-        alignItems: AlignItems;        
+        alignItems: AlignItems;     
+		gap: number;   
 	}>;
 }
 

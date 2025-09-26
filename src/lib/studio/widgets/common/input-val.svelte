@@ -5,10 +5,19 @@
         name: string;
         class?: string;
         value?: string | number;
+        min?: number;
+        max?: number;
         onChange?: (value: string | number) => void;
     }
 
-    let { class: className, name, value, onChange }: Props = $props();
+    let { class: className, name, value, min, max, onChange }: Props = $props();
+    
+    // 값을 min, max 범위로 제한하는 함수
+    function clampValue(val: number): number {
+        if (min !== undefined && val < min) return min;
+        if (max !== undefined && val > max) return max;
+        return val;
+    }
     
     // value를 분석하여 숫자 부분과 unit 부분을 분리
     let { numberPart, unit } = $derived.by(() => { 
@@ -69,15 +78,16 @@
         
         accumulatedDelta += deltaX;
         const newValue = dragStartValue + (accumulatedDelta * sensitivity);
-        console.log('newValue', newValue);
+        
+        // min, max 범위로 제한
+        const clampedValue = clampValue(Math.round(newValue));
 
         // 새로운 값 적용
         let finalValue: string | number;
         if (typeof value === 'number') {
-            finalValue = Math.round(newValue)
+            finalValue = clampedValue;
         } else {
-            const roundedValue = Math.round(newValue);
-            finalValue = unit ? roundedValue + unit : roundedValue.toString();
+            finalValue = unit ? clampedValue + unit : clampedValue.toString();
         }
 
         onChange?.(finalValue);
@@ -120,10 +130,17 @@
             if (typeof value === 'number') {
                 // 원래 number 타입이었다면 number로 변환하여 반환
                 const numValue = parseFloat(input.value);
-                finalValue = isNaN(numValue) ? 0 : numValue;
+                const validValue = isNaN(numValue) ? 0 : numValue;
+                finalValue = clampValue(validValue);
             } else {
                 // 원래 string 타입이었다면 unit과 조합하여 string으로 반환
-                finalValue = unit ? input.value + unit : input.value;
+                const numValue = parseFloat(input.value);
+                if (!isNaN(numValue)) {
+                    const clampedNum = clampValue(numValue);
+                    finalValue = unit ? clampedNum + unit : clampedNum.toString();
+                } else {
+                    finalValue = unit ? input.value + unit : input.value;
+                }
             }
             
             onChange?.(finalValue);

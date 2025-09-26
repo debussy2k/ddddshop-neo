@@ -77,7 +77,7 @@ export namespace du {
             position: ${position};
 		`;
 
-	        // 수평 정렬 스타일 추가
+	    // 수평 정렬 스타일 추가
         styles += getHorizontalStyles(prop);
 		styles += getVerticalStyles(prop);
                 

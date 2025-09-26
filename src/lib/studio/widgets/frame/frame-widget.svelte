@@ -95,28 +95,36 @@
 
     function getCurrentStyle() {
         let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
-        style += `
-        `;
+
+		if (currentProp.layout === 'flex-row') {
+			style += `column-gap: ${currentProp.gap}px;`
+		}
+		else if (currentProp.layout === 'flex-col') {
+			style += `row-gap: ${currentProp.gap}px;`
+		}
+
         return style;
     }
 
-    function getLayoutClasses(): string {
-        let cls = "";
+	function getLayoutStyle() {
+		let style = "";
         if (currentProp.layout === 'block') {
-            cls += "block";
+            style += "display: block;";
         }
         else if (currentProp.layout === 'flex-row') {
-            cls += "flex flex-row";
+            style += `display: flex; flex-direction: row; column-gap: ${currentProp.gap}px;`;
         }
         else if (currentProp.layout === 'flex-col') {
-            cls += "flex flex-col";
+            style += `display: flex; flex-direction: column; row-gap: ${currentProp.gap}px;`;
         }
         else if (currentProp.layout === 'grid') {
-            cls += "grid";
+            style += "display: grid;";
         }
 
-        return cls;
-    }
+		console.log(style);
+
+		return style;
+	}
 
 	export function getWidth() : number {
 		if (!element) return 0;
@@ -142,7 +150,7 @@
     tabindex="0"
     onkeydown={handleKeyDown}
 >
-    <div class={cn(getLayoutClasses(), "relative h-full")}>
+    <div class="relative h-full" style={getLayoutStyle()}>
         <WidgetRenderer widgets={data.children} />
     </div>
 
