@@ -3,8 +3,8 @@
 	import { cn } from "$lib/utils";
 
 	interface Props {
-		onClick: () => void;
 		icon: string; // SVG 파일 URL
+		onClick?: () => void;
         title?: string;
 		alt?: string;
 		class?: ClassValue;
@@ -32,7 +32,7 @@
 <button 
 	type="button"
 	class={cn(
-		"w-6 h-6 rounded-sm cursor-pointer transition-colors",
+		"w-6 h-6 rounded-sm cursor-pointer transition-colors flex items-center justify-center",
 		isPressed ? "bg-gray-300" : 
 		isHovered ? "bg-gray-100" : "",
 		className
@@ -42,7 +42,7 @@
 	onmouseleave={() => { isHovered = false; }}
 	tabindex="0"
 	title={title}
-	onclick={onClick}
+	onclick={onClick || (() => {})}
 >
 	{@html icon}
 </button>

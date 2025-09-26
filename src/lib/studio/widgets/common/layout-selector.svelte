@@ -1,13 +1,14 @@
 <script lang="ts">
 	import type { LayoutType } from "../../types";
 	import { SegmentedControl } from "$lib/components/ui/segmented-control";
-
+	import { cn } from "$lib/utils";
 	interface Props {
 		layout: LayoutType;
 		onChange?: (layout: LayoutType) => void;
+		class?: string;
 	}
 
-	let { layout, onChange }: Props = $props();
+	let { layout, onChange, class: className }: Props = $props();
 
 	const options = [
 		{
@@ -34,7 +35,7 @@
 </script>
 
 
-<div class="flex flex-col gap-2 text-sm">
+<div class={cn("flex flex-col gap-2 text-sm", className)}>
 	<SegmentedControl
 		{options}
 		value={layout}

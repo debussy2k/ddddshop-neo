@@ -17,6 +17,8 @@
     import { constraintsUtilVert } from "../common/constraints-util-vert";
     import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
     import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
+    import { MiniButton } from "$lib/components/ui/min-button";
+	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 
 	interface Props {
 		data: Widget;
@@ -98,8 +100,10 @@
 
 	<div class="flex flex-col gap-y-2">
 		{#if isContainerProps(currentProp)}
-			<div class=''>
-				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout}/>
+			<div class='flex gap-x-2'>
+				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout} class='flex-1 min-w-0'/>
+                <MiniButton icon={FlexWrapIcon} title="wrap" class=''/>
+
 			</div>
 		{/if}
 
