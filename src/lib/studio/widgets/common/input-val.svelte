@@ -36,8 +36,8 @@
 
     // 드래그 관련 상태
     let isDragging = $state(false);
-    let dragStartX = $state(0);
     let dragStartValue = $state(0);
+    let accumulatedDelta = $state(0);
 
     function handleMouseDown(event: MouseEvent) {
         // 숫자가 아닌 경우 드래그 비활성화
@@ -45,8 +45,12 @@
         if (isNaN(currentNumber)) return;
 
         isDragging = true;
-        dragStartX = event.clientX;
         dragStartValue = currentNumber;
+        accumulatedDelta = 0;
+        
+        // Pointer Lock 요청
+        const target = event.target as HTMLElement;
+        target.requestPointerLock?.();
         
         // 전역 마우스 이벤트 등록
         document.addEventListener('mousemove', handleMouseMove);
@@ -59,9 +63,12 @@
     function handleMouseMove(event: MouseEvent) {
         if (!isDragging) return;
 
-        const deltaX = event.clientX - dragStartX;
+        // Pointer Lock이 활성화된 경우 movementX 사용
+        const deltaX = event.movementX || 0;
         const sensitivity = 1; // 드래그 민감도 조절
-        const newValue = dragStartValue + (deltaX * sensitivity);
+        
+        accumulatedDelta += deltaX;
+        const newValue = dragStartValue + (accumulatedDelta * sensitivity);
         console.log('newValue', newValue);
 
         // 새로운 값 적용
@@ -78,6 +85,11 @@
 
     function handleMouseUp() {
         isDragging = false;
+        accumulatedDelta = 0;
+        
+        // Pointer Lock 해제
+        document.exitPointerLock?.();
+        
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
     }
