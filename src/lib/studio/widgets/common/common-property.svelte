@@ -50,6 +50,10 @@
 	function updateLayout(newLayout: LayoutType) {
         cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
     }
+
+	function updateProp(newProp: Partial<BaseWidgetProp>) {
+		cmd.updateProp(data.id, newProp, bpm.current);
+	}
 </script>
 
 <!-- Position -->
@@ -94,8 +98,8 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				<InputVal name='W' value={computedVal.width}/>
-				<InputVal name='H' value={computedVal.height}/>
+				<InputVal name='W' value={computedVal.width} onChange={value =>updateProp({ width: value + 'px' })}/>
+				<InputVal name='H' value={computedVal.height} onChange={value =>updateProp({ height: value + 'px' })}/>
 			</div>
 		</div>
 	</div>

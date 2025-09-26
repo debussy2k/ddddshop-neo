@@ -34,11 +34,62 @@
         return { numberPart: value, unit: '' };
     });
 
-    
+    // 드래그 관련 상태
+    let isDragging = $state(false);
+    let dragStartX = $state(0);
+    let dragStartValue = $state(0);
+
+    function handleMouseDown(event: MouseEvent) {
+        // 숫자가 아닌 경우 드래그 비활성화
+        const currentNumber = parseFloat(numberPart);
+        if (isNaN(currentNumber)) return;
+
+        isDragging = true;
+        dragStartX = event.clientX;
+        dragStartValue = currentNumber;
+        
+        // 전역 마우스 이벤트 등록
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        
+        // 마우스 선택 방지
+        event.preventDefault();
+    }
+
+    function handleMouseMove(event: MouseEvent) {
+        if (!isDragging) return;
+
+        const deltaX = event.clientX - dragStartX;
+        const sensitivity = 1; // 드래그 민감도 조절
+        const newValue = dragStartValue + (deltaX * sensitivity);
+        console.log('newValue', newValue);
+
+        // 새로운 값 적용
+        let finalValue: string | number;
+        if (typeof value === 'number') {
+            finalValue = Math.round(newValue)
+        } else {
+            const roundedValue = Math.round(newValue);
+            finalValue = unit ? roundedValue + unit : roundedValue.toString();
+        }
+
+        onChange?.(finalValue);
+    }
+
+    function handleMouseUp() {
+        isDragging = false;
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    }
 </script>
 
 <div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0', className)}>
-    <div class='w-6 px-2 text-gray-600 flex-shrink-0'>
+    <div 
+        class={cn('w-6 px-2 text-gray-600 flex-shrink-0 select-none', 
+                  isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
+        onmousedown={handleMouseDown}
+        role="button"
+        tabindex="0">
         {name}
     </div>
     <input type="text" 
