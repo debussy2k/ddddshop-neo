@@ -108,6 +108,8 @@
 
 	function getLayoutStyle() {
 		let style = "";
+
+		// display
         if (currentProp.layout === 'block') {
             style += "display: block;";
         }
@@ -121,7 +123,33 @@
             style += "display: grid;";
         }
 
-		console.log(style);
+		// justify-content
+		if (currentProp.justifyContent === 'start') {
+			style += "justify-content: flex-start;";
+		}
+		else if (currentProp.justifyContent === 'end') {
+			style += "justify-content: flex-end;";
+		}
+		else if (currentProp.justifyContent === 'center') {
+			style += "justify-content: center;";
+		}
+		else if (currentProp.justifyContent === 'space-between') {
+			style += "justify-content: space-between;";
+		}
+
+		// align-items
+		if (currentProp.alignItems === 'start') {
+			style += "align-items: flex-start;";
+		}
+		else if (currentProp.alignItems === 'end') {
+			style += "align-items: flex-end;";
+		}
+		else if (currentProp.alignItems === 'center') {
+			style += "align-items: center;";
+		}
+		else if (currentProp.alignItems === 'space-between') {
+			style += "align-items: space-between;";
+		}
 
 		return style;
 	}

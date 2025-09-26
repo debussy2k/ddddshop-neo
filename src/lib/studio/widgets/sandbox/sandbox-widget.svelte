@@ -81,7 +81,8 @@
     }
 
     function getCurrentStyle() {
-        let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
+		let parentLayout = parent?.prop[bpm.current].layout || 'block';
+        let style = du.getBaseStyleOfLeafWidget(currentProp, parentLayout);
         return style;
     }
 

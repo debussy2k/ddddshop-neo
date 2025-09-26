@@ -71,11 +71,19 @@ export namespace du {
         // block인 경우 absolute, 그 외(즉 auto layout인 경우)는 relative. 이렇게 하는 이유는 
         // auto layout(flex-row, flex-col, grid)인 경우 부모에 따라 위치가 결정되어야 하기 때문에 relative로 설정함
 
-        // 참고: static이면 left, top 값이 무시됨
+        // 참고: layout이 flex-row, flex-col이면 항목의 display를 static으로 설정함. 이때 left, top 값이 무시됨
         let position = layout === 'block' ? 'absolute' : 'static';
         let styles = `
             position: ${position};
 		`;
+
+		/*
+			flex-row, flex-col인 경우 컴포넌트가 줄어들지 않도록 설정
+			항목들 flexbox를 넘어가면 자동으로 줄어들어서 표시되는데, 이때 컴포넌트가 줄어들지 않도록 설정
+		*/
+		if (layout === 'flex-row' || layout === 'flex-col') {
+			styles += `flex-shrink: 0;`;
+		}
 
 	    // 수평 정렬 스타일 추가
         styles += getHorizontalStyles(prop);
