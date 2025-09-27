@@ -34,6 +34,12 @@ export class SectionActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					verticalGap: 10,
+					wrap: false,
+					padddingLeft: 10,
+					padddingRight: 10,
+					padddingTop: 10,
+					padddingBottom: 10,
 				},
 				tablet: {
 					height: '360px',
@@ -41,6 +47,12 @@ export class SectionActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					verticalGap: 10,
+					wrap: false,
+					padddingLeft: 10,
+					padddingRight: 10,
+					padddingTop: 10,
+					padddingBottom: 10,
 				},
 				desktop: {
 					height: '460px',
@@ -48,6 +60,12 @@ export class SectionActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					verticalGap: 10,
+					wrap: false,
+					padddingLeft: 10,
+					padddingRight: 10,
+					padddingTop: 10,
+					padddingBottom: 10,
 				}
             }
 

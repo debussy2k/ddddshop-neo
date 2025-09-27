@@ -48,6 +48,10 @@ export class FrameActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
                 },
                 tablet: {
                     layout: 'block',
@@ -66,6 +70,10 @@ export class FrameActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
                 },
                 desktop: {
                     layout: 'block',
@@ -84,6 +92,10 @@ export class FrameActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
                 }
             }
 

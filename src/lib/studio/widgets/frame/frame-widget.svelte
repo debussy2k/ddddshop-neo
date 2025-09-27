@@ -128,33 +128,40 @@
             style += "display: grid;";
         }
 
-		// justify-content
-		if (currentProp.justifyContent === 'start') {
-			style += "justify-content: flex-start;";
-		}
-		else if (currentProp.justifyContent === 'end') {
-			style += "justify-content: flex-end;";
-		}
-		else if (currentProp.justifyContent === 'center') {
-			style += "justify-content: center;";
-		}
-		else if (currentProp.justifyContent === 'space-between') {
-			style += "justify-content: space-between;";
+		if (currentProp.layout === 'flex-row' || currentProp.layout === 'flex-col') {
+			// justify-content
+			if (currentProp.justifyContent === 'start') {
+				style += "justify-content: flex-start;";
+			}
+			else if (currentProp.justifyContent === 'end') {
+				style += "justify-content: flex-end;";
+			}
+			else if (currentProp.justifyContent === 'center') {
+				style += "justify-content: center;";
+			}
+			else if (currentProp.justifyContent === 'space-between') {
+				style += "justify-content: space-between;";
+			}
+	
+			// 교차축 정렬 옵션 : align-items 또는 align-content(wrap인 경우)
+			let crossAxisAlignment = (currentProp.wrap) ? "align-content" : "align-items";
+			if (currentProp.alignItems === 'start') {
+				style += `${crossAxisAlignment}: flex-start;`;
+			}
+			else if (currentProp.alignItems === 'end') {
+				style += `${crossAxisAlignment}: flex-end;`;
+			}
+			else if (currentProp.alignItems === 'center') {
+				style += `${crossAxisAlignment}: center;`;
+			}
+			else if (currentProp.alignItems === 'space-between') {
+				style += `${crossAxisAlignment}: space-between;`;
+			}
+
+			// padding
+			style += `padding-left: ${currentProp.paddingLeft}px; padding-right: ${currentProp.paddingRight}px; padding-top: ${currentProp.paddingTop}px; padding-bottom: ${currentProp.paddingBottom}px;`;
 		}
 
-		// align-items
-		if (currentProp.alignItems === 'start') {
-			style += "align-items: flex-start;";
-		}
-		else if (currentProp.alignItems === 'end') {
-			style += "align-items: flex-end;";
-		}
-		else if (currentProp.alignItems === 'center') {
-			style += "align-items: center;";
-		}
-		else if (currentProp.alignItems === 'space-between') {
-			style += "align-items: space-between;";
-		}
 
 		return style;
 	}

@@ -19,6 +19,8 @@
     import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
     import { MiniToggleButton } from "$lib/components/ui/min-button";
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
+	import PadingXIcon from "$lib/assets/studio/padding-x.svg?raw";
+	import PadingYIcon from "$lib/assets/studio/padding-y.svg?raw";
 
 	interface Props {
 		data: Widget;
@@ -81,8 +83,8 @@
 		</div>
 
 		<div class='flex gap-x-2'>
-			<InputVal name='X' value={computedVal.left} onChange={value =>updateProp({ left: value + 'px' })}/>
-			<InputVal name='Y' value={computedVal.top} onChange={value =>updateProp({ top: value + 'px' })}/>
+			<InputVal name='X' value={computedVal.left} onChange={value => updateProp({ left: value + 'px' })}/>
+			<InputVal name='Y' value={computedVal.top} onChange={value => updateProp({ top: value + 'px' })}/>
 		</div>
 
 		<!-- 부모가 block인 경우만 보여줌 -->
@@ -136,19 +138,36 @@
 			<div class="flex flex-col gap-y-2">
 				<div class='flex gap-x-2'>
 					<div class='w-1/2 min-w-0 space-y-2'>
-						<JustifyContentDropdownBox class='flex-1' value={currentProp.justifyContent} onChange={value =>updateProp({ justifyContent: value })}/>
-						<AlignItemsDropdownBox class='' value={currentProp.alignItems} onChange={value =>updateProp({ alignItems: value })}/>
+						<JustifyContentDropdownBox class='flex-1' value={currentProp.justifyContent} onChange={value => updateProp({ justifyContent: value })}/>
+						<AlignItemsDropdownBox class='' value={currentProp.alignItems} onChange={value => updateProp({ alignItems: value })}/>
 					</div>
 					<div class='w-1/2 min-w-0 space-y-2'>
 						<!-- gap 조정 공간 -->
 						 {#if isFlexbox(currentProp)}
-							<InputVal name='G' value={currentProp.gap} min={0} onChange={value =>updateProp({ gap: value as number })}/>
+							<InputVal name='G' value={currentProp.gap} min={0} onChange={value => updateProp({ gap: value as number })}/>
 						{/if}
 						{#if isFlexboxRow(currentProp) && currentProp.wrap}
-							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value =>updateProp({ verticalGap: value as number })}/>
+							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value => updateProp({ verticalGap: value as number })}/>
 						{/if}
 					</div>
 				</div>
+
+				<!-- padding 조절 공간 -->
+				<div class='flex gap-x-2'>
+					<InputVal icon={PadingXIcon} value={currentProp.paddingLeft} min={0} 
+						onChange={value => updateProp({ 
+							paddingLeft: value as number,
+							paddingRight: value as number
+						})}
+					/>
+					<InputVal icon={PadingYIcon} value={currentProp.paddingTop} min={0} 
+						onChange={value => updateProp({ 
+							paddingTop: value as number,
+							paddingBottom: value as number
+						})}
+					/>
+				</div>
+
 			</div>
 		{/if}
 	</div>

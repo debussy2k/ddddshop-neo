@@ -2,7 +2,8 @@
 	import { cn } from "$lib/utils";
 
     interface Props {
-        name: string;
+        name?: string;
+		icon?: string; // svg 문자열을 받음
         class?: string;
         value?: string | number;
         min?: number;
@@ -10,7 +11,7 @@
         onChange?: (value: string | number) => void;
     }
 
-    let { class: className, name, value, min, max, onChange }: Props = $props();
+    let { class: className, name, icon, value, min, max, onChange }: Props = $props();
     
     // 값을 min, max 범위로 제한하는 함수
     function clampValue(val: number): number {
@@ -107,12 +108,20 @@
 
 <div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0', className)}>
     <div 
-        class={cn('w-6 px-2 text-gray-600 flex-shrink-0 select-none', 
+        class={cn('w-6  flex-shrink-0 select-none', 
                   isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
         onmousedown={handleMouseDown}
         role="button"
         tabindex="0">
-        {name}
+        {#if icon}
+			<div class=''>
+				{@html icon}
+			</div>
+        {:else}
+			<div class="px-2 text-gray-600">
+				{name}
+			</div>
+        {/if}
     </div>
     <input type="text" 
         class='h-full outline-none flex-1 min-w-0 text-ellipsis text-gray-800'

@@ -15,6 +15,10 @@ export interface Frame {
         gap: number;
 		verticalGap: number;
         wrap: boolean;
+		paddingLeft: number;
+		paddingRight: number;
+		paddingTop: number;
+		paddingBottom: number;
     }>;
 }
 
