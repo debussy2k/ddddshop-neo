@@ -115,6 +115,8 @@
         }
         else if (currentProp.layout === 'flex-row') {
             style += `display: flex; flex-direction: row; column-gap: ${currentProp.gap}px;`;
+			if (currentProp.wrap) 
+				style += "flex-wrap: wrap;";
         }
         else if (currentProp.layout === 'flex-col') {
             style += `display: flex; flex-direction: column; row-gap: ${currentProp.gap}px;`;

@@ -15,6 +15,7 @@ export interface Section {
         justifyContent: JustifyContent;
         alignItems: AlignItems;     
 		gap: number;   
+		wrap: boolean;
 	}>;
 }
 

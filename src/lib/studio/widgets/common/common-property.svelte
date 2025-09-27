@@ -17,7 +17,7 @@
     import { constraintsUtilVert } from "../common/constraints-util-vert";
     import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
     import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
-    import { MiniButton } from "$lib/components/ui/min-button";
+    import { MiniToggleButton } from "$lib/components/ui/min-button";
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 
 	interface Props {
@@ -34,6 +34,9 @@
 	// 타입 가드 함수 추가
 	function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
 		return 'layout' in prop;
+	}	
+	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+		return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
 	}	
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
@@ -101,9 +104,13 @@
 	<div class="flex flex-col gap-y-2">
 		{#if isContainerProps(currentProp)}
 			<div class='flex gap-x-2'>
-				<LayoutSelector layout={currentProp.layout}  onChange={updateLayout} class='flex-1 min-w-0'/>
-                <MiniButton icon={FlexWrapIcon} title="wrap" class=''/>
-
+				<LayoutSelector layout={currentProp.layout}  onChange={value => {
+					updateLayout(value);
+					updateProp({ wrap: false });
+				}} class='flex-1 min-w-0'/>
+               	<MiniToggleButton icon={FlexWrapIcon} title="wrap" 
+					class={currentProp.layout !== 'flex-row' ? 'invisible' : ''}
+					toggled={currentProp.wrap} onToggle={value => updateProp({ wrap: value })}/>
 			</div>
 		{/if}
 
@@ -119,7 +126,7 @@
 				<div class='flex gap-x-2'>
 					<div class='w-1/2 min-w-0 space-y-2'>
 						<JustifyContentDropdownBox class='flex-1' value={currentProp.justifyContent} onChange={value =>updateProp({ justifyContent: value })}/>
-						<AlignItemsDropdownBox class='flex-1' value={currentProp.alignItems} onChange={value =>updateProp({ alignItems: value })}/>
+						<AlignItemsDropdownBox class='' value={currentProp.alignItems} onChange={value =>updateProp({ alignItems: value })}/>
 					</div>
 					<div class='w-1/2 min-w-0'>
 						<!-- gap 조정 공간 -->

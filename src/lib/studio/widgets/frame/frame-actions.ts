@@ -46,6 +46,7 @@ export class FrameActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					wrap: false,
                 },
                 tablet: {
                     layout: 'block',
@@ -62,6 +63,7 @@ export class FrameActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					wrap: false,
                 },
                 desktop: {
                     layout: 'block',
@@ -78,6 +80,7 @@ export class FrameActions {
                     justifyContent: 'start',
                     alignItems: 'start',
 					gap: 10,
+					wrap: false,
                 }
             }
 
