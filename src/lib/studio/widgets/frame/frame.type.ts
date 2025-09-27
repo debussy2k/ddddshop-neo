@@ -13,6 +13,7 @@ export interface Frame {
         justifyContent: JustifyContent;
         alignItems: AlignItems;
         gap: number;
+		verticalGap: number;
         wrap: boolean;
     }>;
 }

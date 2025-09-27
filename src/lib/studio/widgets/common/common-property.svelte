@@ -38,6 +38,9 @@
 	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
 		return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
 	}	
+	function isFlexboxRow(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+		return isFlexbox(prop) && prop.layout === 'flex-row';
+	}
 
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
 		if (parentComp === null) {
@@ -105,11 +108,19 @@
 		{#if isContainerProps(currentProp)}
 			<div class='flex gap-x-2'>
 				<LayoutSelector layout={currentProp.layout}  onChange={value => {
-					updateLayout(value);
-					updateProp({ wrap: false });
+					let obj: Partial<FramePropValue | SectionPropValue> = {
+						layout: value,
+						wrap: false,
+					}
+					// 기존 값이 flexbox가 아닌 경우 gap과 verticalGap를 10으로 설정
+					if (!isFlexbox(currentProp)) {
+						obj = { ...obj, gap: 10, verticalGap: 10 };
+					}
+					updateProp(obj);
+					
 				}} class='flex-1 min-w-0'/>
                	<MiniToggleButton icon={FlexWrapIcon} title="wrap" 
-					class={currentProp.layout !== 'flex-row' ? 'invisible' : ''}
+					class={!isFlexboxRow(currentProp) ? 'invisible' : ''}
 					toggled={currentProp.wrap} onToggle={value => updateProp({ wrap: value })}/>
 			</div>
 		{/if}
@@ -128,9 +139,14 @@
 						<JustifyContentDropdownBox class='flex-1' value={currentProp.justifyContent} onChange={value =>updateProp({ justifyContent: value })}/>
 						<AlignItemsDropdownBox class='' value={currentProp.alignItems} onChange={value =>updateProp({ alignItems: value })}/>
 					</div>
-					<div class='w-1/2 min-w-0'>
+					<div class='w-1/2 min-w-0 space-y-2'>
 						<!-- gap 조정 공간 -->
-						 <InputVal name='G' value={currentProp.gap} min={0} onChange={value =>updateProp({ gap: value as number })}/>
+						 {#if isFlexbox(currentProp)}
+							<InputVal name='G' value={currentProp.gap} min={0} onChange={value =>updateProp({ gap: value as number })}/>
+						{/if}
+						{#if isFlexboxRow(currentProp)}
+							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value =>updateProp({ verticalGap: value as number })}/>
+						{/if}
 					</div>
 				</div>
 			</div>

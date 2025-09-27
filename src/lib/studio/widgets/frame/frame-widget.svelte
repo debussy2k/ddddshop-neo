@@ -114,7 +114,10 @@
             style += "display: block;";
         }
         else if (currentProp.layout === 'flex-row') {
-            style += `display: flex; flex-direction: row; column-gap: ${currentProp.gap}px;`;
+			/*
+				align-content:start; --> 기본 값이 stretch여서 row간 간격이 발생하는 문제가 발생하는 것을 방지하기 위해 추가함.
+			*/
+            style += `display: flex; flex-direction: row; align-content:start; column-gap: ${currentProp.gap}px; row-gap: ${currentProp.verticalGap}px;`;
 			if (currentProp.wrap) 
 				style += "flex-wrap: wrap;";
         }
