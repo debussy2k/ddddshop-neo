@@ -144,7 +144,7 @@
 						 {#if isFlexbox(currentProp)}
 							<InputVal name='G' value={currentProp.gap} min={0} onChange={value =>updateProp({ gap: value as number })}/>
 						{/if}
-						{#if isFlexboxRow(currentProp)}
+						{#if isFlexboxRow(currentProp) && currentProp.wrap}
 							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value =>updateProp({ verticalGap: value as number })}/>
 						{/if}
 					</div>
