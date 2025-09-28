@@ -70,29 +70,8 @@
     }
 	
 	function updateWidthProp(newWidth: number) {
-		if (currentProp.horzAlign === 'left' || currentProp.horzAlign === 'right') {
-			updateProp({ width: newWidth + 'px' });
-		}
-		else if (currentProp.horzAlign === 'both') {
-			let widthDelta = newWidth - computedVal.width;
-			updateProp({ right: computedVal.right - widthDelta + 'px' });
-		}
-		else if (currentProp.horzAlign === 'center') {
-			let centerOffsetX = (computedVal.left + newWidth/2) - computedVal.parentWidth/2;
-			updateProp({ 
-				left: `calc(50% + ${centerOffsetX}px - ${newWidth/2}px)`,
-				width: newWidth + 'px',
-				centerOffsetX: centerOffsetX
-
-			});
-		}
-		else if (currentProp.horzAlign === 'scale') {
-			let widthDelta = newWidth - computedVal.width;
-			let computedRight = computedVal.parentWidth - (computedVal.left + computedVal.width);
-			updateProp({
-				right: computedRight - widthDelta + 'px'
-			})
-		}
+		const updatedProps = constraintsUtilHorz.updateWidthConstraints(newWidth, currentProp, computedVal);
+		updateProp(updatedProps);
 	}
 
 </script>

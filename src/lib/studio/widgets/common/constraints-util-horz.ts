@@ -144,5 +144,39 @@ export namespace constraintsUtilHorz {
 		let width = getWidthValue(prop, parentWidth);
 		let centerOffsetX =  (left + width/2) - parentWidth/2;
 		return util.round(centerOffsetX, 2);
-	}	
+	}
+
+	/**
+	 * 위젯의 너비 변경 시 각 horzAlign에 따른 속성 업데이트 값을 계산합니다.
+	 */
+	export function updateWidthConstraints(
+		newWidth: number, 
+		currentProp: BaseWidgetProp, 
+		computedVal: { left: number; right: number; width: number; parentWidth: number }
+	): Partial<BaseWidgetProp> {
+		if (currentProp.horzAlign === 'left' || currentProp.horzAlign === 'right') {
+			return { width: newWidth + 'px' };
+		}
+		else if (currentProp.horzAlign === 'both') {
+			let widthDelta = newWidth - computedVal.width;
+			return { right: computedVal.right - widthDelta + 'px' };
+		}
+		else if (currentProp.horzAlign === 'center') {
+			let centerOffsetX = (computedVal.left + newWidth/2) - computedVal.parentWidth/2;
+			return { 
+				left: `calc(50% + ${centerOffsetX}px - ${newWidth/2}px)`,
+				width: newWidth + 'px',
+				centerOffsetX: centerOffsetX
+			};
+		}
+		else if (currentProp.horzAlign === 'scale') {
+			let widthDelta = newWidth - computedVal.width;
+			let computedRight = computedVal.parentWidth - (computedVal.left + computedVal.width);
+			return {
+				right: computedRight - widthDelta + 'px'
+			};
+		}
+		
+		return {};
+	}
 }
