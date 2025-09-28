@@ -144,18 +144,46 @@
 			}
 	
 			// 교차축 정렬 옵션 : align-items 또는 align-content(wrap인 경우)
-			let crossAxisAlignment = (currentProp.wrap) ? "align-content" : "align-items";
-			if (currentProp.alignItems === 'start') {
-				style += `${crossAxisAlignment}: flex-start;`;
+			if (currentProp.wrap === false) {
+				if (currentProp.alignItems === 'start') {
+					style += `align-items: flex-start;`;
+				}
+				else if (currentProp.alignItems === 'end') {
+					style += `align-items: flex-end;`;
+				}
+				else if (currentProp.alignItems === 'center') {
+					style += `align-items: center;`;
+				}
+				else if (currentProp.alignItems === 'space-between') {
+					style += `align-items: space-between;`;
+				}
 			}
-			else if (currentProp.alignItems === 'end') {
-				style += `${crossAxisAlignment}: flex-end;`;
-			}
-			else if (currentProp.alignItems === 'center') {
-				style += `${crossAxisAlignment}: center;`;
-			}
-			else if (currentProp.alignItems === 'space-between') {
-				style += `${crossAxisAlignment}: space-between;`;
+			else {
+				/*
+					정리
+						align-items: 한 줄 아이템 단위의 정렬을 지정함.
+						align-content: 줄 묶음 단위의 정렬을 지정함.
+
+					"align-items: flex-start"를 지정하는 이유
+						- wrap인 경우 각 줄에 있는 아이템은 수직방향(=교차축)으로 높이가 가장 큰 아이템 높이에 맞춰짐.
+						- 이를 방지하기 위해 align-items를 flex-start로 설정.
+						- align-items의 기본값은 stretch이기 때문임.
+				*/
+				style += `align-items: flex-start;`;
+
+				// align-content은 "줄 묶음" 단위의 정렬을 지정함.
+				if (currentProp.alignItems === 'start') {
+					style += `align-content: flex-start;`;
+				}
+				else if (currentProp.alignItems === 'end') {
+					style += `align-content: flex-end;`;
+				}
+				else if (currentProp.alignItems === 'center') {
+					style += `align-content: center;`;
+				}
+				else if (currentProp.alignItems === 'space-between') {
+					style += `align-content: space-between;`;
+				}
 			}
 
 			// padding
