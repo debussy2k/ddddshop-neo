@@ -15,16 +15,18 @@
 		onClick?: (value: T) => void;
 		variant?: "default" | "outline" | "secondary" | "ghost";
 		size?: "sm" | "default" | "lg";
+		disabled?: boolean;
 	}
 
 	let { 
 		class: className, 
 		options, 
 		onClick,
+		disabled,
 	}: Props = $props();
 
 	function handleClick(option: Option) {
-		if (!option.disabled) {
+		if (!option.disabled && !disabled) {
 			onClick?.(option.id);
 		}
 	}
@@ -44,15 +46,17 @@
 				index === options.length - 1 && "rounded-r-sm",
 				// 중간 버튼들은 모서리 없음
 				index > 0 && index < options.length - 1 && "rounded-none",
+				// disabled 상태 스타일링
+				(disabled || option.disabled) && "opacity-50 cursor-not-allowed hover:bg-gray-100",
 			)}
-			disabled={option.disabled}
+			disabled={disabled || option.disabled}
 			onclick={() => handleClick(option)}
 			title={option.label}
 		>
 			{#if option.icon}
 				<span class={cn(
 					"w-6 h-6 flex items-center justify-center",
-					option.disabled && "opacity-30"
+					(disabled || option.disabled) && "opacity-30"
 				)} aria-hidden="true">
 					{@html option.icon}
 				</span>

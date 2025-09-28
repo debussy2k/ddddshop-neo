@@ -8,9 +8,10 @@
 		align: HorizontalAlign;
 		onChange?: (align: HorizontalAlign) => void;
 		class?: string;
+		disabled?: boolean;
 	}
 
-	let { align, onChange, class: className }: Props = $props();
+	let { align, onChange, class: className, disabled }: Props = $props();
 
 	const options = [
 		{
@@ -31,10 +32,10 @@
 	];
 </script>
 
-
 <div class={cn("flex flex-col gap-2 text-sm", className)}>
 	<ButtonGroup
 		{options}
-		onClick={(value) => onChange?.(value as HorizontalAlign)}
+		onClick={disabled ? undefined : (value) => onChange?.(value as HorizontalAlign)}
+		{disabled}
 	/>
 </div>

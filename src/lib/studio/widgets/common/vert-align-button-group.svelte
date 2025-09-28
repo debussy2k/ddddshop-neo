@@ -7,9 +7,10 @@
 		align: VerticalAlign;
 		onChange?: (align: VerticalAlign) => void;
 		class?: string;
+		disabled?: boolean;
 	}
 
-	let { align, onChange, class: className }: Props = $props();
+	let { align, onChange, class: className, disabled }: Props = $props();
 
 	const options = [
 		{
@@ -34,6 +35,7 @@
 <div class={cn("flex flex-col gap-2 text-sm", className)}>
 	<ButtonGroup
 		{options}
-		onClick={(value) => onChange?.(value as VerticalAlign)}
+		onClick={disabled ? undefined : (value) => onChange?.(value as VerticalAlign)}
+		{disabled}
 	/>
 </div>

@@ -21,7 +21,6 @@
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 	import PadingXIcon from "$lib/assets/studio/padding-x.svg?raw";
 	import PadingYIcon from "$lib/assets/studio/padding-y.svg?raw";
-	import { util } from "$lib/studio/util";
 
 	interface Props {
 		data: Widget;
@@ -113,8 +112,8 @@
 	<div class="mb-3">위치</div>
 	<div class="flex flex-col gap-y-2">
 		<div class="flex items-center gap-2">
-			<HorzAlignSelector align={"left"} class='flex-1'/>
-			<VertAlignSelector align={"top"} class='flex-1'/>
+			<HorzAlignSelector align={"left"} class='flex-1' disabled={isFlexbox(parentProp)}/>
+			<VertAlignSelector align={"top"} class='flex-1' disabled={isFlexbox(parentProp)}/>
 		</div>
 
 		<div class='flex gap-x-2'>
