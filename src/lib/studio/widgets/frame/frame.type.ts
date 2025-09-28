@@ -19,6 +19,16 @@ export interface Frame {
 		paddingRight: number;
 		paddingTop: number;
 		paddingBottom: number;
+		// min, max 속성
+		hasMinWidth: boolean;
+		minWidth: number;
+		hasMaxWidth: boolean;
+		maxWidth: number;
+		hasMinHeight: boolean;
+		minHeight: number;
+		hasMaxHeight: boolean;
+		maxHeight: number;
+		
     }>;
 }
 

@@ -21,6 +21,7 @@
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 	import PadingXIcon from "$lib/assets/studio/padding-x.svg?raw";
 	import PadingYIcon from "$lib/assets/studio/padding-y.svg?raw";
+	import { util } from "$lib/studio/util";
 
 	interface Props {
 		data: Widget;
@@ -44,6 +45,10 @@
 		return isFlexbox(prop) && prop.layout === 'flex-row';
 	}
 
+	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
+		cmd.updateProp(data.id, newProp, bpm.current);
+	}
+
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, data.id);
@@ -63,14 +68,33 @@
 
         cmd.updateProp(data.id, obj, bpm.current);
     }
+	
+	function updateWidthProp(newWidth: number) {
+		if (currentProp.horzAlign === 'left' || currentProp.horzAlign === 'right') {
+			updateProp({ width: newWidth + 'px' });
+		}
+		else if (currentProp.horzAlign === 'both') {
+			let widthDelta = newWidth - computedVal.width;
+			updateProp({ right: computedVal.right - widthDelta + 'px' });
+		}
+		else if (currentProp.horzAlign === 'center') {
+			let centerOffsetX = (computedVal.left + newWidth/2) - computedVal.parentWidth/2;
+			updateProp({ 
+				left: `calc(50% + ${centerOffsetX}px - ${newWidth/2}px)`,
+				width: newWidth + 'px',
+				centerOffsetX: centerOffsetX
 
-	function updateLayout(newLayout: LayoutType) {
-        cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
-    }
-
-	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
-		cmd.updateProp(data.id, newProp, bpm.current);
+			});
+		}
+		else if (currentProp.horzAlign === 'scale') {
+			let widthDelta = newWidth - computedVal.width;
+			let computedRight = computedVal.parentWidth - (computedVal.left + computedVal.width);
+			updateProp({
+				right: computedRight - widthDelta + 'px'
+			})
+		}
 	}
+
 </script>
 
 <!-- Position -->
@@ -129,7 +153,7 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				<InputVal name='W' value={computedVal.width} onChange={value => updateProp({ width: value + 'px' })}/>
+				<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
 				<InputVal name='H' value={computedVal.height} onChange={value => updateProp({ height: value + 'px' })}/>
 			</div>
 		</div>
@@ -177,5 +201,12 @@
 	<div class="mb-3">정보</div>
 	<div class='overflow-x-scroll'>
 		<JsonView json={currentProp}/>
+	</div>
+</div>
+
+<div class='px-3 py-4 text-xs border-b border-gray-200'>
+	<div class="mb-3">계산된 값</div>
+	<div class='overflow-x-scroll'>
+		<JsonView json={computedVal}/>
 	</div>
 </div>
