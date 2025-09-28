@@ -147,6 +147,47 @@ export namespace constraintsUtilHorz {
 	}
 
 	/**
+	 * 위젯의 왼쪽 위치 변경 시 각 horzAlign에 따른 속성 업데이트 값을 계산합니다.
+	 */
+	export function updateLeftConstraints(
+		newLeft: number, 
+		currentProp: BaseWidgetProp, 
+		computedVal: { left: number; right: number; width: number; parentWidth: number;  }
+	): Partial<BaseWidgetProp> {
+		if (currentProp.horzAlign === 'left') {
+			return { left: newLeft + 'px' };
+		}
+		else if (currentProp.horzAlign === 'right') {
+			let  leftDelta = newLeft - computedVal.left;
+			return { right: computedVal.right - leftDelta + 'px' };
+		}
+		else if (currentProp.horzAlign === 'both') {
+			let leftDelta = newLeft - computedVal.left;
+			return { 
+				left: newLeft + 'px',
+				right: computedVal.right - leftDelta + 'px' 
+			};
+		}
+		else if (currentProp.horzAlign === 'center') {
+			let leftDelta = newLeft - computedVal.left;
+			let newCenterOffsetX = currentProp.centerOffsetX + leftDelta;
+			return { 
+				left: `calc(50% + ${newCenterOffsetX}px - ${computedVal.width/2}px)`,
+				centerOffsetX: newCenterOffsetX
+			};
+		}
+		else if (currentProp.horzAlign === 'scale') {
+			let leftDelta = newLeft - computedVal.left;
+			return {
+				left: util.toPercent(newLeft, computedVal.parentWidth) + '%',
+				right: util.toPercent(computedVal.right - leftDelta, computedVal.parentWidth) + '%'
+			}
+		}
+
+		return {};
+	}
+
+	/**
 	 * 위젯의 너비 변경 시 각 horzAlign에 따른 속성 업데이트 값을 계산합니다.
 	 */
 	export function updateWidthConstraints(
@@ -171,9 +212,8 @@ export namespace constraintsUtilHorz {
 		}
 		else if (currentProp.horzAlign === 'scale') {
 			let widthDelta = newWidth - computedVal.width;
-			let computedRight = computedVal.parentWidth - (computedVal.left + computedVal.width);
 			return {
-				right: computedRight - widthDelta + 'px'
+				right: util.toPercent(computedVal.right - widthDelta, computedVal.parentWidth) + '%'
 			};
 		}
 		

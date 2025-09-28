@@ -69,6 +69,15 @@
         cmd.updateProp(data.id, obj, bpm.current);
     }
 	
+	function updateLeftProp(newLeft: number) {
+		const updatedProps = constraintsUtilHorz.updateLeftConstraints(newLeft, currentProp, computedVal);
+		updateProp(updatedProps);
+	}
+	function updateTopProp(newTop: number) {
+		// const updatedProps = constraintsUtilVert.updateTopConstraints(newTop, currentProp, computedVal);
+		// updateProp(updatedProps);
+	}
+
 	function updateWidthProp(newWidth: number) {
 		const updatedProps = constraintsUtilHorz.updateWidthConstraints(newWidth, currentProp, computedVal);
 		updateProp(updatedProps);
@@ -90,8 +99,8 @@
 		</div>
 
 		<div class='flex gap-x-2'>
-			<InputVal name='X' value={computedVal.left} onChange={value => updateProp({ left: value + 'px' })}/>
-			<InputVal name='Y' value={computedVal.top} onChange={value => updateProp({ top: value + 'px' })}/>
+			<InputVal name='X' value={computedVal.left} onChange={value => updateLeftProp(value as number)}/>
+			<InputVal name='Y' value={computedVal.top} onChange={value => updateTopProp(value as number)}/>
 		</div>
 
 		<!-- 부모가 block인 경우만 보여줌 -->
