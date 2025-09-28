@@ -1,3 +1,3 @@
-import DropdownBox from './drtopdown-box.svelte';
+import DropdownBox from './dropdown-box.svelte';
 
 export default DropdownBox;
