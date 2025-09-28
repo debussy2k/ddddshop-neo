@@ -154,6 +154,47 @@ export namespace constraintsUtilVert {
 	}	
 
 	/**
+	 * 위젯의 top 변경 시 각 vertAlign에 따른 속성 업데이트 값을 계산합니다.
+	 */
+	export function updateTopConstraints(
+		newTop: number, 
+		currentProp: BaseWidgetProp, 
+		computedVal: { top: number; bottom: number; height: number; parentHeight: number }
+	): Partial<BaseWidgetProp> {
+		if (currentProp.vertAlign === 'top') {
+			return { top: newTop + 'px' };
+		}
+		else if (currentProp.vertAlign === 'bottom') {
+			let topDelta = newTop - computedVal.top;
+			return { bottom: computedVal.bottom - topDelta + 'px' };
+		}
+		else if (currentProp.vertAlign === 'both') {
+			let topDelta = newTop - computedVal.top;
+			return { 
+				top: newTop + 'px',
+				bottom: computedVal.bottom - topDelta + 'px' 
+			};
+		}
+		else if (currentProp.vertAlign === 'center') {
+			let topDelta = newTop - computedVal.top;
+			let newCenterOffsetY = currentProp.centerOffsetY + topDelta;
+			return { 
+				top: `calc(50% + ${newCenterOffsetY}px - ${computedVal.height/2}px)`,
+				centerOffsetY: newCenterOffsetY
+			};
+		}
+		else if (currentProp.vertAlign === 'scale') {
+			let topDelta = newTop - computedVal.top;
+			return {
+				top: util.toPercent(newTop, computedVal.parentHeight) + '%',
+				bottom: util.toPercent(computedVal.bottom - topDelta, computedVal.parentHeight) + '%'
+			}
+		}
+
+		return {};
+	}
+
+	/**
 	 * 위젯의 높이 변경 시 각 vertAlign에 따른 속성 업데이트 값을 계산합니다.
 	 */
 	export function updateHeightConstraints(

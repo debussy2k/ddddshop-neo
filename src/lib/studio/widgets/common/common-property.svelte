@@ -74,8 +74,8 @@
 		updateProp(updatedProps);
 	}
 	function updateTopProp(newTop: number) {
-		// const updatedProps = constraintsUtilVert.updateTopConstraints(newTop, currentProp, computedVal);
-		// updateProp(updatedProps);
+		const updatedProps = constraintsUtilVert.updateTopConstraints(newTop, currentProp, computedVal);
+		updateProp(updatedProps);
 	}
 
 	function updateWidthProp(newWidth: number) {
