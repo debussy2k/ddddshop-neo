@@ -152,4 +152,38 @@ export namespace constraintsUtilVert {
 		let centerOffsetY =  (top + height/2) - parentHeight/2;
 		return util.round(centerOffsetY, 2);
 	}	
+
+	/**
+	 * 위젯의 높이 변경 시 각 vertAlign에 따른 속성 업데이트 값을 계산합니다.
+	 */
+	export function updateHeightConstraints(
+		newHeight: number, 
+		currentProp: BaseWidgetProp, 
+		computedVal: { top: number; bottom: number; height: number; parentHeight: number }
+	): Partial<BaseWidgetProp> {
+		if (currentProp.vertAlign === 'top' || currentProp.vertAlign === 'bottom') {
+			return { height: newHeight + 'px' };
+		}
+		else if (currentProp.vertAlign === 'both') {
+			let heightDelta = newHeight - computedVal.height;
+			return { bottom: computedVal.bottom - heightDelta + 'px' };
+		}
+		else if (currentProp.vertAlign === 'center') {
+			let centerOffsetY = (computedVal.top + newHeight/2) - computedVal.parentHeight/2;
+			return { 
+				top: `calc(50% + ${centerOffsetY}px - ${newHeight/2}px)`,
+				height: newHeight + 'px',
+				centerOffsetY: centerOffsetY
+			};
+		}
+		else if (currentProp.vertAlign === 'scale') {
+			let heightDelta = newHeight - computedVal.height;
+			let computedBottom = computedVal.parentHeight - (computedVal.top + computedVal.height);
+			return {
+				bottom: computedBottom - heightDelta + 'px'
+			};
+		}
+		
+		return {};
+	}
 }

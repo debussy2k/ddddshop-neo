@@ -73,6 +73,10 @@
 		const updatedProps = constraintsUtilHorz.updateWidthConstraints(newWidth, currentProp, computedVal);
 		updateProp(updatedProps);
 	}
+	function updateHeightProp(newHeight: number) {
+		const updatedProps = constraintsUtilVert.updateHeightConstraints(newHeight, currentProp, computedVal);
+		updateProp(updatedProps);
+	}
 
 </script>
 
@@ -133,7 +137,7 @@
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
 				<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
-				<InputVal name='H' value={computedVal.height} onChange={value => updateProp({ height: value + 'px' })}/>
+				<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
 			</div>
 		</div>
 
