@@ -54,5 +54,7 @@
         />
     </div> -->
 
-	<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} />
+	{#if parentProp}
+		<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} />
+	{/if}
 </div>

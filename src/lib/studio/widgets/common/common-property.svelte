@@ -27,7 +27,7 @@
 		data: Widget;
 		cmd: Cmd;
 		currentProp: BaseWidgetProp | FramePropValue; // Section은 common-property를 사용하지 않음
-		parentProp: SectionPropValue | FramePropValue | undefined;
+		parentProp: SectionPropValue | FramePropValue;
 		computedVal: ComputedValue;
 	}
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
@@ -118,12 +118,12 @@
 		</div>
 
 		<div class='flex gap-x-2'>
-			<InputVal name='X' value={computedVal.left} onChange={value => updateLeftProp(value as number)}/>
-			<InputVal name='Y' value={computedVal.top} onChange={value => updateTopProp(value as number)}/>
+			<InputVal name='X' value={computedVal.left} disabled={isFlexbox(parentProp)} onChange={value => updateLeftProp(value as number)}/>
+			<InputVal name='Y' value={computedVal.top} disabled={isFlexbox(parentProp)} onChange={value => updateTopProp(value as number)}/>
 		</div>
 
 		<!-- 부모가 block인 경우만 보여줌 -->
-		{#if parentProp?.layout === 'block'}
+		{#if parentProp.layout === 'block'}
 			<div class='flex gap-x-2'>
 				<div class='w-1/2 min-w-0 space-y-2'>
 					<HorzAlignDropdownBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>

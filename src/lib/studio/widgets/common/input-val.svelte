@@ -8,10 +8,11 @@
         value?: string | number;
         min?: number;
         max?: number;
+        disabled?: boolean;
         onChange?: (value: string | number) => void;
     }
 
-    let { class: className, name, icon, value, min, max, onChange }: Props = $props();
+    let { class: className, name, icon, value, min, max, disabled, onChange }: Props = $props();
     
     // 값을 min, max 범위로 제한하는 함수
     function clampValue(val: number): number {
@@ -50,7 +51,8 @@
     let accumulatedDelta = $state(0);
 
     function handleMouseDown(event: MouseEvent) {
-        // 숫자가 아닌 경우 드래그 비활성화
+        // disabled 상태이거나 숫자가 아닌 경우 드래그 비활성화
+        if (disabled) return;
         const currentNumber = parseFloat(numberPart);
         if (isNaN(currentNumber)) return;
 
@@ -106,9 +108,11 @@
     }
 </script>
 
-<div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0', className)}>
+<div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0', 
+              disabled && 'opacity-50 cursor-not-allowed', className)}>
     <div 
         class={cn('w-6  flex-shrink-0 select-none', 
+                  disabled ? 'cursor-not-allowed' : 
                   isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
         onmousedown={handleMouseDown}
         role="button"
@@ -125,6 +129,7 @@
     </div>
     <input type="text" 
         class='h-full outline-none flex-1 min-w-0 text-ellipsis text-gray-800'
+        disabled={disabled}
         onfocus={(event) => {
             const input = event.target as HTMLInputElement;
             input.select();
