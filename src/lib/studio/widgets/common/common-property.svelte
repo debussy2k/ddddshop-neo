@@ -49,6 +49,25 @@
 		cmd.updateProp(data.id, newProp, bpm.current);
 	}
 
+	function onChangeLayout(newLayout: LayoutType) {
+		let obj: Partial<FramePropValue | SectionPropValue> = {
+			layout: newLayout,
+			wrap: false,
+		}
+		// 기존 값이 flexbox가 아닌 경우 아래 값으로 초기화
+		// gap과 verticalGap를 10으로 설정, justifyContent와 alignItems를 start로 설정
+		if (!isFlexbox(currentProp)) {
+			obj = { ...obj, 
+				justifyContent: "start",
+				alignItems: "start",						
+				gap: 10, 
+				verticalGap: 10 
+			};
+		}
+		updateProp(obj);
+
+	}
+
     function updateHorzAlign(newHorzAlign: HorizontalAlign) {
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, data.id);
@@ -125,18 +144,7 @@
 	<div class="flex flex-col gap-y-2">
 		{#if isContainerProps(currentProp)}
 			<div class='flex gap-x-2'>
-				<LayoutSelector layout={currentProp.layout}  onChange={value => {
-					let obj: Partial<FramePropValue | SectionPropValue> = {
-						layout: value,
-						wrap: false,
-					}
-					// 기존 값이 flexbox가 아닌 경우 gap과 verticalGap를 10으로 설정
-					if (!isFlexbox(currentProp)) {
-						obj = { ...obj, gap: 10, verticalGap: 10 };
-					}
-					updateProp(obj);
-					
-				}} class='flex-1 min-w-0'/>
+				<LayoutSelector layout={currentProp.layout} onChange={onChangeLayout} class='flex-1 min-w-0'/>
                	<MiniToggleButton icon={FlexWrapIcon} title="wrap" 
 					class={!isFlexboxRow(currentProp) ? 'invisible' : ''}
 					toggled={currentProp.wrap} onToggle={value => updateProp({ wrap: value })}/>
@@ -150,7 +158,7 @@
 			</div>
 		</div>
 
-		{#if isContainerProps(currentProp)}
+		{#if isContainerProps(currentProp) && isFlexbox(currentProp)}
 			<div class="flex flex-col gap-y-2">
 				<div class='flex gap-x-2'>
 					<div class='w-1/2 min-w-0 space-y-2'>
