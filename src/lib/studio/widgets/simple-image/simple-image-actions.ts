@@ -3,7 +3,7 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
 import type { SimpleImage, SimpleImageInput, SimpleImagePropValue } from "./simple-image.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
-import { du } from '../common/doc-util';
+import * as du from '../common/doc-util';
 
 export class SimpleImageActions {
 

@@ -1,6 +1,6 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
 import type { DocState, CompositeWidget, Widget } from "./types";
-import { du } from "./widgets/common/doc-util";
+import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
     pastCount: number;

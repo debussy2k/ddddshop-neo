@@ -6,7 +6,7 @@
     import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSimpleImage } from "$lib/studio/command";
-    import { du } from "$lib/studio/widgets/common/doc-util";
+    import * as du from "$lib/studio/widgets/common/doc-util";
 
     let element: HTMLElement;
     let { data: data }: { data: SimpleImage } = $props();

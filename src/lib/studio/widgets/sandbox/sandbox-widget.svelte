@@ -6,7 +6,7 @@
 	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
-    import { du } from "$lib/studio/widgets/common/doc-util";
+    import * as du from "$lib/studio/widgets/common/doc-util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";

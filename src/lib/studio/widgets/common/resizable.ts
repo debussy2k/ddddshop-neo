@@ -1,10 +1,10 @@
 import interact from 'interactjs'
 import type { ResizeEvent } from '@interactjs/types'
-import { util } from '$lib/studio/util'
+import * as util from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { BaseWidgetProp } from '$lib/studio/types'
-import { constraintsUtilHorz } from './constraints-util-horz'
-import { constraintsUtilVert } from './constraints-util-vert'
+import * as constraintsUtilHorz from './constraints-util-horz'
+import * as constraintsUtilVert from './constraints-util-vert'
 
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 

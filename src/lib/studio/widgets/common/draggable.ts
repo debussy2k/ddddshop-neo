@@ -1,10 +1,10 @@
 import interact from 'interactjs'
 import type { DragEvent } from '@interactjs/types'
-import { util } from '$lib/studio/util'
+import * as util from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
 import type { BaseWidgetProp } from '$lib/studio/types'
-import { constraintsUtilHorz } from './constraints-util-horz'
-import { constraintsUtilVert } from './constraints-util-vert'
+import * as constraintsUtilHorz from './constraints-util-horz'
+import * as constraintsUtilVert from './constraints-util-vert'
 
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
@@ -153,13 +153,13 @@ export function setupDraggable(config: DraggableConfig): void {
 		// vertical
 		if (prop.vertAlign === 'top') {
 			vertPos = {
-				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
+				top: Mathutil.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'bottom') {
 			vertPos = {
-				bottom: Math.round(util.getNumberPart(prop.bottom || '0')) - event.dy + 'px',
+				bottom: Mathutil.round(util.getNumberPart(prop.bottom || '0')) - event.dy + 'px',
 				top: 'auto'
 			}
 		}
@@ -202,7 +202,7 @@ export function setupDraggable(config: DraggableConfig): void {
 		}
 		else {
 			vertPos = {
-				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
+				top: Mathutil.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}      

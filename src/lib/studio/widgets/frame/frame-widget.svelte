@@ -7,9 +7,8 @@
 	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
 	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
-    import { du } from "$lib/studio/widgets/common/doc-util";
-	import { cn } from "$lib/utils";
-	import { util } from "$lib/studio/util";
+    import * as du from "$lib/studio/widgets/common/doc-util";
+	import * as util from "$lib/studio/util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";

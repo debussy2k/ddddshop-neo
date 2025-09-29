@@ -6,7 +6,7 @@
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-	import { util } from "$lib/studio/util";
+	import * as util from "$lib/studio/util";
 	import { cn } from "$lib/utils";
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
 

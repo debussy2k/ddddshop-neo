@@ -13,8 +13,8 @@
     import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
-	import { constraintsUtilHorz } from "../common/constraints-util-horz";
-    import { constraintsUtilVert } from "../common/constraints-util-vert";
+	import * as constraintsUtilHorz from "../common/constraints-util-horz";
+    import * as constraintsUtilVert from "../common/constraints-util-vert";
     import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
     import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
     import { MiniToggleButton } from "$lib/components/ui/min-button";

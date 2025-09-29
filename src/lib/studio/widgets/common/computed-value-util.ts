@@ -1,7 +1,7 @@
 import type { BaseWidgetProp } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
-import { constraintsUtilHorz } from "./constraints-util-horz";
-import { constraintsUtilVert } from "./constraints-util-vert";
+import * as constraintsUtilHorz from "./constraints-util-horz";
+import * as constraintsUtilVert from "./constraints-util-vert";
 
 export interface ComputedValue {
     parentWidth: number;

@@ -3,7 +3,7 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, Section, Widget } from "../../types";
 import type { Frame, FrameInput, FramePropValue } from "./frame.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
-import { du } from '../common/doc-util';
+import * as du from '../common/doc-util';
 
 export class FrameActions {
 
