@@ -10,6 +10,7 @@
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
+	import WhComboBox from "./wh-combo-box.svelte";
     import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
@@ -152,8 +153,13 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
-				<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+				{#if isContainerProps(currentProp)}
+					<WhComboBox name='W' value={computedVal.width} widthProps={currentProp} onChange={value => updateWidthProp(value as number)}/>
+					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+				{:else}
+					<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
+					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+				{/if}
 			</div>
 		</div>
 
