@@ -4,18 +4,18 @@
     import { studioDoc } from "../../studio-doc.svelte";
     import type { Cmd } from "$lib/studio/command";
     import { bpm } from "../../breakpoint-man.svelte";
-    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign, LayoutType } from "../../types";
+    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
 	import type { ComputedValue } from "./computed-value-util";
-    import HorzAlignSelector from "../common/horz-align-button-group.svelte";
-    import VertAlignSelector from "../common/vert-align-button-group.svelte";
-    import InputVal from "../common/input-val.svelte";
+    import HorzAlignSelector from "./horz-align-button-group.svelte";
+    import VertAlignSelector from "./vert-align-button-group.svelte";
+    import InputVal from "./input-val.svelte";
     import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
-	import * as constraintsUtilHorz from "../common/constraints-util-horz";
-    import * as constraintsUtilVert from "../common/constraints-util-vert";
-	import LayoutSection from "./layout-section.svelte";
+	import * as constraintsUtilHorz from "./constraints-util-horz";
+    import * as constraintsUtilVert from "./constraints-util-vert";
+	import LayoutSection from "./common-property/layout-section.svelte";
 
 	interface Props {
 		data: Widget;
