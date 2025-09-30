@@ -109,7 +109,8 @@
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
 							{currentProp} {updateProp} {computedVal}
-							min={1}
+							min={currentProp.hasMinWidth ? currentProp.minWidth : 1}
+							max={currentProp.hasMaxWidth ? currentProp.maxWidth : undefined}
 							bind:displayStatus={displayStatus}
 							/>
 						<!-- min width -->
@@ -133,7 +134,8 @@
 						<!-- height -->
 						<HeightComboBox value={computedVal.height} 
 							{currentProp} {updateProp} {computedVal}
-							min={1}
+							min={currentProp.hasMinHeight ? currentProp.minHeight : 1}
+							max={currentProp.hasMaxHeight ? currentProp.maxHeight : undefined}
 							bind:displayStatus={displayStatus}
 							/>
 						<!-- min height -->

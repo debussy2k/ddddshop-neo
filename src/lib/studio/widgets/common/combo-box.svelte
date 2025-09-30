@@ -126,6 +126,21 @@
             
             onChange?.(finalValue);
         }}
+        onkeydown={(event) => {
+            if (event.key === 'Enter') {
+                const input = event.target as HTMLInputElement;
+                
+                // number로 변환하여 반환
+                const numValue = parseFloat(input.value);
+                const validValue = isNaN(numValue) ? 0 : numValue;
+                const finalValue = clampValue(validValue);
+                
+                onChange?.(finalValue);
+                
+                // 포커스 해제 (선택 사항)
+                input.blur();
+            }
+        }}
     />
 
 	<Popover.Root bind:open={isPopoverOpen}>
