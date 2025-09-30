@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ButtonGroup } from "$lib/components/ui/button-group";
 	import { cn } from "$lib/utils";
-	import type { HorizontalAlign } from "../../types";
+	import type { HorizontalAlign } from "../../../types";
 	
 
 	interface Props {
