@@ -28,7 +28,11 @@
 
     let parentComp: any = studioDoc.getWidget<any>(data.parentId);
 	
-	let displayStatus = $state({
+	export type DisplayStatus = {
+		showMinWidth: boolean;
+		showMaxWidth: boolean;
+	}
+	let displayStatus = $state<DisplayStatus>({
 		showMinWidth: false,
 		showMaxWidth: false,
 	})

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
+    import { type DisplayStatus } from "./common-property.svelte";
 	import type { BaseWidgetProp, LayoutType } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
@@ -23,10 +24,7 @@
 		class?: ClassValue;
 		currentProp: BaseWidgetProp | FramePropValue;
 		computedVal: ComputedValue;
-		displayStatus?: {
-			showMinWidth: boolean;
-			showMaxWidth: boolean;
-		};
+		displayStatus: DisplayStatus;
 		updateProp: (newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
 	}
 
@@ -34,7 +32,7 @@
 		class: className, 
 		currentProp, 
 		computedVal, 
-		displayStatus = $bindable({ showMinWidth: false, showMaxWidth: false }), 
+		displayStatus = $bindable(), 
 		updateProp, 
 	}: Props = $props();
 
