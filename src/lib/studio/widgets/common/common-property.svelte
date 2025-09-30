@@ -11,8 +11,7 @@
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
-	import ComboBox from "./combo-box.svelte";
-	import WhComboBox, { type WidthComboBoxItemChangeValue } from "./wh-combo-box.svelte";
+	import WidthComboBox, { type WidthComboBoxItemChangeValue } from "./width-combo-box.svelte";
     import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
@@ -117,31 +116,12 @@
 		const updatedProps = constraintsUtilHorz.updateWidthConstraints(newWidth, currentProp, computedVal);
 		updateProp(updatedProps);
 	}
+
 	function updateHeightProp(newHeight: number) {
 		const updatedProps = constraintsUtilVert.updateHeightConstraints(newHeight, currentProp, computedVal);
 		updateProp(updatedProps);
 	}
 
-	function onWidthComboBoxItemChange(value: WidthComboBoxItemChangeValue) {
-		console.log('onWidthComboBoxItemChange', value);
-		if (value === 'select-fixed-width') {
-			// 
-		} else if (value === 'hug-contents') {
-			//
-		} else if (value === 'select-min-width' || value === 'add-min-width') {
-			displayStatus.showMinWidth = true;
-		} else if (value === 'select-max-width' || value === 'add-max-width') {
-			displayStatus.showMaxWidth = true;
-		} else if (value === 'delete-min-max') {
-			displayStatus.showMinWidth = false;
-			updateProp({
-				hasMinWidth: false,
-				minWidth: 0,
-				hasMaxWidth: false,
-				maxWidth: 0
-			});
-		}
-	}
 </script>
 
 <!-- Position -->
@@ -190,11 +170,14 @@
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
 				{#if isContainerProps(currentProp)}
+					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
-						<WhComboBox name='W' value={computedVal.width} widthProps={currentProp} 
-							onChange={value => updateWidthProp(value as number)}
-							onComboBoxItemChange={onWidthComboBoxItemChange}
+						<!-- width -->
+						<WidthComboBox value={computedVal.width} 
+							{currentProp} {updateProp} {computedVal}
+							bind:displayStatus={displayStatus}
 							/>
+						<!-- min width -->
 						{#if displayStatus.showMinWidth}
 							<InputVal icon={MinWidthIcon} value={currentProp.minWidth} onChange={value => {
 								updateProp({ 
@@ -203,6 +186,7 @@
 								})}
 							}/>
 						{/if}
+						<!-- max width -->
 						{#if displayStatus.showMaxWidth}
 							<InputVal icon={MaxWidthIcon} value={currentProp.maxWidth} onChange={value => {
 								updateProp({ 
@@ -216,6 +200,7 @@
 						<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
 					</div>
 				{:else}
+					<!-- Freeform layout 일때의 Width/Height UI -->
 					<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
 					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
 				{/if}
