@@ -8,6 +8,7 @@
 	import type { ComputedValue } from "../computed-value-util";
 	import InputVal from "../input-val.svelte";
 	import WidthComboBox from "./width-combo-box.svelte";
+	import MinWidthComboBox from "./min-width-combo-box.svelte";
 	import LayoutSelector from "./layout-selector.svelte";
 	import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
 	import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
@@ -96,7 +97,7 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				{#if isContainerProps(currentProp)}
+				{#if isFlexbox(currentProp)}
 					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
@@ -106,12 +107,10 @@
 							/>
 						<!-- min width -->
 						{#if displayStatus.showMinWidth}
-							<InputVal icon={MinWidthIcon} value={currentProp.minWidth} onChange={value => {
-								updateProp({ 
-									hasMinWidth: true,
-									minWidth: value as number 
-								})}
-							}/>
+							<MinWidthComboBox icon={MinWidthIcon} value={currentProp.minWidth} 
+								{currentProp} {updateProp} {computedVal}
+								bind:displayStatus={displayStatus}
+								/>
 						{/if}
 						<!-- max width -->
 						{#if displayStatus.showMaxWidth}

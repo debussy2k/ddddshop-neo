@@ -8,7 +8,7 @@
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
 	import type { ComputedValue } from "./computed-value-util";
-	import LayoutSection from "./layout-property/layout-section.svelte";
+	import { LayoutSection } from "./layout-property";	
 	import { PositionSection } from "./position-property";
 
 	interface Props {

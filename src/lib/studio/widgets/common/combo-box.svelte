@@ -132,11 +132,6 @@
 				'flex items-center text-xs rounded-sm w-full',
 				className
 			)}>
-				{#if icon}
-					<div class='w-6 text-gray-600 flex-shrink-0'>
-						{@html icon}
-					</div>
-				{/if}
 				<div class='w-6 text-gray-800 flex-shrink-0'>
 					<svg width="24" height="24" fill="none" viewBox="0 0 24 24">
 						<path fill="currentColor" fill-rule="evenodd" d="M9.146 11.146a.5.5 0 0 1 .708 0l1.646 1.647 1.646-1.647a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 0-.708" clip-rule="evenodd"></path>
