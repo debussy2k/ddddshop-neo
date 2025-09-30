@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { JsonView } from "@zerodevx/svelte-json-view";
     import { studioDoc } from "../../studio-doc.svelte";
     import type { Cmd } from "$lib/studio/command";
@@ -10,7 +11,8 @@
     import HorzAlignSelector from "../common/horz-align-button-group.svelte";
     import VertAlignSelector from "../common/vert-align-button-group.svelte";
     import InputVal from "../common/input-val.svelte";
-	import WhComboBox from "./wh-combo-box.svelte";
+	import ComboBox from "./combo-box.svelte";
+	import WhComboBox, { type WidthComboBoxItemChangeValue } from "./wh-combo-box.svelte";
     import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
     import LayoutSelector from "../common/layout-selector.svelte";
@@ -22,6 +24,8 @@
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 	import PadingXIcon from "$lib/assets/studio/padding-x.svg?raw";
 	import PadingYIcon from "$lib/assets/studio/padding-y.svg?raw";
+	import MinWidthIcon from "$lib/assets/studio/min-width.svg?raw";
+	import MaxWidthIcon from "$lib/assets/studio/max-width.svg?raw";
 
 	interface Props {
 		data: Widget;
@@ -33,6 +37,18 @@
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
 
     let parentComp: any = studioDoc.getWidget<any>(data.parentId);
+	
+	let displayStatus = $state({
+		showMinWidth: false,
+		showMaxWidth: false,
+	})
+
+	onMount(() => {
+		if (isFlexbox(currentProp) && currentProp.hasMinWidth) {
+			displayStatus.showMinWidth = true;
+		}
+	})
+
 
 	// 타입 가드 함수 추가
 	function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
@@ -106,6 +122,26 @@
 		updateProp(updatedProps);
 	}
 
+	function onWidthComboBoxItemChange(value: WidthComboBoxItemChangeValue) {
+		console.log('onWidthComboBoxItemChange', value);
+		if (value === 'select-fixed-width') {
+			// 
+		} else if (value === 'hug-contents') {
+			//
+		} else if (value === 'select-min-width' || value === 'add-min-width') {
+			displayStatus.showMinWidth = true;
+		} else if (value === 'select-max-width' || value === 'add-max-width') {
+			displayStatus.showMaxWidth = true;
+		} else if (value === 'delete-min-max') {
+			displayStatus.showMinWidth = false;
+			updateProp({
+				hasMinWidth: false,
+				minWidth: 0,
+				hasMaxWidth: false,
+				maxWidth: 0
+			});
+		}
+	}
 </script>
 
 <!-- Position -->
@@ -154,8 +190,31 @@
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
 				{#if isContainerProps(currentProp)}
-					<WhComboBox name='W' value={computedVal.width} widthProps={currentProp} onChange={value => updateWidthProp(value as number)}/>
-					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+					<div class='flex-1 min-w-0 space-y-2'>
+						<WhComboBox name='W' value={computedVal.width} widthProps={currentProp} 
+							onChange={value => updateWidthProp(value as number)}
+							onComboBoxItemChange={onWidthComboBoxItemChange}
+							/>
+						{#if displayStatus.showMinWidth}
+							<InputVal icon={MinWidthIcon} value={currentProp.minWidth} onChange={value => {
+								updateProp({ 
+									hasMinWidth: true,
+									minWidth: value as number 
+								})}
+							}/>
+						{/if}
+						{#if displayStatus.showMaxWidth}
+							<InputVal icon={MaxWidthIcon} value={currentProp.maxWidth} onChange={value => {
+								updateProp({ 
+									hasMaxWidth: true,
+									maxWidth: value as number 
+								})}
+							}/>
+						{/if}
+					</div>
+					<div class='flex-1 min-w-0'>
+						<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+					</div>
 				{:else}
 					<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
 					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
@@ -213,5 +272,12 @@
 	<div class="mb-3">계산된 값</div>
 	<div class='overflow-x-scroll'>
 		<JsonView json={computedVal}/>
+	</div>
+</div>
+
+<div class='px-3 py-4 text-xs border-b border-gray-200'>
+	<div class="mb-3">표시 상태</div>
+	<div class='overflow-x-scroll'>
+		<JsonView json={displayStatus}/>
 	</div>
 </div>

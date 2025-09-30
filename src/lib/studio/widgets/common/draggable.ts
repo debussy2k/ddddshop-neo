@@ -6,6 +6,7 @@ import type { BaseWidgetProp } from '$lib/studio/types'
 import * as constraintsUtilHorz from './constraints-util-horz'
 import * as constraintsUtilVert from './constraints-util-vert'
 
+
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
     'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
@@ -51,7 +52,7 @@ export function setupDraggable(config: DraggableConfig): void {
 
                 studioDoc.historyManager.commitBatch();
                 event.stopPropagation();
-            }
+			}
         }
     });
 
@@ -153,13 +154,13 @@ export function setupDraggable(config: DraggableConfig): void {
 		// vertical
 		if (prop.vertAlign === 'top') {
 			vertPos = {
-				top: Mathutil.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}
 		else if (prop.vertAlign === 'bottom') {
 			vertPos = {
-				bottom: Mathutil.round(util.getNumberPart(prop.bottom || '0')) - event.dy + 'px',
+				bottom: Math.round(util.getNumberPart(prop.bottom || '0')) - event.dy + 'px',
 				top: 'auto'
 			}
 		}
@@ -202,7 +203,7 @@ export function setupDraggable(config: DraggableConfig): void {
 		}
 		else {
 			vertPos = {
-				top: Mathutil.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
+				top: Math.round(util.getNumberPart(prop.top || '0')) + event.dy + 'px',
 				bottom: 'auto'
 			}
 		}      
