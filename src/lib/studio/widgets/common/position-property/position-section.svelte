@@ -85,8 +85,8 @@
 		{#if parentProp.layout === 'block'}
 			<div class='flex gap-x-2'>
 				<div class='w-1/2 min-w-0 space-y-2'>
-					<HorzAlignDropdownBox value={currentProp.horzAlign} onChange={updateHorzAlign}/>
-					<VertAlignDropdownBox value={currentProp.vertAlign} onChange={updateVertAlign}/>
+					<HorzAlignDropdownBox value={currentProp.horzAlign} currentProp={currentProp} onChange={updateHorzAlign}/>
+					<VertAlignDropdownBox value={currentProp.vertAlign} currentProp={currentProp} onChange={updateVertAlign}/>
 				</div>
 				<div class='w-1/2 min-w-0'>
 					

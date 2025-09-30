@@ -7,6 +7,7 @@
 		label: string;
 		value: string;
 		icon?: string;
+		disabled?: boolean;
 	}
 
 	interface Props {
@@ -70,10 +71,13 @@
 					<button 
 						type="button"
 						class={cn(
-							'p-2 hover:bg-gray-100 cursor-pointer text-left flex items-center gap-2',
-							option.value === value && 'bg-gray-100'
+							'p-2 text-left flex items-center gap-2',
+							!option.disabled && 'hover:bg-gray-100 cursor-pointer',
+							option.disabled && 'opacity-50 text-gray-400',
+							option.value === value && !option.disabled && 'bg-gray-100'
 						)}
-						onclick={() => handleSelectOption(option.value)}
+						disabled={option.disabled}
+						onclick={() => !option.disabled && handleSelectOption(option.value)}
 					>
 						{#if option.icon}
 							<div class='w-4 h-4 text-gray-600 flex-shrink-0'>
