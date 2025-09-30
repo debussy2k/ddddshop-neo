@@ -7,10 +7,10 @@
 	import type { FramePropValue } from "../../frame/frame.type";
 	import type { ComputedValue } from "../computed-value-util";
 	import InputVal from "../input-val.svelte";
-	import WidthComboBox from "../width-combo-box.svelte";
-	import LayoutSelector from "../layout-selector.svelte";
-	import JustifyContentDropdownBox from "../justify-content-dropdown-box.svelte";
-	import AlignItemsDropdownBox from "../align-items-dropdown-box.svelte";
+	import WidthComboBox from "./width-combo-box.svelte";
+	import LayoutSelector from "./layout-selector.svelte";
+	import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
+	import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
 	import { MiniToggleButton } from "$lib/components/ui/min-button";
 	import FlexWrapIcon from "$lib/components/ui/min-button/flex-wrap.svg?raw";
 	import PadingXIcon from "$lib/assets/studio/padding-x.svg?raw";

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AlignItems } from "../../types";
+	import type { AlignItems } from "../../../types";
 	import type { ClassValue } from "svelte/elements";
 	import DropdownBox from "$lib/components/ui/dropdown-box/index.js";
 

@@ -3,7 +3,7 @@
     import type { LayoutType } from "../../types";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
     import { cmdSection as cmd } from "$lib/studio/command";
-    import LayoutSelector from "../common/layout-selector.svelte";
+    import LayoutSelector from "../common/layout-property/layout-selector.svelte";
     import InputVal from "../common/input-val.svelte";
     import { JsonView } from "@zerodevx/svelte-json-view";
     import { canvasManager } from "$lib/studio/canvas-manager.svelte";

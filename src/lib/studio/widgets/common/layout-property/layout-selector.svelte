@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LayoutType } from "../../types";
+	import type { LayoutType } from "../../../types";
 	import { SegmentedControl } from "$lib/components/ui/segmented-control";
 	import { cn } from "$lib/utils";
 	interface Props {

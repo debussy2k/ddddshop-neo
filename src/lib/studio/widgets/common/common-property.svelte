@@ -15,7 +15,7 @@
     import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
 	import * as constraintsUtilHorz from "./constraints-util-horz";
     import * as constraintsUtilVert from "./constraints-util-vert";
-	import LayoutSection from "./common-property/layout-section.svelte";
+	import LayoutSection from "./layout-property/layout-section.svelte";
 
 	interface Props {
 		data: Widget;

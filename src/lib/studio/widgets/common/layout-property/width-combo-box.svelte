@@ -1,10 +1,10 @@
 <script lang="ts">
-    import ComboBox, { type ComboBoxItem } from "./combo-box.svelte";
-    import type { BaseWidgetProp } from "../../types";
-    import type { FramePropValue } from "../../widgets/frame/frame.type";
-    import type { SectionPropValue } from "../../widgets/section/section.type";
-	import * as constraintsUtilHorz from "../common/constraints-util-horz";
-    import type { ComputedValue } from "./computed-value-util";
+    import ComboBox, { type ComboBoxItem } from "../combo-box.svelte";
+    import type { BaseWidgetProp } from "../../../types";
+    import type { FramePropValue } from "../../frame/frame.type";
+    import type { SectionPropValue } from "../../section/section.type";
+	import * as constraintsUtilHorz from "../constraints-util-horz";
+    import type { ComputedValue } from "../computed-value-util";
 
     export type WidthComboBoxItemChangeValue = "select-fixed-width" | "hug-contents" | "select-min-width" | "add-min-width" | "select-max-width" | "add-max-width" | "delete-min-max";
 

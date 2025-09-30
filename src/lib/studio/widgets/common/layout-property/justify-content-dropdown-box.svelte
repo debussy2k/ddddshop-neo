@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { JustifyContent } from "../../types";
+	import type { JustifyContent } from "../../../types";
 	import type { ClassValue } from "svelte/elements";
 	import DropdownBox from "$lib/components/ui/dropdown-box/index.js";
 
