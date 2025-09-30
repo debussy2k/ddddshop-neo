@@ -17,6 +17,8 @@
     type Props = {
         name?: string;
 		icon?: string; // svg 문자열을 받음
+        title?: string; // tooltip 타이틀
+        placeholder?: string; // input 플레이스홀더
         class?: string;
         value: number;
         comboBoxItems: ComboBoxItem[];
@@ -25,7 +27,7 @@
         onChange?: (value: number) => void;
     }
 
-    let { class: className, name, icon, value, comboBoxItems, min, max, onChange }: Props = $props();
+    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, onChange }: Props = $props();
     
     // popover 상태 관리
     let isPopoverOpen = $state(false);
@@ -109,6 +111,7 @@
     </div>
     <input type="text" 
         class='h-full outline-none flex-1 min-w-0 text-ellipsis text-gray-800'
+        placeholder={placeholder}
         onfocus={(event) => {
             const input = event.target as HTMLInputElement;
             input.select();

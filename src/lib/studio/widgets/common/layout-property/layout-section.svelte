@@ -9,6 +9,7 @@
 	import InputVal from "../input-val.svelte";
 	import WidthComboBox from "./width-combo-box.svelte";
 	import MinWidthComboBox from "./min-width-combo-box.svelte";
+	import MaxWidthComboBox from "./max-width-combo-box.svelte";
 	import LayoutSelector from "./layout-selector.svelte";
 	import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
 	import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
@@ -114,12 +115,10 @@
 						{/if}
 						<!-- max width -->
 						{#if displayStatus.showMaxWidth}
-							<InputVal icon={MaxWidthIcon} value={currentProp.maxWidth} onChange={value => {
-								updateProp({ 
-									hasMaxWidth: true,
-									maxWidth: value as number 
-								})}
-							}/>
+							<MaxWidthComboBox icon={MaxWidthIcon} value={currentProp.maxWidth} 
+								{currentProp} {updateProp} {computedVal}
+								bind:displayStatus={displayStatus}
+								/>
 						{/if}
 					</div>
 					<div class='flex-1 min-w-0'>

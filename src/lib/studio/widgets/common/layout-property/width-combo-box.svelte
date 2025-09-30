@@ -77,6 +77,7 @@
 			displayStatus.showMaxWidth = true;
 		} else if (value === 'delete-min-max') {
 			displayStatus.showMinWidth = false;
+			displayStatus.showMaxWidth = false;
 			updateProp({
 				hasMinWidth: false,
 				minWidth: 0,

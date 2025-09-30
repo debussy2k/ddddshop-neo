@@ -5,7 +5,7 @@
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
 
-    export type MinWidthComboBoxItemChangeValue = "set-current-width" | "remove-min-width";
+    export type MaxWidthComboBoxItemChangeValue = "set-current-width" | "remove-max-width";
 
     interface Props {
         icon?: string; // svg 문자열을 받음
@@ -29,42 +29,42 @@
             label: `현재 width로 설정 (${computedVal.width})`,
             value: "set-current-width",
             onChange: (value:string) => {
-                handleComboBoxItemChange(value as MinWidthComboBoxItemChangeValue);
+                handleComboBoxItemChange(value as MaxWidthComboBoxItemChangeValue);
             }
         },
         {
             type: 'item',
-            label: `최소 폭 제거`,
-            value: "remove-min-width",
+            label: `최대 폭 제거`,
+            value: "remove-max-width",
             onChange: (value:string) => {
-                handleComboBoxItemChange(value as MinWidthComboBoxItemChangeValue);
+                handleComboBoxItemChange(value as MaxWidthComboBoxItemChangeValue);
             }
         }
     ])
     
     function handleValueChange(value: number) {
         updateProp({ 
-            hasMinWidth: true,
-            minWidth: value 
+            hasMaxWidth: true,
+            maxWidth: value 
         });
     }
 
-    function handleComboBoxItemChange(value: MinWidthComboBoxItemChangeValue) {
-        console.log('onMinWidthComboBoxItemChange', value);
+    function handleComboBoxItemChange(value: MaxWidthComboBoxItemChangeValue) {
+        console.log('onMaxWidthComboBoxItemChange', value);
         if (value === 'set-current-width') {
             updateProp({ 
-                hasMinWidth: true,
-                minWidth: computedVal.width 
+                hasMaxWidth: true,
+                maxWidth: computedVal.width 
             });
-        } else if (value === 'remove-min-width') {
-            displayStatus.showMinWidth = false;
+        } else if (value === 'remove-max-width') {
+            displayStatus.showMaxWidth = false;
             updateProp({
-                hasMinWidth: false,
-                minWidth: 0
+                hasMaxWidth: false,
+                maxWidth: 0
             });
         }
     }
 
 </script>
 
-<ComboBox class={className} {icon} placeholder='Min W' {value} {comboBoxItems} {min} {max} onChange={handleValueChange} />
+<ComboBox class={className} {icon} placeholder='Max W' {value} {comboBoxItems} {min} {max} onChange={handleValueChange} />
