@@ -4,6 +4,7 @@
     import type { FramePropValue } from "../../frame/frame.type";
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
+    import * as constraintsUtilHorz from "../constraints-util-horz";
 
     export type MaxWidthComboBoxItemChangeValue = "set-current-width" | "remove-max-width";
 
@@ -43,7 +44,15 @@
     ])
     
     function handleValueChange(value: number) {
+        /*
+            만약 horzAlign이 "both" 또는 "scale"이면 horzAlign을 "left"로 변경
+        */
+       let obj: Partial<BaseWidgetProp> = {};
+        if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
+            obj = constraintsUtilHorz.createHorzAlignProps("left", currentProp, computedVal.parentWidth);
+        }
         updateProp({ 
+            ...obj,
             hasMaxWidth: true,
             maxWidth: value 
         });
@@ -52,10 +61,8 @@
     function handleComboBoxItemChange(value: MaxWidthComboBoxItemChangeValue) {
         console.log('onMaxWidthComboBoxItemChange', value);
         if (value === 'set-current-width') {
-            updateProp({ 
-                hasMaxWidth: true,
-                maxWidth: computedVal.width 
-            });
+            handleValueChange(computedVal.width);
+
         } else if (value === 'remove-max-width') {
             displayStatus.showMaxWidth = false;
             updateProp({

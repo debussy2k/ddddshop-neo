@@ -4,6 +4,7 @@
     import type { FramePropValue } from "../../frame/frame.type";
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
+    import * as constraintsUtilVert from "../constraints-util-vert";
 
     export type MinHeightComboBoxItemChangeValue = "set-current-height" | "remove-min-height";
 
@@ -43,7 +44,15 @@
     ])
     
     function handleValueChange(value: number) {
+        /*
+            만약 vertAlign이 "both" 또는 "scale"이면 vertAlign을 "top"로 변경
+        */
+       let obj: Partial<BaseWidgetProp> = {};
+        if (currentProp.vertAlign === 'both' || currentProp.vertAlign === 'scale') {
+            obj = constraintsUtilVert.createVertAlignProps("top", currentProp, computedVal.parentHeight);
+        }
         updateProp({ 
+            ...obj,
             hasMinHeight: true,
             minHeight: value 
         });
@@ -52,10 +61,7 @@
     function handleComboBoxItemChange(value: MinHeightComboBoxItemChangeValue) {
         console.log('onMinHeightComboBoxItemChange', value);
         if (value === 'set-current-height') {
-            updateProp({ 
-                hasMinHeight: true,
-                minHeight: computedVal.height 
-            });
+            handleValueChange(computedVal.height);
         } else if (value === 'remove-min-height') {
             displayStatus.showMinHeight = false;
             updateProp({

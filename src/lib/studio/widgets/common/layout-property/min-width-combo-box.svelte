@@ -4,6 +4,7 @@
     import type { FramePropValue } from "../../frame/frame.type";
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
+    import * as constraintsUtilHorz from "../constraints-util-horz";
 
     export type MinWidthComboBoxItemChangeValue = "set-current-width" | "remove-min-width";
 
@@ -43,7 +44,16 @@
     ])
     
     function handleValueChange(value: number) {
+        /*
+            만약 horzAlign이 "both" 또는 "scale"이면 horzAlign을 "left"로 변경
+        */
+       let obj: Partial<BaseWidgetProp> = {};
+        if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
+		    obj = constraintsUtilHorz.createHorzAlignProps("left", currentProp, computedVal.parentWidth);
+        }
+
         updateProp({ 
+            ...obj,
             hasMinWidth: true,
             minWidth: value 
         });
@@ -52,10 +62,7 @@
     function handleComboBoxItemChange(value: MinWidthComboBoxItemChangeValue) {
         console.log('onMinWidthComboBoxItemChange', value);
         if (value === 'set-current-width') {
-            updateProp({ 
-                hasMinWidth: true,
-                minWidth: computedVal.width 
-            });
+            handleValueChange(computedVal.width);
         } else if (value === 'remove-min-width') {
             displayStatus.showMinWidth = false;
             updateProp({

@@ -4,6 +4,7 @@
     import type { FramePropValue } from "../../frame/frame.type";
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
+    import * as constraintsUtilVert from "../constraints-util-vert";
 
     export type MaxHeightComboBoxItemChangeValue = "set-current-height" | "remove-max-height";
 
@@ -43,7 +44,15 @@
     ])
     
     function handleValueChange(value: number) {
+        /*
+            만약 vertAlign이 "both" 또는 "scale"이면 vertAlign을 "top"로 변경
+        */
+       let obj: Partial<BaseWidgetProp> = {};
+        if (currentProp.vertAlign === 'both' || currentProp.vertAlign === 'scale') {
+            obj = constraintsUtilVert.createVertAlignProps("top", currentProp, computedVal.parentHeight);
+        }
         updateProp({ 
+            ...obj,
             hasMaxHeight: true,
             maxHeight: value 
         });
@@ -52,10 +61,7 @@
     function handleComboBoxItemChange(value: MaxHeightComboBoxItemChangeValue) {
         console.log('onMaxHeightComboBoxItemChange', value);
         if (value === 'set-current-height') {
-            updateProp({ 
-                hasMaxHeight: true,
-                maxHeight: computedVal.height 
-            });
+            handleValueChange(computedVal.height);
         } else if (value === 'remove-max-height') {
             displayStatus.showMaxHeight = false;
             updateProp({
