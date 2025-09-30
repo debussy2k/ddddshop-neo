@@ -35,6 +35,15 @@
         },
         {
             type: 'item',
+            label: `콘텐츠 맞춤`,
+            value: "hug-contents",
+            onChange: (value:string) => {
+                handleComboBoxItemChange(value as WidthComboBoxItemChangeValue);
+            }
+        },
+        { type: 'divider'},
+        {
+            type: 'item',
             label: currentProp.hasMinWidth ? `최소 폭: ${currentProp.minWidth}` : `최소 폭 추가`,
             value: currentProp.hasMinWidth ? "select-min-width" : "add-min-width",
             onChange: (value:string) => {

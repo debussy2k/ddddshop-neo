@@ -35,6 +35,15 @@
         },
         {
             type: 'item',
+            label: `콘텐츠 맞춤`,
+            value: "hug-contents",
+            onChange: (value:string) => {
+                handleComboBoxItemChange(value as HeightComboBoxItemChangeValue);
+            }
+        },
+        { type: 'divider'},
+        {
+            type: 'item',
             label: currentProp.hasMinHeight ? `최소 높이: ${currentProp.minHeight}` : `최소 높이 추가`,
             value: currentProp.hasMinHeight ? "select-min-height" : "add-min-height",
             onChange: (value:string) => {
