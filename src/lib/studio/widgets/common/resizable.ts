@@ -56,11 +56,11 @@ export function setupResizable(config: ResizableConfig): void {
             },
             move: (event: ResizeEvent) => {
 				// console.log('move', event.deltaRect);
-				let newPosition = getNewPosition(event, ctx);
+				const newPosition = getNewPosition(event, ctx);
                 config.updateCallback(config.id, newPosition);
             },
             end: (event: ResizeEvent) => {
-				let newPosition = getNewPosition(event, ctx);
+				const newPosition = getNewPosition(event, ctx);
 				config.updateCallback(config.id, newPosition);
 
                 studioDoc.historyManager.commitBatch();
@@ -70,9 +70,9 @@ export function setupResizable(config: ResizableConfig): void {
     });
 
 	function newContext(prop: LayoutProp) : ContextInfo {
-        let parentSize = config.getParentSize();
+        const parentSize = config.getParentSize();
         // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
-        let ctxInfo: ContextInfo = {
+        const ctxInfo: ContextInfo = {
             left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
             right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
             top: constraintsUtilVert.getTopValue(prop, parentSize.height),
@@ -87,8 +87,8 @@ export function setupResizable(config: ResizableConfig): void {
 
 	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 		const prop = config.getCurrentProp();
-		let horzPos: Partial<LayoutProp> = calcHorzProps(event, prop, ctx);
-		let vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
+		const horzPos: Partial<LayoutProp> = calcHorzProps(event, prop, ctx);
+		const vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
 
 		return {
 			...horzPos,
@@ -128,7 +128,7 @@ export function setupResizable(config: ResizableConfig): void {
 		}
 		else if (prop.horzAlign === 'center') {
 			// console.log('center', deltaRect);
-			let newWidth = util.getNumberPart(prop.width || '0') + deltaRect?.width;
+			const newWidth = util.getNumberPart(prop.width || '0') + deltaRect?.width;
 			let newCenterOffsetX = prop.centerOffsetX || 0;
 			if (deltaRect?.left !== 0) {
 				newCenterOffsetX += deltaRect?.left/2
@@ -203,7 +203,7 @@ export function setupResizable(config: ResizableConfig): void {
 			}
 		}
 		else if (prop.vertAlign === 'center') {
-			let newHeight = util.getNumberPart(prop.height || '0') + deltaRect?.height;
+			const newHeight = util.getNumberPart(prop.height || '0') + deltaRect?.height;
 			let newCenterOffsetY = prop.centerOffsetY || 0;
 			if (deltaRect?.top !== 0) {
 				newCenterOffsetY += deltaRect?.top/2
