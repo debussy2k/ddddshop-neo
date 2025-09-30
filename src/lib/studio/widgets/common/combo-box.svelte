@@ -97,6 +97,7 @@
         class={cn('w-6  flex-shrink-0 select-none', 
                   isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
         onmousedown={handleMouseDown}
+        title={title}
         role="button"
         tabindex="0">
         {#if icon}

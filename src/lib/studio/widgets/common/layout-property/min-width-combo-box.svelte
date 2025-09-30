@@ -67,4 +67,4 @@
 
 </script>
 
-<ComboBox class={className} {icon} placeholder='Min W' {value} {comboBoxItems} {min} {max} onChange={handleValueChange} />
+<ComboBox class={className} {icon} placeholder='Min W' title='Min width' {value} {comboBoxItems} {min} {max} onChange={handleValueChange} />
