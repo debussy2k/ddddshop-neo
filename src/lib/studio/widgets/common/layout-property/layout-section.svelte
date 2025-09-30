@@ -10,6 +10,9 @@
 	import WidthComboBox from "./width-combo-box.svelte";
 	import MinWidthComboBox from "./min-width-combo-box.svelte";
 	import MaxWidthComboBox from "./max-width-combo-box.svelte";
+	import HeightComboBox from "./height-combo-box.svelte";
+	import MinHeightComboBox from "./min-height-combo-box.svelte";
+	import MaxHeightComboBox from "./max-height-combo-box.svelte";
 	import LayoutSelector from "./layout-selector.svelte";
 	import JustifyContentDropdownBox from "./justify-content-dropdown-box.svelte";
 	import AlignItemsDropdownBox from "./align-items-dropdown-box.svelte";
@@ -19,6 +22,8 @@
 	import PadingYIcon from "$lib/assets/studio/padding-y.svg?raw";
 	import MinWidthIcon from "$lib/assets/studio/min-width.svg?raw";
 	import MaxWidthIcon from "$lib/assets/studio/max-width.svg?raw";
+	import MinHeightIcon from "$lib/assets/studio/min-height.svg?raw";
+	import MaxHeightIcon from "$lib/assets/studio/max-height.svg?raw";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
 
@@ -124,8 +129,29 @@
 								/>
 						{/if}
 					</div>
-					<div class='flex-1 min-w-0'>
-						<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+					<div class='flex-1 min-w-0 space-y-2'>
+						<!-- height -->
+						<HeightComboBox value={computedVal.height} 
+							{currentProp} {updateProp} {computedVal}
+							min={1}
+							bind:displayStatus={displayStatus}
+							/>
+						<!-- min height -->
+						{#if displayStatus.showMinHeight}
+							<MinHeightComboBox icon={MinHeightIcon} value={currentProp.minHeight} 
+								{currentProp} {updateProp} {computedVal}
+								min={1}
+								bind:displayStatus={displayStatus}
+								/>
+						{/if}
+						<!-- max height -->
+						{#if displayStatus.showMaxHeight}
+							<MaxHeightComboBox icon={MaxHeightIcon} value={currentProp.maxHeight} 
+								{currentProp} {updateProp} {computedVal}
+								min={1}
+								bind:displayStatus={displayStatus}
+								/>
+						{/if}
 					</div>
 				{:else}
 					<!-- Freeform layout 일때의 Width/Height UI -->

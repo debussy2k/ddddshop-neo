@@ -25,15 +25,18 @@
 	export type DisplayStatus = {
 		showMinWidth: boolean;
 		showMaxWidth: boolean;
+		showMinHeight: boolean;
+		showMaxHeight: boolean;
 	}
 	let displayStatus = $state<DisplayStatus>({
 		showMinWidth: false,
 		showMaxWidth: false,
+		showMinHeight: false,
+		showMaxHeight: false,
 	})
 
 	onMount(() => {
-		if ('layout' in currentProp && (currentProp.layout === 'flex-row' || currentProp.layout === 'flex-col') && currentProp.hasMinWidth) {
-			displayStatus.showMinWidth = true;
+		if ('layout' in currentProp && (currentProp.layout === 'flex-row' || currentProp.layout === 'flex-col')) {
 		}
 	})
 
