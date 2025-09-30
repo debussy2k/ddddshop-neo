@@ -104,12 +104,14 @@
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
 							{currentProp} {updateProp} {computedVal}
+							min={1}
 							bind:displayStatus={displayStatus}
 							/>
 						<!-- min width -->
 						{#if displayStatus.showMinWidth}
 							<MinWidthComboBox icon={MinWidthIcon} value={currentProp.minWidth} 
 								{currentProp} {updateProp} {computedVal}
+								min={1}
 								bind:displayStatus={displayStatus}
 								/>
 						{/if}
@@ -117,6 +119,7 @@
 						{#if displayStatus.showMaxWidth}
 							<MaxWidthComboBox icon={MaxWidthIcon} value={currentProp.maxWidth} 
 								{currentProp} {updateProp} {computedVal}
+								min={1}
 								bind:displayStatus={displayStatus}
 								/>
 						{/if}
@@ -126,8 +129,8 @@
 					</div>
 				{:else}
 					<!-- Freeform layout 일때의 Width/Height UI -->
-					<InputVal name='W' value={computedVal.width} onChange={value => updateWidthProp(value as number)}/>
-					<InputVal name='H' value={computedVal.height} onChange={value => updateHeightProp(value as number)}/>
+					<InputVal name='W' value={computedVal.width} min={1} onChange={value => updateWidthProp(value as number)}/>
+					<InputVal name='H' value={computedVal.height} min={1} onChange={value => updateHeightProp(value as number)}/>
 				{/if}
 			</div>
 		</div>

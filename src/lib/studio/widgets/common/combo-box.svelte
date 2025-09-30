@@ -20,7 +20,7 @@
         title?: string; // tooltip 타이틀
         placeholder?: string; // input 플레이스홀더
         class?: string;
-        value: number;
+        value: number | undefined;
         comboBoxItems: ComboBoxItem[];
         min?: number;
         max?: number;
@@ -45,11 +45,9 @@
     let accumulatedDelta = $state(0);
 
     function handleMouseDown(event: MouseEvent) {
-        // value가 없는 경우 드래그 비활성화
-        if (value === null || value === undefined) return;
-
         isDragging = true;
-        dragStartValue = value;
+        // value가 undefined인 경우 1에서 시작
+        dragStartValue = value ?? 1;
         accumulatedDelta = 0;
         
         // Pointer Lock 요청
@@ -117,7 +115,7 @@
             const input = event.target as HTMLInputElement;
             input.select();
         }}
-        value={value}
+        value={value ?? ''}
         onchange={(event) => {
             const input = event.target as HTMLInputElement;
             
