@@ -204,4 +204,13 @@
 			</div>
 		{/if}
 	</div>
+
+	{#if (isFlexbox(currentProp) || isFlexbox(parentProp)) && sizeConstraints === undefined }
+		<div class='mt-4 p-1 border'>
+			<div class="mb-1">오류</div>
+			<div class="text-red-500">
+				sizeConstraints가 정의되지 않았습니다.
+			</div>
+		</div>
+	{/if}
 </div>
