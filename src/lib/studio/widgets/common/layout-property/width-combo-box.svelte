@@ -52,7 +52,7 @@
         },
         {
             type: 'item',
-            label: currentProp.hasMaxWidth ? `최대 폭 (${currentProp.maxWidth})` : `최대 폭 추가`,
+            label: currentProp.hasMaxWidth ? `최대 폭: ${currentProp.maxWidth}` : `최대 폭 추가`,
             value: currentProp.hasMaxWidth ? "select-max-width" : "add-max-width",
             onChange: (value: string) => {
                 handleComboBoxItemChange(value as WidthComboBoxItemChangeValue);
