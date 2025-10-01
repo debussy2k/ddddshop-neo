@@ -9,6 +9,16 @@ import * as constraintsUtilVert from './constraints-util-vert'
 export type LayoutProp = Pick<BaseWidgetProp, 
     'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
     'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
+export type WidthMinMax = {
+	hasMinWidth: boolean;
+	minWidth: number;
+	hasMaxWidth: boolean;
+	maxWidth: number;
+	hasMinHeight: boolean;
+	minHeight: number;
+	hasMaxHeight: boolean;
+	maxHeight: number;	
+}
 
 type ContextInfo = {
 	left: number;
@@ -26,7 +36,39 @@ export interface ResizableConfig {
 	getParentSize: () => { width: number; height: number };
     updateCallback: (id: string, updatedProps: Partial<LayoutProp>) => void;
     minSize?: { width: number; height: number };
+    maxSize?: { width: number; height: number };
     edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
+}
+
+export function unsetup(element: HTMLElement | SVGElement) {
+	interact(element).resizable(false);
+}
+
+/**
+ * min, max 값 변경을 감지하는 함수
+ * @param currentProp 현재 크기/위치 정보
+ * @param prevMinMaxHash 이전 min, max 값 해시
+ * @returns 현재 min, max 값 해시와 변경 여부
+ */
+export function detectMinMaxChanges(currentProp: LayoutProp & Partial<WidthMinMax>, prevMinMaxHash:string) {
+	const currentMinMaxValues = {
+		hasMinWidth: currentProp.hasMinWidth,
+		minWidth: currentProp.minWidth,
+		hasMaxWidth: currentProp.hasMaxWidth,
+		maxWidth: currentProp.maxWidth,
+		hasMinHeight: currentProp.hasMinHeight,
+		minHeight: currentProp.minHeight,
+		hasMaxHeight: currentProp.hasMaxHeight,
+		maxHeight: currentProp.maxHeight
+	};
+	
+	// 약간 비효율적인 방법이지만, 코드 간결성을 위해 사용.
+	const currentHash = JSON.stringify(currentMinMaxValues);
+	
+	return {
+		currentHash,
+		changed: prevMinMaxHash !== currentHash
+	}
 }
 
 /**
@@ -36,11 +78,50 @@ export interface ResizableConfig {
 export function setupResizable(config: ResizableConfig): void {
 	let ctx: ContextInfo;
     
+	interact(config.element).resizable(false);
+
+	// min, max 값 계산 함수
+	function calculateMinMaxSizes() {
+		let min = { width: 1, height: 1 };
+		let max = { width: Infinity, height: Infinity };
+
+		// config.getCurrentProp()에서 min/max 속성들 확인
+		const currentProp = config.getCurrentProp() as LayoutProp & Partial<WidthMinMax>;
+		
+		// getCurrentProp의 min/max 속성들을 반영
+		if (currentProp.hasMinWidth && typeof currentProp.minWidth === 'number') {
+			min.width = currentProp.minWidth;
+		}
+		if (currentProp.hasMinHeight && typeof currentProp.minHeight === 'number') {
+			min.height = currentProp.minHeight;
+		}
+		if (currentProp.hasMaxWidth && typeof currentProp.maxWidth === 'number') {
+			max.width = currentProp.maxWidth;
+		}
+		if (currentProp.hasMaxHeight && typeof currentProp.maxHeight === 'number') {
+			max.height = currentProp.maxHeight;
+		}
+
+		// config.minSize, config.maxSize가 있으면 우선 사용
+		if (config.minSize) {
+			min = config.minSize;
+		}
+		if (config.maxSize) {
+			max = config.maxSize;
+		}
+
+		return { min, max };
+	}
+
+	const { min, max } = calculateMinMaxSizes();
+
+	
     interact(config.element).resizable({
         edges: config.edges || { top: true, left: true, bottom: true, right: true },
         modifiers: [
             interact.modifiers.restrictSize({
-                min: config.minSize || { width: 10, height: 10 }
+                min: min,
+				max: max
             }),
 			// 향후 필요시 사용할 것.
 			// interact.modifiers.aspectRatio({

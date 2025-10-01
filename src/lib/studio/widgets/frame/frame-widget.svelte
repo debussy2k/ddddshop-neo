@@ -5,7 +5,7 @@
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
 	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
-	import { setupResizable } from "$lib/studio/widgets/common/resizable";
+	import { setupResizable, detectMinMaxChanges } from "$lib/studio/widgets/common/resizable";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import * as du from "$lib/studio/widgets/common/doc-util";
 	import * as util from "$lib/studio/util";
@@ -26,6 +26,21 @@
         canvasManager.needUpdate;   // 의존성만 추가. 
         return getComputedVal(data, currentProp);
     })
+
+	let prevMinMaxHash = '';
+
+	$effect(() => {
+		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
+		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
+		if (currentProp) {
+			const { currentHash, changed } = detectMinMaxChanges(currentProp, prevMinMaxHash);
+			if (changed) {
+				console.log('min,max changed');
+				setupResizableWidget();
+				prevMinMaxHash = currentHash;
+			}
+		}
+	});
 
 	onMount(() => {
         if (!parent) {
