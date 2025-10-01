@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { Sandbox, SandboxPropValue } from "./sandbox.type";
+    import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
-	import { setupResizable } from "$lib/studio/widgets/common/resizable";
+	import { setupResizable, detectMinMaxChanges } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
     import * as du from "$lib/studio/widgets/common/doc-util";
@@ -21,6 +21,21 @@
         canvasManager.needUpdate;   // 의존성만 추가. 
         return getComputedVal(data, currentProp);
     })
+
+    let prevMinMaxHash = '';
+
+    $effect(() => {
+        // width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
+        // currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
+        if (currentProp.sizeConstraints) {
+            const { currentHash, changed } = detectMinMaxChanges(currentProp.sizeConstraints, prevMinMaxHash);
+            if (changed) {
+                console.log('min,max changed');
+                setupResizableWidget();
+                prevMinMaxHash = currentHash;
+            }
+        }
+    });
 
     onMount(() => {
         
@@ -73,7 +88,7 @@
     }
 
     function getSandboxClasses(isActive: boolean): string {
-        const baseClasses = `border border-green-400 p-4 cursor-pointer`;
+        const baseClasses = `border border-green-400 cursor-pointer`;
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
         const inactiveClasses = 'bg-green-50 hover:bg-green-100';
 
