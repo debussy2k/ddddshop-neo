@@ -4,7 +4,7 @@
     import { studioDoc } from "../../studio-doc.svelte";
     import type { Cmd } from "$lib/studio/command";
     import { bpm } from "../../breakpoint-man.svelte";
-    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign } from "../../types";
+    import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign, ContainerPropValue } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
 	import type { ComputedValue } from "./computed-value-util";
@@ -15,7 +15,7 @@
 		data: Widget;
 		cmd: Cmd;
 		currentProp: BaseWidgetProp | FramePropValue; // Section은 common-property를 사용하지 않음
-		parentProp: SectionPropValue | FramePropValue;
+		parentProp: ContainerPropValue;
 		computedVal: ComputedValue;
 	}
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	

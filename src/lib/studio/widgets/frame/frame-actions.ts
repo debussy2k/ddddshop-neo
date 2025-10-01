@@ -182,12 +182,14 @@ export class FrameActions {
                     if (du.isLayoutFlexBox(updates.layout)) {
                         // children의 sizeConstraints를 기본값으로 설정
                         widget.children.forEach(child => {
+                            // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
                             child.prop[breakpoint].sizeConstraints = this.getDefaultSizeConstraints();
                         });
                     }
                     else {
                         // children의 sizeConstraints를 제거함
                         widget.children.forEach(child => {
+                            // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
                             child.prop[breakpoint].sizeConstraints = undefined;
                         });
                     }

@@ -3,7 +3,7 @@
 	import { cn } from "$lib/utils";
 	import * as du from "../doc-util";
     import { type DisplayStatus } from "../common-property.svelte";
-	import type { Widget, BaseWidgetProp, LayoutType } from "../../../types";
+	import type { Widget, BaseWidgetProp, LayoutType, ContainerPropValue } from "../../../types";
 	import type { SectionPropValue } from "../../section/section.type";
 	import type { FramePropValue } from "../../frame/frame.type";
 	import type { ComputedValue } from "../computed-value-util";
@@ -32,7 +32,7 @@
 		data: Widget;
 		currentProp: BaseWidgetProp | FramePropValue;
 		computedVal: ComputedValue;
-		parentProp: SectionPropValue | FramePropValue;
+		parentProp: ContainerPropValue;
 		displayStatus: DisplayStatus;
 		updateProp: (newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
 	}
@@ -118,7 +118,7 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
-							currentProp={currentProp} {updateProp} {computedVal}
+							currentProp={currentProp} {parentProp} {updateProp} {computedVal}
 							min={sizeConstraints.hasMinWidth ? sizeConstraints.minWidth : 1}
 							max={sizeConstraints.hasMaxWidth ? sizeConstraints.maxWidth : undefined}
 							bind:displayStatus={displayStatus}
@@ -171,6 +171,11 @@
 					<InputVal name='H' value={computedVal.height} min={1} onChange={value => updateHeightProp(value as number)}/>
 				{/if}
 			</div>
+		</div>
+
+		<!-- For Debug -->
+		<div class='border border-red-500'>
+			isContainerProps: {isContainerProps(currentProp)}, isFlexbox: {isFlexbox(currentProp)}
 		</div>
 
 		{#if isContainerProps(currentProp) && isFlexbox(currentProp)}

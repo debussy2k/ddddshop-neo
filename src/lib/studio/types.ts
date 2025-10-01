@@ -15,6 +15,9 @@ export type { CompositeWidget };
 type ContainerProp = Section['prop'] | Frame['prop'];
 export type { ContainerProp };
 
+type ContainerPropValue = ContainerProp[keyof ContainerProp];
+export type { ContainerPropValue };
+
 export interface DocState {
     sections: Section[];
 }
