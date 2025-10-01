@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Widget, Sandbox } from "../../types";
+import type { DocState } from "../../types";
 import type { Section, SectionInput, SectionPropValue } from "./section.type";
-import { bpm, type BreakPoint } from "$lib/studio/breakpoint-man.svelte";
+import { type BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 
 export class SectionActions {
@@ -27,7 +27,7 @@ export class SectionActions {
         this.historyManager.execute((draft) => {
             const sectionName = data.name?.trim() || this.generateSectionName(draft.sections);
             
-            let defaultProp:Section['prop'] = {
+            const defaultProp:Section['prop'] = {
 				mobile: {
 					height: '260px',
 					layout: 'block',
@@ -36,10 +36,10 @@ export class SectionActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
-					padddingLeft: 10,
-					padddingRight: 10,
-					padddingTop: 10,
-					padddingBottom: 10,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
 				},
 				tablet: {
 					height: '360px',
@@ -49,10 +49,10 @@ export class SectionActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
-					padddingLeft: 10,
-					padddingRight: 10,
-					padddingTop: 10,
-					padddingBottom: 10,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
 				},
 				desktop: {
 					height: '460px',
@@ -62,10 +62,10 @@ export class SectionActions {
 					gap: 10,
 					verticalGap: 10,
 					wrap: false,
-					padddingLeft: 10,
-					padddingRight: 10,
-					padddingTop: 10,
-					padddingBottom: 10,
+					paddingLeft: 10,
+					paddingRight: 10,
+					paddingTop: 10,
+					paddingBottom: 10,
 				}
             }
 

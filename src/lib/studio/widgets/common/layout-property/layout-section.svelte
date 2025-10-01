@@ -174,9 +174,9 @@
 		</div>
 
 		<!-- For Debug -->
-		<div class='border border-red-500'>
+		<!-- <div class='border border-red-500'>
 			isContainerProps: {isContainerProps(currentProp)}, isFlexbox: {isFlexbox(currentProp)}
-		</div>
+		</div> -->
 
 		{#if isContainerProps(currentProp) && isFlexbox(currentProp)}
 			<div class="flex flex-col gap-y-2">

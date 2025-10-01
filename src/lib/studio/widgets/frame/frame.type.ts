@@ -1,4 +1,4 @@
-import type { Widget, BaseWidgetProp, LayoutType, JustifyContent, AlignItems } from "../../types";
+import type { Widget, BaseWidgetProp, BaseContainerProp } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Frame {
@@ -8,18 +8,7 @@ export interface Frame {
     parentId: string; // Section의 child로 사용될 때의 부모 ID
     children: Widget[]; // child Widget 객체들
 
-    prop: Record<BreakPoint, BaseWidgetProp & {
-        layout: LayoutType;
-        justifyContent: JustifyContent;
-        alignItems: AlignItems;
-        gap: number;
-		verticalGap: number;
-        wrap: boolean;
-		paddingLeft: number;
-		paddingRight: number;
-		paddingTop: number;
-		paddingBottom: number;
-    }>;
+    prop: Record<BreakPoint, BaseWidgetProp & BaseContainerProp>;
 }
 
 export type FramePropValue = Frame['prop'][keyof Frame['prop']];

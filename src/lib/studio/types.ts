@@ -53,3 +53,16 @@ export type VerticalAlign = "top" | "bottom" | "both" | "center" | "scale";
 export type LayoutType = "block" | "flex-row" | "flex-col" | "grid";
 export type JustifyContent = "start" | "end" | "center" | "space-between";
 export type AlignItems = "start" | "end" | "center";
+
+export type BaseContainerProp = {
+    layout: LayoutType;
+    justifyContent: JustifyContent;
+    alignItems: AlignItems;
+    gap: number;
+    verticalGap: number;
+    wrap: boolean;
+    paddingLeft: number;
+    paddingRight: number;
+    paddingTop: number;
+    paddingBottom: number; 
+}
