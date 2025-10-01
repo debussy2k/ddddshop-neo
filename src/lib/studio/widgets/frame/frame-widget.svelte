@@ -32,8 +32,8 @@
 	$effect(() => {
 		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
 		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
-		if (currentProp) {
-			const { currentHash, changed } = detectMinMaxChanges(currentProp, prevMinMaxHash);
+		if (currentProp.sizeConstraints) {
+			const { currentHash, changed } = detectMinMaxChanges(currentProp.sizeConstraints, prevMinMaxHash);
 			if (changed) {
 				console.log('min,max changed');
 				setupResizableWidget();

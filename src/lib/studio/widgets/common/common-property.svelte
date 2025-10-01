@@ -59,6 +59,7 @@
 <LayoutSection 
 	{currentProp} 
 	{computedVal} 
+	{parentProp}
 	bind:displayStatus={displayStatus}
 	{updateProp} 
 />

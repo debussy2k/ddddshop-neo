@@ -31,6 +31,7 @@
 		class?: ClassValue;
 		currentProp: BaseWidgetProp | FramePropValue;
 		computedVal: ComputedValue;
+		parentProp: SectionPropValue | FramePropValue;
 		displayStatus: DisplayStatus;
 		updateProp: (newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
 	}
@@ -39,9 +40,12 @@
 		class: className, 
 		currentProp, 
 		computedVal, 
+		parentProp,
 		displayStatus = $bindable(), 
 		updateProp, 
 	}: Props = $props();
+
+	let sizeConstraints = $derived(currentProp.sizeConstraints);
 
 	// 타입 가드 함수들
 	function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
@@ -103,28 +107,28 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				{#if isFlexbox(currentProp)}
+				{#if sizeConstraints && (isFlexbox(currentProp) || isFlexbox(parentProp))}
 					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
-							{currentProp} {updateProp} {computedVal}
-							min={currentProp.hasMinWidth ? currentProp.minWidth : 1}
-							max={currentProp.hasMaxWidth ? currentProp.maxWidth : undefined}
+							currentProp={currentProp} {updateProp} {computedVal}
+							min={sizeConstraints.hasMinWidth ? sizeConstraints.minWidth : 1}
+							max={sizeConstraints.hasMaxWidth ? sizeConstraints.maxWidth : undefined}
 							bind:displayStatus={displayStatus}
 							/>
 						<!-- min width -->
 						{#if displayStatus.showMinWidth}
-							<MinWidthComboBox icon={MinWidthIcon} value={currentProp.minWidth} 
-								{currentProp} {updateProp} {computedVal}
+							<MinWidthComboBox icon={MinWidthIcon} value={sizeConstraints.minWidth || 0} 
+								currentProp={currentProp} {sizeConstraints} {updateProp} {computedVal}
 								min={1}
 								bind:displayStatus={displayStatus}
 								/>
 						{/if}
 						<!-- max width -->
 						{#if displayStatus.showMaxWidth}
-							<MaxWidthComboBox icon={MaxWidthIcon} value={currentProp.maxWidth} 
-								{currentProp} {updateProp} {computedVal}
+							<MaxWidthComboBox icon={MaxWidthIcon} value={sizeConstraints.maxWidth || 0} 
+								currentProp={currentProp} {sizeConstraints} {updateProp} {computedVal}
 								min={1}
 								bind:displayStatus={displayStatus}
 								/>
@@ -133,23 +137,23 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- height -->
 						<HeightComboBox value={computedVal.height} 
-							{currentProp} {updateProp} {computedVal}
-							min={currentProp.hasMinHeight ? currentProp.minHeight : 1}
-							max={currentProp.hasMaxHeight ? currentProp.maxHeight : undefined}
+							currentProp={currentProp} {updateProp} {computedVal}
+							min={sizeConstraints.hasMinHeight ? sizeConstraints.minHeight : 1}
+							max={sizeConstraints.hasMaxHeight ? sizeConstraints.maxHeight : undefined}
 							bind:displayStatus={displayStatus}
 							/>
 						<!-- min height -->
 						{#if displayStatus.showMinHeight}
-							<MinHeightComboBox icon={MinHeightIcon} value={currentProp.minHeight} 
-								{currentProp} {updateProp} {computedVal}
+							<MinHeightComboBox icon={MinHeightIcon} value={sizeConstraints.minHeight || 0} 
+								currentProp={currentProp} {sizeConstraints} {updateProp} {computedVal}
 								min={1}
 								bind:displayStatus={displayStatus}
 								/>
 						{/if}
 						<!-- max height -->
 						{#if displayStatus.showMaxHeight}
-							<MaxHeightComboBox icon={MaxHeightIcon} value={currentProp.maxHeight} 
-								{currentProp} {updateProp} {computedVal}
+							<MaxHeightComboBox icon={MaxHeightIcon} value={sizeConstraints.maxHeight || 0} 
+								currentProp={currentProp} {sizeConstraints} {updateProp} {computedVal}
 								min={1}
 								bind:displayStatus={displayStatus}
 								/>

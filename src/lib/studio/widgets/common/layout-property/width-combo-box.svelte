@@ -12,7 +12,7 @@
 		icon?: string; // svg 문자열을 받음
         class?: string;
         value: number;
-        currentProp: FramePropValue; // min, max 값이 있는 경우는 frame 밖에 없음.
+        currentProp: BaseWidgetProp; // min, max 값이 있는 경우는 frame 밖에 없음.
         min?: number;
         max?: number;
         updateProp:(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
@@ -44,16 +44,16 @@
         { type: 'divider'},
         {
             type: 'item',
-            label: currentProp.hasMinWidth ? `최소 폭: ${currentProp.minWidth}` : `최소 폭 추가`,
-            value: currentProp.hasMinWidth ? "select-min-width" : "add-min-width",
+            label: currentProp.sizeConstraints?.hasMinWidth ? `최소 폭: ${currentProp.sizeConstraints.minWidth}` : `최소 폭 추가`,
+            value: currentProp.sizeConstraints?.hasMinWidth ? "select-min-width" : "add-min-width",
             onChange: (value:string) => {
                 handleComboBoxItemChange(value as WidthComboBoxItemChangeValue);
             }
         },
         {
             type: 'item',
-            label: currentProp.hasMaxWidth ? `최대 폭: ${currentProp.maxWidth}` : `최대 폭 추가`,
-            value: currentProp.hasMaxWidth ? "select-max-width" : "add-max-width",
+            label: currentProp.sizeConstraints?.hasMaxWidth ? `최대 폭: ${currentProp.sizeConstraints.maxWidth}` : `최대 폭 추가`,
+            value: currentProp.sizeConstraints?.hasMaxWidth ? "select-max-width" : "add-max-width",
             onChange: (value: string) => {
                 handleComboBoxItemChange(value as WidthComboBoxItemChangeValue);
             }
@@ -88,10 +88,16 @@
 			displayStatus.showMinWidth = false;
 			displayStatus.showMaxWidth = false;
 			updateProp({
-				hasMinWidth: false,
-				minWidth: 0,
-				hasMaxWidth: false,
-				maxWidth: 0
+				sizeConstraints: {
+					hasMinWidth: false,
+					minWidth: 0,
+					hasMaxWidth: false,
+					maxWidth: 0,
+					hasMinHeight: currentProp.sizeConstraints?.hasMinHeight || false,
+					minHeight: currentProp.sizeConstraints?.minHeight || 0,
+					hasMaxHeight: currentProp.sizeConstraints?.hasMaxHeight || false,
+					maxHeight: currentProp.sizeConstraints?.maxHeight || 0
+				}
 			});
 		}
     }

@@ -52,14 +52,16 @@ export class FrameActions {
 					paddingRight: 10,
 					paddingTop: 10,
 					paddingBottom: 10,
-					hasMinWidth: false,
-					minWidth: 0,
-					hasMaxWidth: false,
-					maxWidth: 0,
-					hasMinHeight: false,
-					minHeight: 0,
-					hasMaxHeight: false,
-					maxHeight: 0,
+					sizeConstraints: {
+						hasMinWidth: false,
+						minWidth: 0,
+						hasMaxWidth: false,
+						maxWidth: 0,
+						hasMinHeight: false,
+						minHeight: 0,
+						hasMaxHeight: false,
+						maxHeight: 0
+					},
                 },
                 tablet: {
                     layout: 'block',
@@ -82,14 +84,16 @@ export class FrameActions {
 					paddingRight: 10,
 					paddingTop: 10,
 					paddingBottom: 10,
-					hasMinWidth: false,
-					minWidth: 0,
-					hasMaxWidth: false,
-					maxWidth: 0,
-					hasMinHeight: false,
-					minHeight: 0,
-					hasMaxHeight: false,
-					maxHeight: 0,
+					sizeConstraints: {
+						hasMinWidth: false,
+						minWidth: 0,
+						hasMaxWidth: false,
+						maxWidth: 0,
+						hasMinHeight: false,
+						minHeight: 0,
+						hasMaxHeight: false,
+						maxHeight: 0
+					},
                 },
                 desktop: {
                     layout: 'block',
@@ -112,14 +116,16 @@ export class FrameActions {
 					paddingRight: 10,
 					paddingTop: 10,
 					paddingBottom: 10,
-					hasMinWidth: false,
-					minWidth: 0,
-					hasMaxWidth: false,
-					maxWidth: 0,
-					hasMinHeight: false,
-					minHeight: 0,
-					hasMaxHeight: false,
-					maxHeight: 0,
+					sizeConstraints: {
+						hasMinWidth: false,
+						minWidth: 0,
+						hasMaxWidth: false,
+						maxWidth: 0,
+						hasMinHeight: false,
+						minHeight: 0,
+						hasMaxHeight: false,
+						maxHeight: 0
+					},
                 }
             }
 
@@ -148,9 +154,9 @@ export class FrameActions {
 
     remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
-            let widget = du.findById(id, draft);
+            const widget = du.findById(id, draft);
             if (widget) {
-                let parent = du.findById(widget.parentId, draft);
+                const parent = du.findById(widget.parentId, draft);
                 if (parent && 'children' in parent && parent.children) {
                     parent.children = parent.children.filter((child:Widget) => child.id !== id);
                 }
@@ -160,7 +166,7 @@ export class FrameActions {
 
     update(id: string, updates: Partial<Omit<Frame, 'id'|'type'|'prop'>>): DocState {
         return this.historyManager.execute((draft) => {
-            let widget = du.findById(id, draft);
+            const widget = du.findById(id, draft);
 
             if (widget) {
                 Object.assign(widget, updates);

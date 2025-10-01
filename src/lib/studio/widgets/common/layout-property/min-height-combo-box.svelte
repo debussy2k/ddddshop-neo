@@ -1,6 +1,6 @@
 <script lang="ts">
     import ComboBox, { type ComboBoxItem } from "../combo-box.svelte";
-    import type { BaseWidgetProp } from "../../../types";
+    import type { BaseWidgetProp, SizeConstraints } from "../../../types";
     import type { FramePropValue } from "../../frame/frame.type";
     import type { SectionPropValue } from "../../section/section.type";
     import type { ComputedValue } from "../computed-value-util";
@@ -12,7 +12,8 @@
         icon?: string; // svg 문자열을 받음
         class?: string;
         value: number;
-        currentProp: FramePropValue; // min, max 값이 있는 경우는 frame 밖에 없음.
+        currentProp: BaseWidgetProp;
+        sizeConstraints: SizeConstraints;
         min?: number;
         max?: number;
         updateProp:(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
@@ -22,7 +23,7 @@
             showMaxHeight: boolean;
         };
     }
-    let { class: className, icon, value, currentProp, min, max, updateProp, computedVal, displayStatus=$bindable() }: Props = $props();
+    let { class: className, icon, value, currentProp, sizeConstraints, min, max, updateProp, computedVal, displayStatus=$bindable() }: Props = $props();
 
     let comboBoxItems: ComboBoxItem[] = $derived([
         {
@@ -53,8 +54,11 @@
         }
         updateProp({ 
             ...obj,
-            hasMinHeight: true,
-            minHeight: value 
+            sizeConstraints: {
+                ...sizeConstraints,
+                hasMinHeight: true,
+                minHeight: value,
+            }
         });
     }
 
@@ -65,8 +69,11 @@
         } else if (value === 'remove-min-height') {
             displayStatus.showMinHeight = false;
             updateProp({
-                hasMinHeight: false,
-                minHeight: 0
+                sizeConstraints: {
+                    ...sizeConstraints,
+                    hasMinHeight: false,
+                    minHeight: 0,
+                }
             });
         }
     }
@@ -74,5 +81,5 @@
 </script>
 
 <ComboBox class={className} {icon} placeholder='Min H' title='Min height' {comboBoxItems} {min} {max} 
-    value={ currentProp.hasMinHeight ? value : undefined } 
+    value={ sizeConstraints.hasMinHeight ? value : undefined } 
     onChange={handleValueChange} />

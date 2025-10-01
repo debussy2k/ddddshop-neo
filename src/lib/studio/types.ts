@@ -28,6 +28,18 @@ export type BaseWidgetProp = {
 	centerOffsetY: number;
     horzAlign: HorizontalAlign;
     vertAlign: VerticalAlign;
+    sizeConstraints?: SizeConstraints;
+}
+
+export type SizeConstraints = {
+    hasMinWidth: boolean;
+    minWidth: number;
+    hasMaxWidth: boolean;
+    maxWidth: number;
+    hasMinHeight: boolean;
+    minHeight: number;
+    hasMaxHeight: boolean;
+    maxHeight: number;		
 }
 
 export type HorizontalAlign = "left" | "right" | "both" | "center" | "scale";

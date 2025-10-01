@@ -12,7 +12,7 @@
 		icon?: string; // svg 문자열을 받음
         class?: string;
         value: number;
-        currentProp: FramePropValue; // min, max 값이 있는 경우는 frame 밖에 없음.
+        currentProp: BaseWidgetProp; 
         min?: number;
         max?: number;
         updateProp:(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
@@ -44,16 +44,16 @@
         { type: 'divider'},
         {
             type: 'item',
-            label: currentProp.hasMinHeight ? `최소 높이: ${currentProp.minHeight}` : `최소 높이 추가`,
-            value: currentProp.hasMinHeight ? "select-min-height" : "add-min-height",
+            label: currentProp.sizeConstraints?.hasMinHeight ? `최소 높이: ${currentProp.sizeConstraints.minHeight}` : `최소 높이 추가`,
+            value: currentProp.sizeConstraints?.hasMinHeight ? "select-min-height" : "add-min-height",
             onChange: (value:string) => {
                 handleComboBoxItemChange(value as HeightComboBoxItemChangeValue);
             }
         },
         {
             type: 'item',
-            label: currentProp.hasMaxHeight ? `최대 높이 (${currentProp.maxHeight})` : `최대 높이 추가`,
-            value: currentProp.hasMaxHeight ? "select-max-height" : "add-max-height",
+            label: currentProp.sizeConstraints?.hasMaxHeight ? `최대 높이: ${currentProp.sizeConstraints.maxHeight}` : `최대 높이 추가`,
+            value: currentProp.sizeConstraints?.hasMaxHeight ? "select-max-height" : "add-max-height",
             onChange: (value: string) => {
                 handleComboBoxItemChange(value as HeightComboBoxItemChangeValue);
             }
@@ -88,10 +88,16 @@
 			displayStatus.showMinHeight = false;
 			displayStatus.showMaxHeight = false;
 			updateProp({
-				hasMinHeight: false,
-				minHeight: 0,
-				hasMaxHeight: false,
-				maxHeight: 0
+				sizeConstraints: {
+					hasMinWidth: currentProp.sizeConstraints?.hasMinWidth || false,
+					minWidth: currentProp.sizeConstraints?.minWidth || 0,
+					hasMaxWidth: currentProp.sizeConstraints?.hasMaxWidth || false,
+					maxWidth: currentProp.sizeConstraints?.maxWidth || 0,
+					hasMinHeight: false,
+					minHeight: 0,
+					hasMaxHeight: false,
+					maxHeight: 0
+				}
 			});
 		}
     }

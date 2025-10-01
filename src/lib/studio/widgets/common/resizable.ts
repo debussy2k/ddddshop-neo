@@ -2,13 +2,10 @@ import interact from 'interactjs'
 import type { ResizeEvent } from '@interactjs/types'
 import * as util from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
-import type { BaseWidgetProp } from '$lib/studio/types'
+import type { BaseWidgetProp, SizeConstraints } from '$lib/studio/types'
 import * as constraintsUtilHorz from './constraints-util-horz'
 import * as constraintsUtilVert from './constraints-util-vert'
 
-export type LayoutProp = Pick<BaseWidgetProp, 
-    'left' | 'width' | 'right' | 'centerOffsetX' | 'horzAlign' | 
-    'top' | 'bottom' | 'height' | 'centerOffsetY' | 'vertAlign'>;
 export type WidthMinMax = {
 	hasMinWidth: boolean;
 	minWidth: number;
@@ -32,9 +29,9 @@ type ContextInfo = {
 export interface ResizableConfig {
     id: string;
     element: HTMLElement|SVGElement;
-    getCurrentProp: () => LayoutProp; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
+    getCurrentProp: () => BaseWidgetProp; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
 	getParentSize: () => { width: number; height: number };
-    updateCallback: (id: string, updatedProps: Partial<LayoutProp>) => void;
+    updateCallback: (id: string, updatedProps: Partial<BaseWidgetProp>) => void;
     minSize?: { width: number; height: number };
     maxSize?: { width: number; height: number };
     edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
@@ -50,18 +47,18 @@ export function unsetup(element: HTMLElement | SVGElement) {
  * @param prevMinMaxHash 이전 min, max 값 해시
  * @returns 현재 min, max 값 해시와 변경 여부
  */
-export function detectMinMaxChanges(currentProp: LayoutProp & Partial<WidthMinMax>, prevMinMaxHash:string) {
+export function detectMinMaxChanges(sizeConstraints: SizeConstraints, prevMinMaxHash:string) {
 	const currentMinMaxValues = {
-		hasMinWidth: currentProp.hasMinWidth,
-		minWidth: currentProp.minWidth,
-		hasMaxWidth: currentProp.hasMaxWidth,
-		maxWidth: currentProp.maxWidth,
-		hasMinHeight: currentProp.hasMinHeight,
-		minHeight: currentProp.minHeight,
-		hasMaxHeight: currentProp.hasMaxHeight,
-		maxHeight: currentProp.maxHeight
+		hasMinWidth: sizeConstraints.hasMinWidth,
+		minWidth: sizeConstraints.minWidth,
+		hasMaxWidth: sizeConstraints.hasMaxWidth,
+		maxWidth: sizeConstraints.maxWidth,
+		hasMinHeight: sizeConstraints.hasMinHeight,
+		minHeight: sizeConstraints.minHeight,
+		hasMaxHeight: sizeConstraints.hasMaxHeight,
+		maxHeight: sizeConstraints.maxHeight
 	};
-	
+
 	// 약간 비효율적인 방법이지만, 코드 간결성을 위해 사용.
 	const currentHash = JSON.stringify(currentMinMaxValues);
 	
@@ -80,42 +77,8 @@ export function setupResizable(config: ResizableConfig): void {
     
 	interact(config.element).resizable(false);
 
-	// min, max 값 계산 함수
-	function calculateMinMaxSizes() {
-		let min = { width: 1, height: 1 };
-		let max = { width: Infinity, height: Infinity };
-
-		// config.getCurrentProp()에서 min/max 속성들 확인
-		const currentProp = config.getCurrentProp() as LayoutProp & Partial<WidthMinMax>;
-		
-		// getCurrentProp의 min/max 속성들을 반영
-		if (currentProp.hasMinWidth && typeof currentProp.minWidth === 'number') {
-			min.width = currentProp.minWidth;
-		}
-		if (currentProp.hasMinHeight && typeof currentProp.minHeight === 'number') {
-			min.height = currentProp.minHeight;
-		}
-		if (currentProp.hasMaxWidth && typeof currentProp.maxWidth === 'number') {
-			max.width = currentProp.maxWidth;
-		}
-		if (currentProp.hasMaxHeight && typeof currentProp.maxHeight === 'number') {
-			max.height = currentProp.maxHeight;
-		}
-
-		// config.minSize, config.maxSize가 있으면 우선 사용
-		if (config.minSize) {
-			min = config.minSize;
-		}
-		if (config.maxSize) {
-			max = config.maxSize;
-		}
-
-		return { min, max };
-	}
-
 	const { min, max } = calculateMinMaxSizes();
 
-	
     interact(config.element).resizable({
         edges: config.edges || { top: true, left: true, bottom: true, right: true },
         modifiers: [
@@ -150,7 +113,43 @@ export function setupResizable(config: ResizableConfig): void {
         }
     });
 
-	function newContext(prop: LayoutProp) : ContextInfo {
+	// min, max 값 계산 함수
+	function calculateMinMaxSizes() {
+		let min = { width: 1, height: 1 };
+		let max = { width: Infinity, height: Infinity };
+
+		// config.getCurrentProp()에서 min/max 속성들 확인
+		const currentProp = config.getCurrentProp();
+		
+		if (currentProp.sizeConstraints) {
+			const sizeConstraints = currentProp.sizeConstraints;
+			// getCurrentProp의 min/max 속성들을 반영
+			if (sizeConstraints.hasMinWidth && typeof sizeConstraints.minWidth === 'number') {
+				min.width = sizeConstraints.minWidth;
+			}
+			if (sizeConstraints.hasMinHeight && typeof sizeConstraints.minHeight === 'number') {
+				min.height = sizeConstraints.minHeight;
+			}
+			if (sizeConstraints.hasMaxWidth && typeof sizeConstraints.maxWidth === 'number') {
+				max.width = sizeConstraints.maxWidth;
+			}
+			if (sizeConstraints.hasMaxHeight && typeof sizeConstraints.maxHeight === 'number') {
+				max.height = sizeConstraints.maxHeight;
+			}
+		}
+
+		// config.minSize, config.maxSize가 있으면 우선 사용
+		if (config.minSize) {
+			min = config.minSize;
+		}
+		if (config.maxSize) {
+			max = config.maxSize;
+		}
+
+		return { min, max };
+	}
+	
+	function newContext(prop: BaseWidgetProp) : ContextInfo {
         const parentSize = config.getParentSize();
         // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
         const ctxInfo: ContextInfo = {
@@ -166,10 +165,10 @@ export function setupResizable(config: ResizableConfig): void {
 		return ctxInfo;
 	}
 
-	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<LayoutProp> {
+	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<BaseWidgetProp> {
 		const prop = config.getCurrentProp();
-		const horzPos: Partial<LayoutProp> = calcHorzProps(event, prop, ctx);
-		const vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
+		const horzPos = calcHorzProps(event, prop, ctx);
+		const vertPos = calcVertProps(event, prop, ctx);
 
 		return {
 			...horzPos,
@@ -177,8 +176,8 @@ export function setupResizable(config: ResizableConfig): void {
 		}
 	}
 
-    function calcHorzProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
-		let horzPos: Partial<LayoutProp>;
+    function calcHorzProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<BaseWidgetProp> {
+		let horzPos: Partial<BaseWidgetProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
 		// resizeend에 deltaRect의 right나 width가 0이 아닌 값이 있어 오작동하는 것을 방지하기 위해 초기화
@@ -253,8 +252,8 @@ export function setupResizable(config: ResizableConfig): void {
         return horzPos;
     }
 
-    function calcVertProps(event: ResizeEvent, prop: LayoutProp, ctx: ContextInfo) : Partial<LayoutProp> {
-		let vertPos: Partial<LayoutProp>;
+    function calcVertProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<BaseWidgetProp> {
+		let vertPos: Partial<BaseWidgetProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
 		// resizeend에 deltaRect의 right나 width가 0이 아닌 값이 있어 오작동하는 것을 방지하기 위해 초기화
