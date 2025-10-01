@@ -186,3 +186,7 @@ export function isContainerProps(prop: BaseWidgetProp | FramePropValue | Section
 export function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
     return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
 }	
+
+export function isLayoutFlexBox(layout: LayoutType) {
+    return layout === 'flex-row' || layout === 'flex-col';
+}

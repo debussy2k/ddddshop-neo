@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
+	import * as du from "../doc-util";
     import { type DisplayStatus } from "../common-property.svelte";
 	import type { Widget, BaseWidgetProp, LayoutType } from "../../../types";
 	import type { SectionPropValue } from "../../section/section.type";
@@ -26,7 +27,6 @@
 	import MaxHeightIcon from "$lib/assets/studio/max-height.svg?raw";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
-
 	interface Props {
 		class?: ClassValue;
 		data: Widget;
@@ -67,16 +67,20 @@
 			layout: newLayout,
 			wrap: false,
 		}
-		// 기존 값이 flexbox가 아닌 경우 아래 값으로 초기화
-		// gap과 verticalGap를 10으로 설정, justifyContent와 alignItems를 start로 설정
-		const isCurrentFlexbox = 'layout' in currentProp && (currentProp.layout === 'flex-row' || currentProp.layout === 'flex-col');
-		if (!isCurrentFlexbox) {
-			obj = { ...obj, 
-				justifyContent: "start",
-				alignItems: "start",						
-				gap: 10, 
-				verticalGap: 10 
-			};
+
+		if (du.isFlexbox(currentProp)) {
+		}
+		else {
+			// 기존 값이 flexbox가 아닌 경우 아래 값으로 초기화
+			// gap과 verticalGap를 10으로 설정, justifyContent와 alignItems를 start로 설정
+			if (!du.isFlexbox(currentProp)) {
+				obj = { ...obj, 
+					justifyContent: "start",
+					alignItems: "start",						
+					gap: 10, 
+					verticalGap: 10 
+				};
+			}
 		}
 		updateProp(obj);
 	}

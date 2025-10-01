@@ -173,8 +173,26 @@ export class FrameActions {
 
     updateProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
-            const widget = du.findById(id, draft);
+            const widget = du.findById(id, draft) as Frame;
             if (widget) {
+                const currentProp = widget.prop[breakpoint] as FramePropValue;
+
+                // layout이 변경되면 children의 sizeConstraints를 재설정함
+                if (updates.layout && updates.layout !== currentProp.layout) {
+                    if (du.isLayoutFlexBox(updates.layout)) {
+                        // children의 sizeConstraints를 기본값으로 설정
+                        widget.children.forEach(child => {
+                            child.prop[breakpoint].sizeConstraints = this.getDefaultSizeConstraints();
+                        });
+                    }
+                    else {
+                        // children의 sizeConstraints를 제거함
+                        widget.children.forEach(child => {
+                            child.prop[breakpoint].sizeConstraints = undefined;
+                        });
+                    }
+                }
+
                 widget.prop[breakpoint] = {
                     ...widget.prop[breakpoint],
                     ...updates
