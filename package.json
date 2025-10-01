@@ -5,10 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bld": "pnpm --filter builder dev"
+    "bld": "pnpm --filter builder dev",
+    "serve": "pnpm --filter server dev",
+    "b": "pnpm --filter builder add",
+    "s": "pnpm --filter server add"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.7.1"
+  "packageManager": "pnpm@10.7.1",
+  "devDependencies": {
+    "eslint-config-prettier": "^10.0.1",
+    "prettier": "^3.4.2"
+  }
 }
