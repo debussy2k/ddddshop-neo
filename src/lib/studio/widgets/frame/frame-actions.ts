@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Section, Widget } from "../../types";
+import type { DocState, Section, Widget, ContainerProp } from "../../types";
 import type { Frame, FrameInput, FramePropValue } from "./frame.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 import * as du from '../common/doc-util';
@@ -23,126 +23,27 @@ export class FrameActions {
         return `프레임 ${maxNumber + 1}`;
     }
 
-    add(data: FrameInput): { id: string } {
+    add(input: FrameInput): { id: string } {
         const newId = nanoid();
 
         this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 frame 이름 검색
-            const frameName = data.name?.trim() || this.generateFrameName(draft.sections);
-            
-            const defaultProp:Frame['prop'] = {
-                mobile: {
-                    layout: 'block',
-                    left: '10px',
-                    right: 'auto',
-                    width: '200px',
-                    centerOffsetX: 0,
-                    top: '10px',
-                    bottom: 'auto',
-                    height: '150px',
-                    horzAlign: 'left',
-                    vertAlign: 'top',
-                    centerOffsetY: 0,
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-					sizeConstraints: {
-						hasMinWidth: false,
-						minWidth: 0,
-						hasMaxWidth: false,
-						maxWidth: 0,
-						hasMinHeight: false,
-						minHeight: 0,
-						hasMaxHeight: false,
-						maxHeight: 0
-					},
-                },
-                tablet: {
-                    layout: 'block',
-                    left: '10px',
-                    right: 'auto',
-                    width: '200px',
-                    centerOffsetX: 0,
-                    top: '10px',
-                    bottom: 'auto',
-                    height: '150px',
-                    horzAlign: 'left',
-                    vertAlign: 'top',
-                    centerOffsetY: 0,
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-					sizeConstraints: {
-						hasMinWidth: false,
-						minWidth: 0,
-						hasMaxWidth: false,
-						maxWidth: 0,
-						hasMinHeight: false,
-						minHeight: 0,
-						hasMaxHeight: false,
-						maxHeight: 0
-					},
-                },
-                desktop: {
-                    layout: 'block',
-                    left: '10px',
-                    right: 'auto',
-                    width: '200px',
-                    centerOffsetX: 0,
-                    top: '10px',
-                    bottom: 'auto',
-                    height: '150px',
-                    horzAlign: 'left',
-                    vertAlign: 'top',
-                    centerOffsetY: 0,
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-					sizeConstraints: {
-						hasMinWidth: false,
-						minWidth: 0,
-						hasMaxWidth: false,
-						maxWidth: 0,
-						hasMinHeight: false,
-						minHeight: 0,
-						hasMaxHeight: false,
-						maxHeight: 0
-					},
-                }
-            }
+            const frameName = input.name?.trim() || this.generateFrameName(draft.sections);
+            const parentData = du.findById(input.parentId, draft);
+            if (parentData && du.isContainer(parentData)) {
+                const defaultProp = this.getDefaultProp(parentData.prop as ContainerProp);
 
-            const newFrame: Frame = {
-                ...data,
-                id: newId,
-                type: 'frame',
-                name: frameName,
-                children: [],
-                prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
-            };
+                const newFrame: Frame = {
+                    ...input,
+                    id: newId,
+                    type: 'frame',
+                    name: frameName,
+                    children: [],
+                    prop: input.prop ? { ...defaultProp, ...input.prop } : defaultProp,
+                };
 
-            // 부모 Section이 지정되어 있으면 해당 Section의 child로 추가
-            if (data.parentId) {
-                const widget = du.findById(data.parentId, draft);
-                if (widget && 'children' in widget && widget.children) {
-                    widget.children.push(newFrame);
+                if (parentData && 'children' in parentData && parentData.children) {
+                    parentData.children.push(newFrame);
                 }
             }
         });
@@ -150,6 +51,102 @@ export class FrameActions {
         return {
             id: newId
         }
+    }
+
+    private getDefaultProp(prop: ContainerProp) {
+        const defaultProp:Frame['prop'] = {
+            mobile: {
+                layout: 'block',
+                left: '10px',
+                right: 'auto',
+                width: '200px',
+                centerOffsetX: 0,
+                top: '10px',
+                bottom: 'auto',
+                height: '150px',
+                horzAlign: 'left',
+                vertAlign: 'top',
+                centerOffsetY: 0,
+                justifyContent: 'start',
+                alignItems: 'start',
+                gap: 10,
+                verticalGap: 10,
+                wrap: false,
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+            },
+            tablet: {
+                layout: 'block',
+                left: '10px',
+                right: 'auto',
+                width: '200px',
+                centerOffsetX: 0,
+                top: '10px',
+                bottom: 'auto',
+                height: '150px',
+                horzAlign: 'left',
+                vertAlign: 'top',
+                centerOffsetY: 0,
+                justifyContent: 'start',
+                alignItems: 'start',
+                gap: 10,
+                verticalGap: 10,
+                wrap: false,
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+            },
+            desktop: {
+                layout: 'block',
+                left: '10px',
+                right: 'auto',
+                width: '200px',
+                centerOffsetX: 0,
+                top: '10px',
+                bottom: 'auto',
+                height: '150px',
+                horzAlign: 'left',
+                vertAlign: 'top',
+                centerOffsetY: 0,
+                justifyContent: 'start',
+                alignItems: 'start',
+                gap: 10,
+                verticalGap: 10,
+                wrap: false,
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+            }
+        }
+
+        // 부모의 layout이 flexbox인 경우 sizeConstraints를 부여함.
+        if (du.isFlexbox(prop['mobile'])) {
+            defaultProp['mobile'].sizeConstraints = this.getDefaultSizeConstraints();
+        }
+        if (du.isFlexbox(prop['tablet'])) {
+            defaultProp['tablet'].sizeConstraints = this.getDefaultSizeConstraints()
+        }
+        if (du.isFlexbox(prop['desktop'])) {
+            defaultProp['desktop'].sizeConstraints = this.getDefaultSizeConstraints()
+        }
+        return defaultProp;
+    }
+
+    private getDefaultSizeConstraints() {
+        return {
+            hasMinWidth: false,
+            minWidth: 0,
+            hasMaxWidth: false,
+            maxWidth: 0,
+            hasMinHeight: false,
+            minHeight: 0,
+            hasMaxHeight: false,
+            maxHeight: 0
+    }
     }
 
     remove(id: string): DocState {

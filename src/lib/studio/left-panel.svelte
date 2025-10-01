@@ -19,10 +19,10 @@
     }
 
     function addFrame() {
-
         if (studioDoc.activeId) {
+            let parentId = studioDoc.getAddableParentId(studioDoc.activeId);
             const { id } = cmdFrame.add({
-                parentId: studioDoc.activeId,
+                parentId: parentId,
             });
             studioDoc.activeId = id;
         }

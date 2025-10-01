@@ -44,8 +44,6 @@
 	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
 		cmd.updateProp(data.id, newProp, bpm.current);
 	}
-
-
 </script>
 
 <PositionSection 
@@ -57,6 +55,7 @@
 />
 
 <LayoutSection 
+	{data}
 	{currentProp} 
 	{computedVal} 
 	{parentProp}

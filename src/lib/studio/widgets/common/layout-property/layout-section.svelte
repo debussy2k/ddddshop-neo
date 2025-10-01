@@ -2,7 +2,7 @@
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
     import { type DisplayStatus } from "../common-property.svelte";
-	import type { BaseWidgetProp, LayoutType } from "../../../types";
+	import type { Widget, BaseWidgetProp, LayoutType } from "../../../types";
 	import type { SectionPropValue } from "../../section/section.type";
 	import type { FramePropValue } from "../../frame/frame.type";
 	import type { ComputedValue } from "../computed-value-util";
@@ -29,6 +29,7 @@
 
 	interface Props {
 		class?: ClassValue;
+		data: Widget;
 		currentProp: BaseWidgetProp | FramePropValue;
 		computedVal: ComputedValue;
 		parentProp: SectionPropValue | FramePropValue;
@@ -38,6 +39,7 @@
 
 	let { 
 		class: className, 
+		data,
 		currentProp, 
 		computedVal, 
 		parentProp,
@@ -107,7 +109,7 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				{#if sizeConstraints && (isFlexbox(currentProp) || isFlexbox(parentProp))}
+				{#if sizeConstraints && isFlexbox(parentProp)}
 					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
@@ -205,7 +207,7 @@
 		{/if}
 	</div>
 
-	{#if (isFlexbox(currentProp) || isFlexbox(parentProp)) && sizeConstraints === undefined }
+	{#if isFlexbox(parentProp) && sizeConstraints === undefined }
 		<div class='mt-4 p-1 border'>
 			<div class="mb-1">오류</div>
 			<div class="text-red-500">

@@ -1,4 +1,6 @@
 import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget } from "../../types";
+import type { SectionPropValue } from "../section/section.type";
+import type { FramePropValue } from "../frame/frame.type";
 
 export function findById(id: string, draft: DocState) {
     // 재귀적으로 Widget을 찾는 헬퍼 함수
@@ -171,3 +173,16 @@ function getVerticalStyles(prop: BaseWidgetProp): string {
         `;
     }
 }
+
+export function isContainer(data: Widget | undefined) {
+    return data && (data.type === 'frame' || data.type === 'section');
+}
+
+// 타입 가드 함수들
+export function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+    return 'layout' in prop;
+}	
+
+export function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+    return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
+}	

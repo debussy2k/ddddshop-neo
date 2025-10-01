@@ -12,6 +12,9 @@ export type { Widget };
 type CompositeWidget = Section | Frame;
 export type { CompositeWidget };
 
+type ContainerProp = Section['prop'] | Frame['prop'];
+export type { ContainerProp };
+
 export interface DocState {
     sections: Section[];
 }
