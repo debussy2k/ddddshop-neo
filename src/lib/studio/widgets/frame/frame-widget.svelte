@@ -4,14 +4,15 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
-	import { setupDraggable } from "$lib/studio/widgets/common/draggable";
-	import { setupResizable, detectMinMaxChanges } from "$lib/studio/widgets/common/resizable";
+	import { setupDraggable, unsetup as unsetupDraggable } from "$lib/studio/widgets/common/draggable";
+	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import * as du from "$lib/studio/widgets/common/doc-util";
 	import * as util from "$lib/studio/util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
+    import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
 
 
 	let element: HTMLElement;
@@ -26,20 +27,32 @@
         canvasManager.needUpdate;   // 의존성만 추가. 
         return getComputedVal(data, currentProp);
     })
-
-	let prevMinMaxHash = '';
+    const tracker = new ChangeTracker();
 
 	$effect(() => {
 		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
 		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
 		if (currentProp.sizeConstraints) {
-			const { currentHash, changed } = detectMinMaxChanges(currentProp.sizeConstraints, prevMinMaxHash);
-			if (changed) {
-				console.log('min,max changed');
-				setupResizableWidget();
-				prevMinMaxHash = currentHash;
-			}
+            if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
+                // console.log('min,max changed');
+                setupResizableWidget();
+            }
 		}
+		if (parent?.prop[bpm.current].layout) {
+            if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
+                console.log('parent layout changed');
+                if (parent.prop[bpm.current].layout === 'block') {
+                    setupDraggableWidget();
+                }
+                else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
+                    // console.log('unsetupDraggable');
+                    unsetupDraggable(element);
+                }
+                else {
+                    console.error('layout not supported', parent.prop[bpm.current].layout);
+                }
+            }
+        }		
 	});
 
 	onMount(() => {
