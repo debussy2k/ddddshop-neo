@@ -99,7 +99,7 @@
     onmouseleave={handleMouseLeave}
 >
 
-    <div class='absolute top-0 bottom-0 left:[-320px] right:[320px] opacity-0 hover:opacity-100 transition-opacity duration-200' 
+    <div class='absolute pointer-events-none top-0 bottom-0 left:[-320px] right:[320px] opacity-0 hover:opacity-100 transition-opacity duration-200' 
         class:opacity-100={isHovered}
         style="width:100%">
             <!-- 섹션 왼쪽 빈 공간 -->
