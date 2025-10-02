@@ -1,4 +1,4 @@
-import type { Widget, BaseWidgetProp, BaseContainerProp } from "../../types";
+import type { BaseWidgetProp, BaseContainerProp, NonSectionWidget } from "../../types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export interface Frame {
@@ -6,7 +6,7 @@ export interface Frame {
     type: 'frame';
     name: string;
     parentId: string; // Section의 child로 사용될 때의 부모 ID
-    children: Widget[]; // child Widget 객체들
+    children: NonSectionWidget[]; // child Widget 객체들
 
     prop: Record<BreakPoint, BaseWidgetProp & BaseContainerProp>;
 }

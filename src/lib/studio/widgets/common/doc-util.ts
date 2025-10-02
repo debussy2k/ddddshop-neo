@@ -237,7 +237,7 @@ export function addDefaultSizeConstraints(
  * @param breakPoint 현재 breakpoint
  */
 export function updateChildrenSizeConstraintsOnLayoutChange(
-    children: Widget[],
+    children: NonSectionWidget[],
     newLayout: LayoutType,
     breakPoint: BreakPoint
 ): void {

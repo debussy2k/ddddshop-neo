@@ -1,13 +1,13 @@
-import type { Widget, BaseContainerProp } from '../../types';
+import type { NonSectionWidget, BaseContainerProp } from '../../types';
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 
 export interface Section {
     id: string;
     type: 'section';
     name: string;
-    content?: any;
+    content?: string;
     parentId: string;
-    children: Widget[]; // child Widget 객체들
+    children: NonSectionWidget[]; // child Widget 객체들
 
 	prop: Record<BreakPoint, BaseContainerProp & {
 		height: string; // section에서만 사용하는 속성.
