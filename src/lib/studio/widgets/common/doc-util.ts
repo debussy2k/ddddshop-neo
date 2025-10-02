@@ -1,6 +1,7 @@
 import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget } from "../../types";
 import type { SectionPropValue } from "../section/section.type";
 import type { FramePropValue } from "../frame/frame.type";
+import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 
 export function findById(id: string, draft: DocState) {
     // 재귀적으로 Widget을 찾는 헬퍼 함수
@@ -223,5 +224,34 @@ export function addDefaultSizeConstraints(
     }
     if (isFlexbox(parentProp['desktop'])) {
         defaultProp['desktop'].sizeConstraints = getDefaultSizeConstraints()
+    }
+}
+
+/**
+ * layout이 변경될 때 children의 sizeConstraints를 재설정합니다.
+ * flexbox layout으로 변경되면 children의 sizeConstraints를 기본값으로 설정하고,
+ * 그 외의 layout으로 변경되면 children의 sizeConstraints를 제거합니다.
+ * 
+ * @param children 자식 위젯 배열
+ * @param newLayout 변경될 새로운 layout
+ * @param breakPoint 현재 breakpoint
+ */
+export function updateChildrenSizeConstraintsOnLayoutChange(
+    children: Widget[],
+    newLayout: LayoutType,
+    breakPoint: BreakPoint
+): void {
+    if (isLayoutFlexBox(newLayout)) {
+        // children의 sizeConstraints를 기본값으로 설정
+        children.forEach(child => {
+            // 아래 .sizeConstraints 부분 타입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
+            child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
+        });
+    } else {
+        // children의 sizeConstraints를 제거함
+        children.forEach(child => {
+            // 아래 .sizeConstraints 부분 타입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
+            delete child.prop[breakPoint].sizeConstraints;
+        });
     }
 }
