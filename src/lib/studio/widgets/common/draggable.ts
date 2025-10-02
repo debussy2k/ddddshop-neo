@@ -28,6 +28,10 @@ export type DraggableConfig = {
     updateCallback: (id: string, updatedProps: Partial<LayoutProp>) => void;
 }
 
+export function unsetup(element: HTMLElement | SVGElement) {
+	interact(element).draggable(false);
+}
+
 /**
  * 요소를 드래그 가능하게 만드는 범용 함수
  * @param config 드래그 설정 객체
