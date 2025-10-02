@@ -3,6 +3,7 @@ import type HistoryManager from "../../history-manager";
 import type { DocState } from "../../types";
 import type { Section, SectionInput, SectionPropValue } from "./section.type";
 import { type BreakPoint } from "$lib/studio/breakpoint-man.svelte";
+import * as du from '../common/doc-util';
 
 
 export class SectionActions {
@@ -110,15 +111,35 @@ export class SectionActions {
     }
 
     /*
-        breakPoint를 넘겨서 해당 breakPoint의 prop을 업데이트 함
+        frame-actions.ts의 updateProp와 동일한 기능을 유지해야 함.
     */
-    updateProp(id: string, prop: Partial<SectionPropValue>, breakPoint: BreakPoint): DocState {
+    updateProp(id: string, updates: Partial<SectionPropValue>, breakPoint: BreakPoint): DocState {
         return this.historyManager.execute((draft) => {
-            const sectionIndex = draft.sections.findIndex(s => s.id === id);
-            if (sectionIndex !== -1) {
-                draft.sections[sectionIndex].prop[breakPoint] = {
-                    ...draft.sections[sectionIndex].prop[breakPoint], 
-                    ...prop 
+            const widget = du.findById(id, draft) as Section;
+            if (widget) {
+                const currentProp = widget.prop[breakPoint] as SectionPropValue;
+
+                // layout이 변경되면 children의 sizeConstraints를 재설정함
+                if (updates.layout && updates.layout !== currentProp.layout) {
+                    if (du.isLayoutFlexBox(updates.layout)) {
+                        // children의 sizeConstraints를 기본값으로 설정
+                        widget.children.forEach(child => {
+                            // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
+                            child.prop[breakPoint].sizeConstraints = du.getDefaultSizeConstraints();
+                        });
+                    }
+                    else {
+                        // children의 sizeConstraints를 제거함
+                        widget.children.forEach(child => {
+                            // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
+                            child.prop[breakPoint].sizeConstraints = undefined;
+                        });
+                    }
+                }
+
+                widget.prop[breakPoint] = {
+                    ...widget.prop[breakPoint],
+                    ...updates
                 };
             }
         });

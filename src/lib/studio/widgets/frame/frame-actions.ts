@@ -128,19 +128,6 @@ export class FrameActions {
         return defaultProp;
     }
 
-    private getDefaultSizeConstraints() {
-        return {
-            hasMinWidth: false,
-            minWidth: 0,
-            hasMaxWidth: false,
-            maxWidth: 0,
-            hasMinHeight: false,
-            minHeight: 0,
-            hasMaxHeight: false,
-            maxHeight: 0
-        }
-    }
-
     remove(id: string): DocState {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
@@ -163,11 +150,11 @@ export class FrameActions {
         });
     }
 
-    updateProp(id: string, updates: Partial<FramePropValue>, breakpoint: BreakPoint): DocState { 
+    updateProp(id: string, updates: Partial<FramePropValue>, breakPoint: BreakPoint): DocState { 
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft) as Frame;
             if (widget) {
-                const currentProp = widget.prop[breakpoint] as FramePropValue;
+                const currentProp = widget.prop[breakPoint] as FramePropValue;
 
                 // layout이 변경되면 children의 sizeConstraints를 재설정함
                 if (updates.layout && updates.layout !== currentProp.layout) {
@@ -175,20 +162,20 @@ export class FrameActions {
                         // children의 sizeConstraints를 기본값으로 설정
                         widget.children.forEach(child => {
                             // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
-                            child.prop[breakpoint].sizeConstraints = this.getDefaultSizeConstraints();
+                            child.prop[breakPoint].sizeConstraints = du.getDefaultSizeConstraints();
                         });
                     }
                     else {
                         // children의 sizeConstraints를 제거함
                         widget.children.forEach(child => {
                             // 아래 .sizeConstraints 부분 티입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
-                            child.prop[breakpoint].sizeConstraints = undefined;
+                            child.prop[breakPoint].sizeConstraints = undefined;
                         });
                     }
                 }
 
-                widget.prop[breakpoint] = {
-                    ...widget.prop[breakpoint],
+                widget.prop[breakPoint] = {
+                    ...widget.prop[breakPoint],
                     ...updates
                 };
             }

@@ -30,17 +30,18 @@
         // currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
         if (currentProp.sizeConstraints) {
             if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
-                console.log('min,max changed');
+                // console.log('min,max changed');
                 setupResizableWidget();
             }
         }
         if (parent?.prop[bpm.current].layout) {
             if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
-                console.log('layout changed');
+                console.log('parent layout changed');
                 if (parent.prop[bpm.current].layout === 'block') {
                     setupDraggableWidget();
                 }
                 else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
+                    // console.log('unsetupDraggable');
                     unsetupDraggable(element);
                 }
                 else {
