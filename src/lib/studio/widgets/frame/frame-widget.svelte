@@ -102,6 +102,7 @@
         studioDoc.activeId = data.id;
         // 이벤트 버블링 방지
         event.stopPropagation();
+        event.preventDefault();
     }
 
     function handleKeyDown(e: KeyboardEvent) {
