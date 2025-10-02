@@ -5,8 +5,12 @@ import type { SimpleImage } from "./widgets/simple-image/simple-image.type";
 import type { Showcase } from "./widgets/showcase/showcase.type";
 export type { Section, Frame, Sandbox, SimpleImage, Showcase };
 
-type Widget = Section |Frame | Sandbox | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임
+type Widget = Section | Frame | Sandbox | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임
 export type { Widget };
+
+
+type NonSectionWidget = Frame | Sandbox;
+export type { NonSectionWidget };
 
 // children을 가지는 위젯
 type CompositeWidget = Section | Frame;

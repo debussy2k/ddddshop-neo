@@ -53,7 +53,7 @@ export class FrameActions {
         }
     }
 
-    private getDefaultProp(prop: ContainerProp) {
+    private getDefaultProp(parentProp: ContainerProp) {
         const defaultProp:Frame['prop'] = {
             mobile: {
                 layout: 'block',
@@ -124,15 +124,7 @@ export class FrameActions {
         }
 
         // 부모의 layout이 flexbox인 경우 sizeConstraints를 부여함.
-        if (du.isFlexbox(prop['mobile'])) {
-            defaultProp['mobile'].sizeConstraints = this.getDefaultSizeConstraints();
-        }
-        if (du.isFlexbox(prop['tablet'])) {
-            defaultProp['tablet'].sizeConstraints = this.getDefaultSizeConstraints()
-        }
-        if (du.isFlexbox(prop['desktop'])) {
-            defaultProp['desktop'].sizeConstraints = this.getDefaultSizeConstraints()
-        }
+        du.addDefaultSizeConstraints(defaultProp, parentProp);
         return defaultProp;
     }
 
@@ -146,7 +138,7 @@ export class FrameActions {
             minHeight: 0,
             hasMaxHeight: false,
             maxHeight: 0
-    }
+        }
     }
 
     remove(id: string): DocState {

@@ -1,4 +1,4 @@
-import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget } from "../../types";
+import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget } from "../../types";
 import type { SectionPropValue } from "../section/section.type";
 import type { FramePropValue } from "../frame/frame.type";
 
@@ -73,7 +73,7 @@ export function getBaseStyleOfLeafWidget(prop: BaseWidgetProp, layout: LayoutTyp
     // auto layout(flex-row, flex-col, grid)인 경우 부모에 따라 위치가 결정되어야 하기 때문에 relative로 설정함
 
     // 참고: layout이 flex-row, flex-col이면 항목의 display를 static으로 설정함. 이때 left, top 값이 무시됨
-    let position = layout === 'block' ? 'absolute' : 'static';
+    const position = layout === 'block' ? 'absolute' : 'static';
     let styles = `
         position: ${position};
     `;
@@ -189,4 +189,39 @@ export function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropVal
 
 export function isLayoutFlexBox(layout: LayoutType) {
     return layout === 'flex-row' || layout === 'flex-col';
+}
+
+export function getDefaultSizeConstraints() {
+    return {
+        hasMinWidth: false,
+        minWidth: 0,
+        hasMaxWidth: false,
+        maxWidth: 0,
+        hasMinHeight: false,
+        minHeight: 0,
+        hasMaxHeight: false,
+        maxHeight: 0
+    }
+}
+
+/**
+ * 부모의 layout이 flexbox인 경우 defaultProp의 각 breakpoint에 sizeConstraints를 추가합니다.
+ * 
+ * @param defaultProp 기본 속성 객체 (mobile, tablet, desktop 포함)
+ * @param parentProp 부모의 속성 객체 (각 breakpoint의 layout 확인용)
+ */
+export function addDefaultSizeConstraints(
+    defaultProp: NonSectionWidget['prop'],
+    parentProp: ContainerProp
+): void {
+    // 부모의 layout이 flexbox인 경우 sizeConstraints를 부여함.
+    if (isFlexbox(parentProp['mobile'])) {
+        defaultProp['mobile'].sizeConstraints = getDefaultSizeConstraints();
+    }
+    if (isFlexbox(parentProp['tablet'])) {
+        defaultProp['tablet'].sizeConstraints = getDefaultSizeConstraints()
+    }
+    if (isFlexbox(parentProp['desktop'])) {
+        defaultProp['desktop'].sizeConstraints = getDefaultSizeConstraints()
+    }
 }

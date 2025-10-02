@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState, Section, Widget } from "../../types";
+import type { DocState, Section, Widget, ContainerProp } from "../../types";
 import type { Sandbox, SandboxInput, SandboxPropValue } from "./sandbox.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 import * as du from '../common/doc-util';
@@ -23,74 +23,83 @@ export class SandboxActions {
         return `샌드박스 ${maxNumber + 1}`;
     }
 
-    add(data: SandboxInput): { id: string } {
-        if (!data.parentId) {
+    add(input: SandboxInput): { id: string } {
+        if (!input.parentId) {
             throw new Error('parentId is required');
         }
         
         const newId = nanoid();
         this.historyManager.execute((draft) => {
             // 모든 Section의 children에서 기존 sandbox 이름 검색
-            const sandboxName = data.name?.trim() || this.generateSandboxName(draft.sections);
-            
-            const defaultProp:Sandbox['prop'] = {
-                mobile: {
-                    left: '10px',
-					right: 'auto',
-                    width: '160px',
-                    centerOffsetX: 0,
-                    top: '10px',
-					bottom: 'auto',
-                    height: '100px',
-                    centerOffsetY: 0,
-                    horzAlign: 'left',
-                    vertAlign: 'top',
-                },
-                tablet: {
-                    left: '10px',
-					right: 'auto',
-                    centerOffsetX: 0,
-                    top: '10px',
-                    width: '160px',
-					bottom: 'auto',
-                    height: '100px',
-                    centerOffsetY: 0,
-                    horzAlign: 'left',
-                    vertAlign: 'top',
-                },
-                desktop: {
-                    left: '10px',
-					right: 'auto',
-                    centerOffsetX: 0,
-                    top: '10px',
-                    width: '160px',
-					bottom: 'auto',
-                    height: '100px',
-                    centerOffsetY: 0,
-                    horzAlign: 'left',
-                    vertAlign: 'top'
-                }
-            }
+            const sandboxName = input.name?.trim() || this.generateSandboxName(draft.sections);
+            const parentData = du.findById(input.parentId, draft);
+            if (parentData) {
+                const defaultProp = this.getDefaultProp(parentData.prop as ContainerProp);
 
-            const newSandbox: Sandbox = {
-                ...data,
-                id: newId,
-                type: 'sandbox',
-                name: sandboxName,
-                parentId: data.parentId,
-                text: data.text || '샌드박스 텍스트',
-                prop: data.prop ? { ...defaultProp, ...data.prop } : defaultProp,
-            };
-
-            const widget = du.findById(data.parentId, draft);
-            if (widget && 'children' in widget && widget.children) {
-                widget.children.push(newSandbox);
+                const newSandbox: Sandbox = {
+                    ...input,
+                    id: newId,
+                    type: 'sandbox',
+                    name: sandboxName,
+                    parentId: input.parentId,
+                    text: input.text || '샌드박스 텍스트',
+                    prop: input.prop ? { ...defaultProp, ...input.prop } : defaultProp,
+                };          
+                
+                if (parentData && 'children' in parentData && parentData.children) {
+                    parentData.children.push(newSandbox);
+                }                
             }
         });
 
         return {
             id: newId
         }
+    }
+
+    private getDefaultProp(parentProp: ContainerProp) {
+        const defaultProp:Sandbox['prop'] = {
+            mobile: {
+                left: '10px',
+                right: 'auto',
+                width: '160px',
+                centerOffsetX: 0,
+                top: '10px',
+                bottom: 'auto',
+                height: '100px',
+                centerOffsetY: 0,
+                horzAlign: 'left',
+                vertAlign: 'top',
+            },
+            tablet: {
+                left: '10px',
+                right: 'auto',
+                centerOffsetX: 0,
+                top: '10px',
+                width: '160px',
+                bottom: 'auto',
+                height: '100px',
+                centerOffsetY: 0,
+                horzAlign: 'left',
+                vertAlign: 'top',
+            },
+            desktop: {
+                left: '10px',
+                right: 'auto',
+                centerOffsetX: 0,
+                top: '10px',
+                width: '160px',
+                bottom: 'auto',
+                height: '100px',
+                centerOffsetY: 0,
+                horzAlign: 'left',
+                vertAlign: 'top'
+            }
+        }
+
+        // 부모의 layout이 flexbox인 경우 sizeConstraints를 부여함.
+        du.addDefaultSizeConstraints(defaultProp, parentProp);
+        return defaultProp;
     }
 
     remove(id: string): DocState {
