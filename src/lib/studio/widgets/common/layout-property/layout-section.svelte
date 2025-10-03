@@ -197,10 +197,10 @@
 					<div class='w-1/2 min-w-0 space-y-2'>
 						<!-- gap 조정 공간 -->
 						 {#if isFlexbox(currentProp)}
-							<InputVal name='G' value={currentProp.gap} min={0} onChange={value => updateProp({ gap: value as number })}/>
+							<InputVal name='G' value={currentProp.gap} min={0} onChange={value => updateProp({ gap: value as number })} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
 						{/if}
 						{#if isFlexboxRow(currentProp) && currentProp.wrap}
-							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value => updateProp({ verticalGap: value as number })}/>
+							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value => updateProp({ verticalGap: value as number })} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
 						{/if}
 					</div>
 				</div>
