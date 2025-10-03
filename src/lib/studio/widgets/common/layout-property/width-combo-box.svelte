@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { studioDoc } from "../../../studio-doc.svelte";
     import ComboBox, { type ComboBoxItem } from "../combo-box.svelte";
     import type { BaseWidgetProp, ContainerPropValue } from "../../../types";
     import type { FramePropValue } from "../../frame/frame.type";
@@ -128,6 +129,13 @@
 		}
     }
 
+	function onDragStart() {
+		studioDoc.setBatchMode();
+	}
+
+	function onDragEnd() {
+		studioDoc.commitBatch();
+	}
 </script>
 
-<ComboBox class={className} name='W' {icon} {value} {comboBoxItems} {min} {max} onChange={handleValueChange} />
+<ComboBox class={className} name='W' {icon} {value} {comboBoxItems} {min} {max} onChange={handleValueChange} onDragStart={onDragStart} onDragEnd={onDragEnd} />

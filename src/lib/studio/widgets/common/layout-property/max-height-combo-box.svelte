@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { studioDoc } from "../../../studio-doc.svelte";
     import ComboBox, { type ComboBoxItem } from "../combo-box.svelte";
     import type { BaseWidgetProp, SizeConstraints } from "../../../types";
     import type { FramePropValue } from "../../frame/frame.type";
@@ -78,8 +79,17 @@
         }
     }
 
+	function onDragStart() {
+		studioDoc.setBatchMode();
+	}
+
+	function onDragEnd() {
+		studioDoc.commitBatch();
+	}
 </script>
 
 <ComboBox class={className} {icon} placeholder='Max H' title='Max height' {comboBoxItems} {min} {max} 
     value={ sizeConstraints.hasMaxHeight ? value : undefined } 
-    onChange={handleValueChange} />
+    onChange={handleValueChange} 
+	onDragStart={onDragStart} onDragEnd={onDragEnd} 
+/>

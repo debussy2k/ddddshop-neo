@@ -10,9 +10,11 @@
         max?: number;
         disabled?: boolean;
         onChange?: (value: string | number) => void;
+		onDragStart?: () => void;
+		onDragEnd?: () => void;
     }
 
-    let { class: className, name, icon, value, min, max, disabled, onChange }: Props = $props();
+    let { class: className, name, icon, value, min, max, disabled, onChange, onDragStart, onDragEnd }: Props = $props();
     
     // 값을 min, max 범위로 제한하는 함수
     function clampValue(val: number): number {
@@ -70,6 +72,7 @@
         
         // 마우스 선택 방지
         event.preventDefault();
+        onDragStart?.();
     }
 
     function handleMouseMove(event: MouseEvent) {
@@ -105,6 +108,7 @@
         
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        onDragEnd?.();
     }
 </script>
 

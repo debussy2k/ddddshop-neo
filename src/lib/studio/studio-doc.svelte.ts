@@ -92,6 +92,16 @@ class StudioDoc {
         return this.historyManager.redo();
     }
 
+	setBatchMode = () => {
+		this.historyManager.setBatchMode();
+	}
+	cancelBatch = () => {
+		this.historyManager.cancelBatch();
+	}
+	commitBatch = () => {
+		this.historyManager.commitBatch();
+	}
+
     // reactive한 히스토리 정보 getter
     get historyInfo() {
         return this._historyInfo;

@@ -2,6 +2,7 @@
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import * as du from "../doc-util";
+	import { studioDoc } from "../../../studio-doc.svelte";
     import { type DisplayStatus } from "../common-property.svelte";
 	import type { Widget, BaseWidgetProp, LayoutType, ContainerPropValue } from "../../../types";
 	import type { SectionPropValue } from "../../section/section.type";
@@ -60,6 +61,14 @@
 	
 	function isFlexboxRow(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
 		return isFlexbox(prop) && prop.layout === 'flex-row';
+	}
+
+	function onSetBatchMode() {
+		studioDoc.setBatchMode();
+	}
+
+	function onCommitBatch() {
+		studioDoc.commitBatch();
 	}
     
 	function onChangeLayout(newLayout: LayoutType) {
@@ -167,8 +176,8 @@
 					</div>
 				{:else}
 					<!-- Freeform layout 일때의 Width/Height UI -->
-					<InputVal name='W' value={computedVal.width} min={1} onChange={value => updateWidthProp(value as number)}/>
-					<InputVal name='H' value={computedVal.height} min={1} onChange={value => updateHeightProp(value as number)}/>
+					<InputVal name='W' value={computedVal.width} min={1} onChange={value => updateWidthProp(value as number)} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
+					<InputVal name='H' value={computedVal.height} min={1} onChange={value => updateHeightProp(value as number)} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
 				{/if}
 			</div>
 		</div>

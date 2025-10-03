@@ -25,9 +25,11 @@
         min?: number;
         max?: number;
         onChange?: (value: number) => void;
+		onDragStart?: () => void;
+		onDragEnd?: () => void;		
     }
 
-    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, onChange }: Props = $props();
+    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, onChange, onDragStart, onDragEnd }: Props = $props();
     
     // popover 상태 관리
     let isPopoverOpen = $state(false);
@@ -60,6 +62,7 @@
         
         // 마우스 선택 방지
         event.preventDefault();
+        onDragStart?.();
     }
 
     function handleMouseMove(event: MouseEvent) {
@@ -87,6 +90,7 @@
         
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
+        onDragEnd?.();
     }
 </script>
 
