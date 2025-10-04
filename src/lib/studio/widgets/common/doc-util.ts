@@ -194,6 +194,8 @@ export function isLayoutFlexBox(layout: LayoutType) {
 
 export function getDefaultSizeConstraints() {
     return {
+        fullWidth: false,
+        fullHeight: false,
         hasMinWidth: false,
         minWidth: 0,
         hasMaxWidth: false,

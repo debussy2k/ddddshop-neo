@@ -70,6 +70,10 @@
 
         // Pointer Lock이 활성화된 경우 movementX 사용
         const deltaX = event.movementX || 0;
+		
+		// 움직임이 없으면 처리하지 않음
+		if (deltaX === 0) return;
+
         const sensitivity = 1; // 드래그 민감도 조절
         
         accumulatedDelta += deltaX;

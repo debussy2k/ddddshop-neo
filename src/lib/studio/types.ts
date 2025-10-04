@@ -42,6 +42,8 @@ export type BaseWidgetProp = {
 }
 
 export type SizeConstraints = {
+	fullWidth: boolean;
+	fullHeight: boolean;
     hasMinWidth: boolean;
     minWidth: number;
     hasMaxWidth: boolean;

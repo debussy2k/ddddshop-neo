@@ -58,6 +58,9 @@
                     type: 'item',
                     label: `Fill container`,
                     value: "fill-container",
+					onChange: (value:string) => {
+						handleComboBoxItemChange(value as WidthComboBoxItemChangeValue);
+					}
                 }
             )
         }
@@ -96,17 +99,41 @@
     
     function handleValueChange(value: number) {
 		const updatedProps = constraintsUtilHorz.updateWidthConstraints(value, currentProp, computedVal);
-        updateProp(updatedProps);
+
+		// height가 변경되었을 때 fullHeight 속성이 있으면 fullHeight를 false로 설정
+		if (currentProp.sizeConstraints?.fullWidth) {
+			updateProp({
+				...updatedProps,
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullWidth: false,
+				}
+			});
+		}
+		else {
+			updateProp(updatedProps);
+		}
     }
 
     function handleComboBoxItemChange(value: WidthComboBoxItemChangeValue) {
 		console.log('onWidthComboBoxItemChange', value);
+		if (!currentProp.sizeConstraints) {
+			console.error('currentProp.sizeConstraints is undefined');
+			return;
+		}
+
 		if (value === 'select-fixed-width') {
 			console.log('select-fixed-width');
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
 		} else if (value === 'fill-container') {
 			console.log('fill-container');
+			updateProp({
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullWidth: true,
+				}
+			});
 		} else if (value === 'select-min-width' || value === 'add-min-width') {
 			displayStatus.showMinWidth = true;
 		} else if (value === 'select-max-width' || value === 'add-max-width') {
@@ -116,14 +143,11 @@
 			displayStatus.showMaxWidth = false;
 			updateProp({
 				sizeConstraints: {
+					...currentProp.sizeConstraints,
 					hasMinWidth: false,
 					minWidth: 0,
 					hasMaxWidth: false,
 					maxWidth: 0,
-					hasMinHeight: currentProp.sizeConstraints?.hasMinHeight || false,
-					minHeight: currentProp.sizeConstraints?.minHeight || 0,
-					hasMaxHeight: currentProp.sizeConstraints?.hasMaxHeight || false,
-					maxHeight: currentProp.sizeConstraints?.maxHeight || 0
 				}
 			});
 		}

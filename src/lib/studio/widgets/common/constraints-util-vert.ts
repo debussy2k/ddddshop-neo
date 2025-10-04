@@ -200,7 +200,7 @@ export function updateHeightConstraints(
 	newHeight: number, 
 	currentProp: BaseWidgetProp, 
 	computedVal: { top: number; bottom: number; height: number; parentHeight: number }
-): Partial<BaseWidgetProp> {
+): Partial<Pick<BaseWidgetProp, 'height' | 'top' | 'bottom' | 'centerOffsetY'>> {
 	if (currentProp.vertAlign === 'top' || currentProp.vertAlign === 'bottom') {
 		return { height: newHeight + 'px' };
 	}

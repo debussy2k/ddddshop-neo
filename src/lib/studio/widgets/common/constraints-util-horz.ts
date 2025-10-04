@@ -192,7 +192,7 @@ export function updateWidthConstraints(
 	newWidth: number, 
 	currentProp: BaseWidgetProp, 
 	computedVal: { left: number; right: number; width: number; parentWidth: number }
-): Partial<BaseWidgetProp> {
+): Partial<Pick<BaseWidgetProp, 'width' | 'left' | 'right' | 'centerOffsetX'>> {
 	if (currentProp.horzAlign === 'left' || currentProp.horzAlign === 'right') {
 		return { width: newWidth + 'px' };
 	}
