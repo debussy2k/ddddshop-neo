@@ -170,13 +170,28 @@ export function setupResizable(config: ResizableConfig): void {
 		const horzPos = calcHorzProps(event, prop, ctx);
 		const vertPos = calcVertProps(event, prop, ctx);
 
-		return {
+		let result: Partial<BaseWidgetProp> = {
 			...horzPos,
 			...vertPos
+		};
+
+		// width 또는 height 변화가 있으면 fill container 속성을 제거함
+		if (prop.sizeConstraints?.fullWidth || prop.sizeConstraints?.fullHeight) {
+			result.sizeConstraints = {
+				...prop.sizeConstraints,
+			}
+			if (event.deltaRect?.width !== 0) {
+				result.sizeConstraints.fullWidth = false;
+			}
+			if (event.deltaRect?.height !== 0) {
+				result.sizeConstraints.fullHeight = false;
+			}
 		}
+
+		return result;
 	}
 
-    function calcHorzProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<BaseWidgetProp> {
+    function calcHorzProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<Pick<BaseWidgetProp, 'left' | 'right' | 'width' | 'centerOffsetX'>> {
 		let horzPos: Partial<BaseWidgetProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
@@ -252,7 +267,7 @@ export function setupResizable(config: ResizableConfig): void {
         return horzPos;
     }
 
-    function calcVertProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<BaseWidgetProp> {
+    function calcVertProps(event: ResizeEvent, prop: BaseWidgetProp, ctx: ContextInfo) : Partial<Pick<BaseWidgetProp, 'top' | 'bottom' | 'height' | 'centerOffsetY'>> {
 		let vertPos: Partial<BaseWidgetProp>;
 		let deltaRect = event.deltaRect || { left: 0, width: 0, top: 0, height: 0, right: 0, bottom: 0 };
 
