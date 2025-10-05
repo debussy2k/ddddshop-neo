@@ -163,15 +163,16 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<!-- svelte-ignore a11y_mouse_events_have_key_events -->
-<div class='relative' role="presentation" onmouseover={() => isHovering = true} onmouseout={() => isHovering = false}>
-	<ComboBox class={className} name='W' {icon} {value} {comboBoxItems} {min} {max} onChange={handleValueChange} onDragStart={onDragStart} onDragEnd={onDragEnd} />
-
-	<!-- fullWidth 속성이 있으면 오른쪽에 Fill 표시 -->
-	{#if !isHovering && currentProp.sizeConstraints?.fullWidth}
-		<div class='absolute top-0 w-full h-full flex items-center justify-end hover:invisible pr-2 '>
-			<span class='bg-gray-100'>Fill</span>
-		</div>
-	{/if}
-</div>
+<ComboBox 
+	class={className} 
+	name='W' 
+	{icon} 
+	{value} 
+	{comboBoxItems} 
+	{min} 
+	{max} 
+	showFill={currentProp.sizeConstraints?.fullWidth ?? false}
+	onChange={handleValueChange} 
+	onDragStart={onDragStart} 
+	onDragEnd={onDragEnd} 
+/>

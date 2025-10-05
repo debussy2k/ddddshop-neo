@@ -88,6 +88,10 @@
 
     function handleClick(event: MouseEvent) {
         studioDoc.activeId = data.id;
+
+		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
+		element.focus();		
+		
         // 이벤트 버블링 방지
         event.stopPropagation();
         event.preventDefault();

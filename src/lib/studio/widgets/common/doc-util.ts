@@ -47,7 +47,7 @@ export function hasChild(id: string, draft: DocState): boolean {
  * position이 absolute인 경우에만 left, top 값을 포함합니다.
  * 
  * @param prop 위젯의 위치/크기 속성 객체 (left, top, width, height)
- * @param layout 부모 위젯의 레이아웃 타입
+ * @param parentLayout 부모 위젯의 레이아웃 타입
  *   - 'block': absolute positioning (left, top 포함)
  *   - 'flex-row' | 'flex-col' | 'grid': relative positioning (left, top 제외)
  * @returns CSS 스타일 문자열 (position, width, height, 조건부로 left, top)
@@ -69,12 +69,12 @@ export function hasChild(id: string, draft: DocState): boolean {
  * // 결과: "position: relative; width: 100px; height: 50px;"
  * ```
  */    
-export function getBaseStyleOfLeafWidget(prop: BaseWidgetProp, layout: LayoutType) {
+export function getBaseStyleOfLeafWidget(prop: BaseWidgetProp, parentLayout: LayoutType) {
     // block인 경우 absolute, 그 외(즉 auto layout인 경우)는 relative. 이렇게 하는 이유는 
     // auto layout(flex-row, flex-col, grid)인 경우 부모에 따라 위치가 결정되어야 하기 때문에 relative로 설정함
 
     // 참고: layout이 flex-row, flex-col이면 항목의 display를 static으로 설정함. 이때 left, top 값이 무시됨
-    const position = layout === 'block' ? 'absolute' : 'static';
+    const position = parentLayout === 'block' ? 'absolute' : 'static';
     let styles = `
         position: ${position};
     `;
@@ -83,96 +83,160 @@ export function getBaseStyleOfLeafWidget(prop: BaseWidgetProp, layout: LayoutTyp
         flex-row, flex-col인 경우 컴포넌트가 줄어들지 않도록 설정
         항목들 flexbox를 넘어가면 자동으로 줄어들어서 표시되는데, 이때 컴포넌트가 줄어들지 않도록 설정
     */
-    if (layout === 'flex-row' || layout === 'flex-col') {
+    if (parentLayout === 'flex-row' || parentLayout === 'flex-col') {
         styles += `flex-shrink: 0;`;
     }
 
     // 수평 정렬 스타일 추가
-    styles += getHorizontalStyles(prop);
-    styles += getVerticalStyles(prop);
+    styles += getHorizontalStyles(prop, parentLayout);
+    styles += getVerticalStyles(prop, parentLayout);
             
     return styles;
 }
 
-function getHorizontalStyles(prop: BaseWidgetProp): string {
+function getHorizontalStyles(prop: BaseWidgetProp, parentLayout: LayoutType): string {
+	let styles = '';
+
     if (prop.horzAlign === 'left') {
-        return `
+        styles += `
             left: ${prop.left};
             width: ${prop.width};
         `;
     }
     else if (prop.horzAlign === 'right') {
-        return `
+        styles += `
             width: ${prop.width};
             right: ${prop.right};
         `;
     }
     else if (prop.horzAlign === 'both') {
-        return `
+        styles += `
             left: ${prop.left};
             right: ${prop.right};
         `;
     }
     else if (prop.horzAlign === 'center') {
-        return `
+        styles += `
             left: ${prop.left};
             width: ${prop.width};
         `;
     }
     else if (prop.horzAlign === 'scale') {
-        return `
+        styles += `
             left: ${prop.left};
             width: ${prop.width};
             right: ${prop.right};
         `;
     }
     else {
-        return `
+        styles += `
             left: ${prop.left};
             width: ${prop.width};
         `;
     }
+
+	// full-width 설정
+	if (prop.sizeConstraints?.fullWidth) {
+		if (parentLayout === 'flex-row') {
+			styles += `
+				flex-grow: 1;
+				flex-basis: 0;
+			`;
+		}
+		else if (parentLayout === 'flex-col') {
+			// width가 교차축에 대한 것일 때
+			styles += `
+				width: 100%;
+			`;
+		}
+	}	
+
+	// min-width, max-width는 fullWidth 설정뒤에 할 것 (순서에 영향을 받음)
+	if (prop.sizeConstraints?.hasMinWidth) {
+		styles += `
+			min-width: ${prop.sizeConstraints.minWidth}px;
+		`;
+	}
+	if (prop.sizeConstraints?.hasMaxWidth) {
+		styles += `
+			max-width: ${prop.sizeConstraints.maxWidth}px;
+		`;
+	}
+	
+	return styles;
 }
 
 
-function getVerticalStyles(prop: BaseWidgetProp): string {
+function getVerticalStyles(prop: BaseWidgetProp, parentLayout: LayoutType): string {
+	let styles = '';
+	
     if (prop.vertAlign === 'top') {
-        return `
+        styles += `
             top: ${prop.top};
             height: ${prop.height};
         `;
     }
     else if (prop.vertAlign === 'bottom') {
-        return `
+        styles += `
             height: ${prop.height};
             bottom: ${prop.bottom};
         `;
     }
     else if (prop.vertAlign === 'both') {
-        return `
+        styles += `
             top: ${prop.top};
             bottom: ${prop.bottom};
         `;
     }
     else if (prop.vertAlign === 'center') {
-        return `
+        styles += `
             top: ${prop.top};
             height: ${prop.height};
         `;
     }
     else if (prop.vertAlign === 'scale') {
-        return `
+        styles += `
             top: ${prop.top};
             height: ${prop.height};
             bottom: ${prop.bottom};
         `;
     }
     else {
-        return `
+        styles += `
             top: ${prop.top};
             height: ${prop.height};
         `;
     }
+
+	// full-height 설정
+	if (prop.sizeConstraints?.fullHeight) {
+		if (parentLayout === 'flex-col') {
+			styles += `
+				flex-grow: 1;
+				flex-basis: 0;
+			`;
+		}
+		else if (parentLayout === 'flex-row') {
+			// height가 교차축에 대한 것일 때
+			styles += `
+				height: 100%;
+			`;
+		}
+	}	
+
+	// min-height, max-height는 fullHeight 설정뒤에 할 것 (순서에 영향을 받음)
+	if (prop.sizeConstraints?.hasMinHeight) {
+		styles += `
+			min-height: ${prop.sizeConstraints.minHeight}px;
+		`;
+	}
+	if (prop.sizeConstraints?.hasMaxHeight) {
+		styles += `
+			max-height: ${prop.sizeConstraints.maxHeight}px;
+		`;
+	}
+
+	return styles;
 }
 
 export function isContainer(data: Widget | undefined) {

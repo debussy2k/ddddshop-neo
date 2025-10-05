@@ -24,15 +24,17 @@
         comboBoxItems: ComboBoxItem[];
         min?: number;
         max?: number;
+		showFill?: boolean; // Fill 표시 여부
         onChange?: (value: number) => void;
 		onDragStart?: () => void;
 		onDragEnd?: () => void;		
     }
 
-    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, onChange, onDragStart, onDragEnd }: Props = $props();
+    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, showFill = false, onChange, onDragStart, onDragEnd }: Props = $props();
     
     // popover 상태 관리
     let isPopoverOpen = $state(false);
+	let isHovering = $state(false);
     
     // 값을 min, max 범위로 제한하는 함수
     function clampValue(val: number): number {
@@ -98,7 +100,11 @@
     }
 </script>
 
-<div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0', className)}>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_mouse_events_have_key_events -->
+<div class={cn('flex items-center text-xs bg-gray-100 rounded-sm h-6 min-w-0 relative', className)}
+	 onmouseover={() => isHovering = true}
+	 onmouseout={() => isHovering = false}>
     <div 
         class={cn('w-6  flex-shrink-0 select-none', 
                   isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
@@ -150,6 +156,13 @@
             }
         }}
     />
+
+	<!-- Fill 표시 -->
+	{#if !isHovering && showFill}
+		<div class='absolute top-0 left-6 right-0 h-full flex items-center justify-end pr-2 pointer-events-none'>
+			<span class='bg-gray-100 text-gray-600'>Fill</span>
+		</div>
+	{/if}
 
 	<Popover.Root bind:open={isPopoverOpen}>
 		<Popover.Trigger class='w-6'>
