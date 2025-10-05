@@ -125,6 +125,12 @@
 
 		if (value === 'select-fixed-width') {
 			console.log('select-fixed-width');
+			updateProp({
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullWidth: false,
+				}
+			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
 		} else if (value === 'fill-container') {

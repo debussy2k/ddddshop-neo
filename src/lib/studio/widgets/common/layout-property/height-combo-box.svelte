@@ -144,6 +144,12 @@
 
 		if (value === 'select-fixed-height') {
 			console.log('select-fixed-height');
+			updateProp({
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullHeight: false,
+				}
+			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
 		} else if (value === 'fill-container') {
