@@ -295,8 +295,10 @@ export function addDefaultSizeConstraints(
 
 /**
  * layout이 변경될 때 children의 sizeConstraints를 재설정합니다.
- * flexbox layout으로 변경되면 children의 sizeConstraints를 기본값으로 설정하고,
- * 그 외의 layout으로 변경되면 children의 sizeConstraints를 제거합니다.
+ * 
+ * - flexbox layout으로 변경되면: children 중 sizeConstraints가 없는 경우에만 기본값으로 설정합니다.
+ * - 그 외의 layout으로 변경되면: children의 sizeConstraints를 제거합니다.
+ *   (단, child가 frame이고 해당 frame의 layout이 flexbox인 경우는 제외)
  * 
  * @param children 자식 위젯 배열
  * @param newLayout 변경될 새로운 layout
@@ -310,14 +312,20 @@ export function updateChildrenSizeConstraintsOnLayoutChange(
     if (isLayoutFlexBox(newLayout)) {
         // children의 sizeConstraints를 기본값으로 설정
         children.forEach(child => {
-            // 아래 .sizeConstraints 부분 타입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
-            child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
+			if (child.prop[breakPoint].sizeConstraints === undefined) {
+            	child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
+			}
         });
     } else {
         // children의 sizeConstraints를 제거함
         children.forEach(child => {
-            // 아래 .sizeConstraints 부분 타입 오류는 SimpleImage, Showcase 등에서 발생하는 것이므로 무시함.
-            delete child.prop[breakPoint].sizeConstraints;
+			if (child.type === 'frame' && isLayoutFlexBox(child.prop[breakPoint].layout)) {
+				//
+			}
+			else {
+				console.log("delete sizeConstraints", child.id);
+				delete child.prop[breakPoint].sizeConstraints;
+			}
         });
     }
 }

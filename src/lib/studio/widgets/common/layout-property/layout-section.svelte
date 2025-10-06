@@ -77,20 +77,24 @@
 			wrap: false,
 		}
 
-		if (du.isFlexbox(currentProp)) {
+		if (newLayout === 'block') {
 		}
-		else {
-			// 기존 값이 flexbox가 아닌 경우 아래 값으로 초기화
-			// gap과 verticalGap를 10으로 설정, justifyContent와 alignItems를 start로 설정
-			if (!du.isFlexbox(currentProp)) {
+		else if (du.isLayoutFlexBox(newLayout)) {
+			if (du.isFlexbox(currentProp)) {
+				// flex-row <--> flex-col 일 경우 아래 값 그대로 유지. 
+			}
+			else {
+			// block -> flex 일 경우 아래 값으로 초기화.
 				obj = { ...obj, 
 					justifyContent: "start",
 					alignItems: "start",						
 					gap: 10, 
-					verticalGap: 10 
+					verticalGap: 10,
+					sizeConstraints: du.getDefaultSizeConstraints()
 				};
 			}
 		}
+
 		updateProp(obj);
 	}
 
@@ -122,7 +126,7 @@
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				{#if sizeConstraints && isFlexbox(parentProp)}
+				{#if sizeConstraints && (isFlexbox(currentProp) || isFlexbox(parentProp))}
 					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
