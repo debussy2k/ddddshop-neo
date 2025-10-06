@@ -38,7 +38,7 @@ class StudioDoc {
 		return this.widgetMap[id] as T;
 	}
 	getParentWidgetComponent<T>(id: string): T {
-		let parent = du.getParentByChildId(id, this.doc);
+		const parent = du.getParentByChildId(id, this.doc);
 		if (!parent) return null as T;
 		return this.widgetMap[parent.id] as T;
 	}

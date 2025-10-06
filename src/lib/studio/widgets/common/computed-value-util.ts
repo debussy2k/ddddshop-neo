@@ -24,18 +24,18 @@ export interface WidgetData {
  * auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됩니다.
  */
 export function getComputedVal(data: WidgetData, currentProp: BaseWidgetProp): ComputedValue {
-    let parentComp = studioDoc.getWidget<any>(data.parentId);
+    const parentComp = studioDoc.getWidget<any>(data.parentId);
     if (parentComp === null) {
         // console.error(`parent not found for widget`, data.id);
         return { parentWidth: 0, parentHeight: 0, left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
     }
     
-    let parentWidth = parentComp.getWidth();
-    let parentHeight = parentComp.getHeight();
-	let left = constraintsUtilHorz.getLeftValue(currentProp, parentWidth);
-	let top = constraintsUtilVert.getTopValue(currentProp, parentHeight);
-	let width = constraintsUtilHorz.getWidthValue(currentProp, parentWidth);
-	let height = constraintsUtilVert.getHeightValue(currentProp, parentHeight);
+    const parentWidth = parentComp.getWidth();
+    const parentHeight = parentComp.getHeight();
+	const left = constraintsUtilHorz.getLeftValue(currentProp, parentWidth);
+	const top = constraintsUtilVert.getTopValue(currentProp, parentHeight);
+	const width = constraintsUtilHorz.getWidthValue(currentProp, parentWidth);
+	const height = constraintsUtilVert.getHeightValue(currentProp, parentHeight);
     
     return {
         parentWidth: parentWidth,
