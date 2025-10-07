@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, CompositeWidget, Widget } from "./types";
+import type { DocState, CompositeWidget, WidgetComponentContract } from "./types";
 import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -9,6 +9,8 @@ export interface HistoryInfo {
     canRedo: boolean;
     currentMode: HistoryMode;
 }
+
+
 
 class StudioDoc {
     private initialDoc: DocState = {
@@ -33,13 +35,13 @@ class StudioDoc {
 	activeId = $state<string | null>(null);
 
 	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
-	widgetMap: Record<string, any> = {};
-	getWidget<T>(id: string): T {
+	widgetMap: Record<string, WidgetComponentContract> = {};
+	getWidgetSvelteComponent<T extends WidgetComponentContract>(id: string): T {
 		return this.widgetMap[id] as T;
 	}
-	getParentWidgetComponent<T>(id: string): T {
+	getParentWidgetSvelteComponent<T extends WidgetComponentContract>(id: string): T | null {
 		const parent = du.getParentByChildId(id, this.doc);
-		if (!parent) return null as T;
+		if (!parent) return null;
 		return this.widgetMap[parent.id] as T;
 	}
 
@@ -149,7 +151,7 @@ class StudioDoc {
     hasSavedDocument = () => {
         try {
             return localStorage.getItem(this.STORAGE_KEY) !== null;
-        } catch (error) {
+        } catch {
             return false;
         }
     }

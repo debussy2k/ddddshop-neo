@@ -16,6 +16,10 @@
     let isHovered = $state(false);
     let currentProp = $derived(data.prop?.[bpm.current]);
 
+	export function getElement() {
+		return sectionElement;
+	}
+
     function handleMoutdown(e?: MouseEvent) {
         studioDoc.activeId = data.id;
 		// studioDoc.activeWidget에 현재 지금의  svelte component 객체를 넣어줌

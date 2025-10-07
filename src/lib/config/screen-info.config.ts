@@ -1,3 +1,5 @@
+import type { BreakPoint } from "$lib/studio/types";
+
 interface SnapToInfo {
 	width: number;
 	devices: string[];
@@ -9,8 +11,6 @@ interface ScreenInfo {
 	maxWidth: number;
 	snapTo?: SnapToInfo[];
 }
-
-type BreakPoint = 'mobile' | 'tablet' | 'desktop';
 
 export const getScreenInfo = (breakPoint: BreakPoint): ScreenInfo => {
 	switch (breakPoint) {

@@ -46,7 +46,7 @@
     }
 
     function getParentSize() {
-        let parentComp = studioDoc.getParentWidgetComponent<any>(data.id);
+        let parentComp = studioDoc.getParentWidgetSvelteComponent<any>(data.id);
         if (parentComp === null) {
             console.error(`parent not found for simple-image`, data.id);
             return { width: 0, height: 0 }

@@ -19,7 +19,7 @@
 		console.log('updateShowcaseCode', newCode);
         await cmdShowcase.update(showcase.id, { showcaseCode: newCode });
 
-		let widget = studioDoc.getWidget<ShowcaseWidget>(showcase.id);
+		let widget = studioDoc.getWidgetSvelteComponent<ShowcaseWidget>(showcase.id);
 		widget.loadShowcaseData();
     }
 

@@ -40,6 +40,12 @@ export function hasChild(id: string, draft: DocState): boolean {
     return 'children' in widget;
 }
 
+export function isParentContainer(id: string, draft: DocState): boolean {
+	const parent = getParentByChildId(id, draft);
+	if (!parent) return false;
+	return isContainer(parent);
+}
+
 /**
  * 리프 위젯(자식이 없는 위젯)의 기본 스타일 문자열을 생성합니다.
  * 
@@ -239,8 +245,8 @@ function getVerticalStyles(prop: BaseWidgetProp, parentLayout: LayoutType): stri
 	return styles;
 }
 
-export function isContainer(data: Widget | undefined) {
-    return data && (data.type === 'frame' || data.type === 'section');
+export function isContainer(data: Widget | undefined) : boolean {
+    return !!data && (data.type === 'frame' || data.type === 'section');
 }
 
 // 타입 가드 함수들

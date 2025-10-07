@@ -1,4 +1,5 @@
-export type BreakPoint = 'desktop' | 'tablet' | 'mobile';
+import type { BreakPoint } from "./types";
+export type { BreakPoint };
 
 class BreakPointManager {
     breakPoint = $state<BreakPoint>('desktop');

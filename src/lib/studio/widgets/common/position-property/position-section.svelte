@@ -27,7 +27,7 @@
 
 	let { class: className, data, cmd, currentProp, parentProp, computedVal }: Props = $props();
 
-	let parentComp: any = studioDoc.getWidget<any>(data.parentId);
+	let parentComp: any = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
 
 	// 타입 가드 함수 - 위치 섹션에서 사용
 	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {

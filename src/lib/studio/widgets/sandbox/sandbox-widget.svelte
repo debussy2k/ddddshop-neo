@@ -20,7 +20,7 @@
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
-        return getComputedVal(data, currentProp);
+        return getComputedVal(data);
     })
 
     const tracker = new ChangeTracker();
@@ -50,6 +50,16 @@
             }
         }
     });
+
+	export function getElement() {
+		return element;
+	}
+
+	function getBoundingRect() {
+		
+	}
+
+
 
     onMount(() => {        
 		setupDraggableWidget();
@@ -81,7 +91,7 @@
 	}
 
     function getParentSize() {
-        let parentComp = studioDoc.getWidget<any>(data.parentId);
+        let parentComp = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
 		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 

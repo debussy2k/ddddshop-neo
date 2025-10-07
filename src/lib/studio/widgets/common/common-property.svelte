@@ -20,7 +20,7 @@
 	}
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
 
-    let parentComp: any = studioDoc.getWidget<any>(data.parentId);
+    let parentComp: any = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
 	
 	export type DisplayStatus = {
 		showMinWidth: boolean;

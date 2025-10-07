@@ -15,7 +15,7 @@
         // console.log("parentSize", canvasManager.currentWidth)
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
-        return getComputedVal(data, currentProp);
+        return getComputedVal(data);
     })
 
 </script>

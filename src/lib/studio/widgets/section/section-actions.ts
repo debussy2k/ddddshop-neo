@@ -1,8 +1,7 @@
 import { nanoid } from 'nanoid';
 import type HistoryManager from "../../history-manager";
-import type { DocState } from "../../types";
+import type { DocState, BreakPoint } from "../../types";
 import type { Section, SectionInput, SectionPropValue } from "./section.type";
-import { type BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import * as du from '../common/doc-util';
 
 

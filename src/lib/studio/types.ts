@@ -5,9 +5,10 @@ import type { SimpleImage } from "./widgets/simple-image/simple-image.type";
 import type { Showcase } from "./widgets/showcase/showcase.type";
 export type { Section, Frame, Sandbox, SimpleImage, Showcase };
 
+export type BreakPoint = "desktop" | "tablet" | "mobile";
+
 type Widget = Section | Frame | Sandbox | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임
 export type { Widget };
-
 
 type NonSectionWidget = Frame | Sandbox;
 export type { NonSectionWidget };
@@ -24,6 +25,13 @@ export type { ContainerPropValue };
 
 export interface DocState {
     sections: Section[];
+}
+
+export type WidgetComponentContract = {
+	getElement: () => HTMLElement;
+	getBoundingRect: () => { left: number; top: number; width: number; height: number };
+	getWidth: () => number;
+	getHeight: () => number;
 }
 
 // 위젯의 기본 위치/크기 속성을 나타내는 공통 인터페이스
