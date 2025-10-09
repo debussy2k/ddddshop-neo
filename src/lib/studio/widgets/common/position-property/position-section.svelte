@@ -43,7 +43,7 @@
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
-		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, computedVal.parentWidth);
+		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, computedVal);
 		cmd.updateProp(data.id, obj, bpm.current);
 	}
 

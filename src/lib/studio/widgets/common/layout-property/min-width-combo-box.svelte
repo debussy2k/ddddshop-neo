@@ -51,7 +51,7 @@
         */
        let obj: Partial<BaseWidgetProp> = {};
         if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
-		    obj = constraintsUtilHorz.createHorzAlignProps("left", currentProp, computedVal.parentWidth);
+		    obj = constraintsUtilHorz.createHorzAlignProps("left", currentProp, computedVal);
         }
 
         updateProp({ 

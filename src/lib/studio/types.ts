@@ -50,6 +50,8 @@ export type BaseWidgetProp = {
 }
 
 export type SizeConstraints = {
+	hugContentsWidth: boolean;	// 수평 방향 hug-contents
+	hugContentsHeight: boolean;	// 수직 방향 hug-contents
 	fullWidth: boolean;		// 수평 방향 fill-container
 	fullHeight: boolean;	// 수직 방향 fill-container
     hasMinWidth: boolean;

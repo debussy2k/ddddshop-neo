@@ -129,17 +129,27 @@
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullWidth: false,
+					hugContentsWidth: false,
 				},
 				width: computedVal.width + 'px',
 			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
+
+			updateProp({
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullWidth: false,
+					hugContentsWidth: true,
+				},
+			});
 		} else if (value === 'fill-container') {
 			console.log('fill-container');
 			updateProp({
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullWidth: true,
+					hugContentsWidth: false,
 				}
 			});
 		} else if (value === 'select-min-width' || value === 'add-min-width') {

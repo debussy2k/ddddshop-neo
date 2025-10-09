@@ -1,5 +1,6 @@
 import type { BaseWidgetProp, HorizontalAlign } from "$lib/studio/types";
 import * as util from "$lib/studio/util";
+import type { ComputedValue } from "./computed-value-util";
 
 type HorzProp = {
 	left: string;
@@ -9,54 +10,50 @@ type HorzProp = {
 	horzAlign: HorizontalAlign;
 }
 
-export function createHorzAlignProps(newHorzAlign: HorizontalAlign, currentProp: BaseWidgetProp, parentWidth: number) {
+export function createHorzAlignProps(newHorzAlign: HorizontalAlign, currentProp: BaseWidgetProp, computedVal: ComputedValue) {
 	let obj: Partial<BaseWidgetProp> = {};
 	if (newHorzAlign === 'left') {
-		const left = getLeftValuePx(currentProp, parentWidth);
 		obj = {
 			horzAlign: "left",
-			left: left,
-			width: getWidthValuePx(currentProp, parentWidth),
+			left: computedVal.left + 'px',
+			width: computedVal.width + 'px',
 			right: 'auto',
 			centerOffsetX: 0
 		}
 	}
 	else if (newHorzAlign === 'right') {
-		const right = getRightValuePx(currentProp, parentWidth);
 		obj = {
 			horzAlign: "right",
 			left: 'auto',
-			width: getWidthValuePx(currentProp, parentWidth),
-			right: right,
+			width: computedVal.width + 'px',
+			right: computedVal.right + 'px',
 			centerOffsetX: 0
 		}
 	}
 	else if (newHorzAlign === 'both') {
-		const left = getLeftValuePx(currentProp, parentWidth);
-		const right = getRightValuePx(currentProp, parentWidth);
 		obj = {
 			horzAlign: "both",
-			left: left,
-			right: right,
+			left: computedVal.left + 'px',
+			right: computedVal.right + 'px',
 			width: 'auto',
 			centerOffsetX: 0
 		}
 	}
 	else if (newHorzAlign === 'center') {
-		const centerOffsetX = getCenterOffsetX(currentProp, parentWidth);
-		const child_width_half = getWidthValue(currentProp, parentWidth)/2;
+		const centerOffsetX = (computedVal.left + computedVal.width/2) - computedVal.parentWidth/2;
+		const child_width_half = computedVal.width/2;
 		const left = `calc(50% + ${centerOffsetX}px - ${child_width_half}px)`;
 		obj = {
 			horzAlign: "center",
 			left: left,
-			width: getWidthValuePx(currentProp, parentWidth),
+			width: computedVal.width + 'px',
 			right: 'auto',
-			centerOffsetX: centerOffsetX,
+			centerOffsetX: util.round(centerOffsetX, 2),
 		}
 	}
 	else if (newHorzAlign === 'scale') {
-		const leftPercent = util.toPercent(getLeftValue(currentProp, parentWidth), parentWidth);
-		const rightPercent = util.toPercent(getRightValue(currentProp, parentWidth), parentWidth);
+		const leftPercent = util.toPercent(computedVal.left, computedVal.parentWidth);
+		const rightPercent = util.toPercent(computedVal.right, computedVal.parentWidth);
 		obj = {
 			horzAlign: "scale",
 			left: leftPercent + '%',

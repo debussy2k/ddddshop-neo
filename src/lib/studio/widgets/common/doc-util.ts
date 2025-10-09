@@ -162,6 +162,9 @@ function getHorizontalStyles(prop: BaseWidgetProp, parentLayout: LayoutType): Re
             styleObj.width = '100%';
         }
     }
+	else if (prop.sizeConstraints?.hugContentsWidth) {
+		styleObj.width = 'fit-content';
+	}
 
     // min-width, max-width는 fullWidth 설정뒤에 할 것 (순서에 영향을 받음)
     if (prop.sizeConstraints?.hasMinWidth) {
@@ -246,6 +249,8 @@ export function isLayoutFlexBox(layout: LayoutType) {
 
 export function getDefaultSizeConstraints() {
     return {
+		hugContentsWidth: false,
+		hugContentsHeight: false,
         fullWidth: false,
         fullHeight: false,
         hasMinWidth: false,
