@@ -129,7 +129,8 @@
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullWidth: false,
-				}
+				},
+				width: computedVal.width + 'px',
 			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');

@@ -50,8 +50,8 @@ export type BaseWidgetProp = {
 }
 
 export type SizeConstraints = {
-	fullWidth: boolean;
-	fullHeight: boolean;
+	fullWidth: boolean;		// 수평 방향 fill-container
+	fullHeight: boolean;	// 수직 방향 fill-container
     hasMinWidth: boolean;
     minWidth: number;
     hasMaxWidth: boolean;
