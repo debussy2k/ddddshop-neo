@@ -4,7 +4,6 @@ import type { DocState, Section, Widget, ContainerProp } from "../../types";
 import type { Frame, FrameInput, FramePropValue } from "./frame.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 import * as du from '../common/doc-util';
-import { studioDoc } from "../../studio-doc.svelte";
 
 export class FrameActions {
 

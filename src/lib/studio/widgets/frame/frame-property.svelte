@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import type { ContainerPropValue } from "../../types";
     import type { Frame } from "./frame.type";
     import { studioDoc } from "../../studio-doc.svelte";
@@ -11,12 +12,18 @@
     let { data }: { data: Frame } = $props();
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parentProp:ContainerPropValue = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current] as ContainerPropValue);
-    let computedVal = $derived.by(() => {
+    let refreshTrigger = $state(0);
+	let computedVal = $derived.by(() => {
         // console.log("parentSize", canvasManager.currentWidth)
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
+        refreshTrigger;
         return getComputedVal(data);
     })
+
+    onMount(() => {
+        refreshTrigger++;
+    });
 
 </script>
 

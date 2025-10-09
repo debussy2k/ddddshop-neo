@@ -3,7 +3,6 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, BreakPoint } from "../../types";
 import type { Section, SectionInput, SectionPropValue } from "./section.type";
 import * as du from '../common/doc-util';
-import { studioDoc } from "../../studio-doc.svelte";
 
 export class SectionActions {
 
@@ -123,8 +122,7 @@ export class SectionActions {
                     du.updateChildrenSizeConstraintsOnLayoutChange(
                         widget.children, 
                         updates.layout, 
-                        breakPoint,
-                        studioDoc.widgetMap  // widgetMap 전달
+                        breakPoint
                     );
                 }
 

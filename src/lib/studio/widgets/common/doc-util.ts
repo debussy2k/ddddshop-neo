@@ -329,9 +329,14 @@ function applyComputedValuesToChild(
 /**
  * layout이 변경될 때 children의 sizeConstraints를 재설정합니다.
  * 
- * - flexbox layout으로 변경되면: children 중 sizeConstraints가 없는 경우에만 기본값으로 설정합니다.
- * - 그 외의 layout으로 변경되면: children의 sizeConstraints를 제거합니다.
- *   (단, child가 frame이고 해당 frame의 layout이 flexbox인 경우는 제외)
+ * - flexbox layout으로 변경되면:
+ *   1. children 중 sizeConstraints가 없는 경우에만 기본값으로 설정합니다.
+ *   2. 모든 children의 computed 값으로 위치/크기를 적용합니다.
+ * 
+ * - 그 외의 layout으로 변경되면:
+ *   1. children의 sizeConstraints를 제거합니다.
+ *      (단, child가 frame이고 해당 frame의 layout이 flexbox인 경우는 제외)
+ *   2. 모든 children의 computed 값으로 위치/크기를 적용합니다.
  * 
  * @param children 자식 위젯 배열
  * @param newLayout 변경될 새로운 layout
@@ -365,7 +370,6 @@ export function updateChildrenSizeConstraintsOnLayoutChange(
 			
 			// computed 값으로 위치/크기 설정
 			applyComputedValuesToChild(child, breakPoint);
-
         });
     }
 }

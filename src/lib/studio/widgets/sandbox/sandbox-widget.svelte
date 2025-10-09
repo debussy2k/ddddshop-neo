@@ -12,14 +12,16 @@
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
     
-	let element: HTMLElement;
+	let element: HTMLElement | undefined = $state();
     let { data: data }: { data: Sandbox } = $props();
     let isActive = $derived(studioDoc.activeId === data.id);
     let currentProp = $derived(data.prop?.[bpm.current]);
     let parent = $derived(studioDoc.getParentByChildId(data.id));
+	let refreshTrigger = $state(0);
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
+		refreshTrigger;
         return getComputedVal(data);
     })
 
@@ -55,15 +57,11 @@
 		return element;
 	}
 
-	function getBoundingRect() {
-		
-	}
-
-
 
     onMount(() => {        
 		setupDraggableWidget();
 		setupResizableWidget();
+		refreshTrigger++;
     });
 
 	function setupDraggableWidget() {
@@ -146,7 +144,7 @@
         </div>
     </div>
 
-    {#if isActive}
+    {#if isActive && element}
         <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
     {/if}
 </div>

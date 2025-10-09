@@ -12,18 +12,21 @@ export interface ComputedValue {
     height: number;
 }
 
-// export interface WidgetData {
-//     id: string;
-//     parentId: string;
-// }
 
 /**
  * 위젯의 계산된 값을 반환합니다.
- * auto, percent로 표시된 값은 계산하여 pixel 단위로 리턴됩니다.
+ * DOM의 getBoundingClientRect()를 사용하여 브라우저가 계산한 실제 픽셀 값을 가져오며,
+ * 부모 요소를 기준으로 한 상대 위치(left, right, top, bottom)와 크기(width, height)를 반환합니다.
  */
 export function getComputedVal(data: Widget): ComputedValue {
+	const defaultResult = { parentWidth: 0, parentHeight: 0, left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+	
 	const parentEl = studioDoc.getWidgetSvelteComponent(data.parentId).getElement();
-	const el = studioDoc.getWidgetSvelteComponent(data.id).getElement();
+	const svelteComp = studioDoc.getWidgetSvelteComponent(data.id);
+	if (svelteComp === undefined) {
+		return defaultResult;
+	}
+	const el = svelteComp.getElement();
 
 	// parent와 현재 element의 bounding rect 가져오기
 	const parentRect = parentEl.getBoundingClientRect();
