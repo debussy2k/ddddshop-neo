@@ -1,5 +1,6 @@
 import type { Widget } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
+import { round2 } from "$lib/studio/util";
 
 export interface ComputedValue {
     parentWidth: number;
@@ -41,14 +42,14 @@ export function getComputedVal(data: Widget): ComputedValue {
 	const bottom = parentRect.height - (top + height);
 
 	return {
-		parentWidth: parentRect.width,
-		parentHeight: parentRect.height,
-		left: left,
-		right: right,
-		top: top,
-		bottom: bottom,
-		width: width,
-		height: height
+		parentWidth: round2(parentRect.width),
+		parentHeight: round2(parentRect.height),
+		left: round2(left),
+		right: round2(right),
+		top: round2(top),
+		bottom: round2(bottom),
+		width: round2(width),
+		height: round2(height)
 	};
 	
 	/* auto layout이 아닌 경우에만 사용가능한 코드
