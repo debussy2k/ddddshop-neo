@@ -3,7 +3,7 @@ import type HistoryManager from "../../history-manager";
 import type { DocState, BreakPoint } from "../../types";
 import type { Section, SectionInput, SectionPropValue } from "./section.type";
 import * as du from '../common/doc-util';
-
+import { studioDoc } from "../../studio-doc.svelte";
 
 export class SectionActions {
 
@@ -120,7 +120,12 @@ export class SectionActions {
 
                 // layout이 변경되면 children의 sizeConstraints를 재설정함
                 if (updates.layout && updates.layout !== currentProp.layout) {
-                    du.updateChildrenSizeConstraintsOnLayoutChange(widget.children, updates.layout, breakPoint);
+                    du.updateChildrenSizeConstraintsOnLayoutChange(
+                        widget.children, 
+                        updates.layout, 
+                        breakPoint,
+                        studioDoc.widgetMap  // widgetMap 전달
+                    );
                 }
 
                 widget.prop[breakPoint] = {

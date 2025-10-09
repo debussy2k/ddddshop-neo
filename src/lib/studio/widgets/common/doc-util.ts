@@ -2,6 +2,7 @@ import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, Con
 import type { SectionPropValue } from "../section/section.type";
 import type { FramePropValue } from "../frame/frame.type";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
+import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
 export function findById(id: string, draft: DocState) {
     // 재귀적으로 Widget을 찾는 헬퍼 함수
@@ -300,6 +301,32 @@ export function addDefaultSizeConstraints(
 }
 
 /**
+ * Widget의 computed 값을 사용하여 prop을 업데이트합니다.
+ * align을 left, top으로 변경하고 computed 값으로 위치/크기를 설정합니다.
+ * 
+ * @param child 업데이트할 위젯
+ * @param breakPoint 현재 breakpoint
+ */
+function applyComputedValuesToChild(
+    child: NonSectionWidget,
+    breakPoint: BreakPoint
+): void {
+    const computed = getComputedVal(child);
+    
+    // align을 left, top으로 변경하고 computed 값 설정
+    child.prop[breakPoint].horzAlign = 'left';
+    child.prop[breakPoint].vertAlign = 'top';
+    child.prop[breakPoint].left = `${computed.left}px`;
+    child.prop[breakPoint].top = `${computed.top}px`;
+    child.prop[breakPoint].width = `${computed.width}px`;
+    child.prop[breakPoint].height = `${computed.height}px`;
+    child.prop[breakPoint].right = `${computed.right}px`;
+    child.prop[breakPoint].bottom = `${computed.bottom}px`;
+    child.prop[breakPoint].centerOffsetX = 0;
+    child.prop[breakPoint].centerOffsetY = 0;
+}
+
+/**
  * layout이 변경될 때 children의 sizeConstraints를 재설정합니다.
  * 
  * - flexbox layout으로 변경되면: children 중 sizeConstraints가 없는 경우에만 기본값으로 설정합니다.
@@ -313,25 +340,32 @@ export function addDefaultSizeConstraints(
 export function updateChildrenSizeConstraintsOnLayoutChange(
     children: NonSectionWidget[],
     newLayout: LayoutType,
-    breakPoint: BreakPoint
+    breakPoint: BreakPoint,
 ): void {
     if (isLayoutFlexBox(newLayout)) {
         // children의 sizeConstraints를 기본값으로 설정
         children.forEach(child => {
-			if (child.prop[breakPoint].sizeConstraints === undefined) {
-            	child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
-			}
+            if (child.prop[breakPoint].sizeConstraints === undefined) {
+                child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
+            }
+
+            // computed 값으로 위치/크기 설정
+            applyComputedValuesToChild(child, breakPoint);
         });
     } else {
         // children의 sizeConstraints를 제거함
         children.forEach(child => {
-			if (child.type === 'frame' && isLayoutFlexBox(child.prop[breakPoint].layout)) {
-				//
-			}
-			else {
-				console.log("delete sizeConstraints", child.id);
-				delete child.prop[breakPoint].sizeConstraints;
-			}
+            if (child.type === 'frame' && isLayoutFlexBox(child.prop[breakPoint].layout)) {
+                //
+            }
+            else {
+                // console.log("delete sizeConstraints", child.id);
+                delete child.prop[breakPoint].sizeConstraints;
+            }
+			
+			// computed 값으로 위치/크기 설정
+			applyComputedValuesToChild(child, breakPoint);
+
         });
     }
 }
