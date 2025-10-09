@@ -12,7 +12,7 @@
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
     
-	let element: HTMLElement | undefined = $state();
+	let element: HTMLElement;
     let { data: data }: { data: Sandbox } = $props();
     let isActive = $derived(studioDoc.activeId === data.id);
     let currentProp = $derived(data.prop?.[bpm.current]);
@@ -144,7 +144,7 @@
         </div>
     </div>
 
-    {#if isActive && element}
+    {#if isActive}
         <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
     {/if}
 </div>

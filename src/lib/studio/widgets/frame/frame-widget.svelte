@@ -106,8 +106,12 @@
 		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 
-    function handleMoutdown(event: MouseEvent) {
+    function handleMousedown(event: MouseEvent) {
         studioDoc.activeId = data.id;
+		
+		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
+		element.focus();	
+
         // 이벤트 버블링 방지
         event.stopPropagation();
         event.preventDefault();
@@ -249,7 +253,7 @@
 	bind:this={element}
     class={getFrameClasses(isActive)}
     style={getCurrentStyle()}
-    onmousedown={(e) => handleMoutdown(e as MouseEvent)}
+    onmousedown={(e) => handleMousedown(e as MouseEvent)}
     role="button"
     tabindex="0"
     onkeydown={handleKeyDown}
