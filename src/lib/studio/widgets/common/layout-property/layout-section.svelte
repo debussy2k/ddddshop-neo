@@ -78,6 +78,10 @@
 		}
 
 		if (newLayout === 'block') {
+			obj = {
+				...obj,
+				sizeConstraints: undefined
+			}
 		}
 		else if (du.isLayoutFlexBox(newLayout)) {
 			if (du.isFlexbox(currentProp)) {

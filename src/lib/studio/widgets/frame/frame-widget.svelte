@@ -40,6 +40,13 @@
                 setupResizableWidget();
             }
 		}
+		
+		// sizeConstraints가 undefined가 되면 Resizable 설정을 다시해야 함. (자신이 flex 에서 block 으로 변경되면 발생)
+		if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined ) && currentProp.sizeConstraints === undefined) {
+			// console.log('frame sizeConstraints undefined');
+			setupResizableWidget();
+		}
+
 		if (parent?.prop[bpm.current].layout) {
             if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
                 console.log('parent layout changed');
