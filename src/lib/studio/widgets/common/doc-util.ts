@@ -247,6 +247,10 @@ export function isLayoutFlexBox(layout: LayoutType) {
     return layout === 'flex-row' || layout === 'flex-col';
 }
 
+export function isFlexboxRow(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
+	return isFlexbox(prop) && prop.layout === 'flex-row';
+}	
+
 export function getDefaultSizeConstraints() {
     return {
 		hugContentsWidth: false,

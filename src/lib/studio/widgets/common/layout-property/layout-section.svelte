@@ -52,19 +52,6 @@
 
 	let sizeConstraints = $derived(currentProp.sizeConstraints);
 
-	// 타입 가드 함수들
-	function isContainerProps(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
-		return 'layout' in prop;
-	}	
-	
-	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
-		return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
-	}	
-	
-	function isFlexboxRow(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
-		return isFlexbox(prop) && prop.layout === 'flex-row';
-	}
-
 	function onSetBatchMode() {
 		studioDoc.setBatchMode();
 	}
@@ -123,18 +110,18 @@
 	<div class="mb-3">레이아웃</div>
 
 	<div class="flex flex-col gap-y-2">
-		{#if isContainerProps(currentProp)}
+		{#if du.isContainerProps(currentProp)}
 			<div class='flex gap-x-2'>
 				<LayoutSelector layout={currentProp.layout} onChange={onChangeLayout} class='flex-1 min-w-0'/>
                	<MiniToggleButton icon={FlexWrapIcon} title="wrap" 
-					class={!isFlexboxRow(currentProp) ? 'invisible' : ''}
+					class={!du.isFlexboxRow(currentProp) ? 'invisible' : ''}
 					toggled={currentProp.wrap} onToggle={value => updateProp({ wrap: value })}/>
 			</div>
 		{/if}
 
 		<div class="flex flex-col gap-y-2">
 			<div class='flex gap-x-2'>
-				{#if sizeConstraints && (isFlexbox(currentProp) || isFlexbox(parentProp))}
+				{#if sizeConstraints && (du.isFlexbox(currentProp) || du.isFlexbox(parentProp))}
 					<!-- Auto layout일 때의 Width UI -->
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
@@ -204,7 +191,7 @@
 			isContainerProps: {isContainerProps(currentProp)}, isFlexbox: {isFlexbox(currentProp)}
 		</div> -->
 
-		{#if isContainerProps(currentProp) && isFlexbox(currentProp)}
+		{#if du.isContainerProps(currentProp) && du.isFlexbox(currentProp)}
 			<div class="flex flex-col gap-y-2">
 				<div class='flex gap-x-2'>
 					<div class='w-1/2 min-w-0 space-y-2'>
@@ -213,10 +200,10 @@
 					</div>
 					<div class='w-1/2 min-w-0 space-y-2'>
 						<!-- gap 조정 공간 -->
-						 {#if isFlexbox(currentProp)}
+						 {#if du.isFlexbox(currentProp)}
 							<InputVal name='G' value={currentProp.gap} min={0} onChange={value => updateProp({ gap: value as number })} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
 						{/if}
-						{#if isFlexboxRow(currentProp) && currentProp.wrap}
+						{#if du.isFlexboxRow(currentProp) && currentProp.wrap}
 							<InputVal name='V' value={currentProp.verticalGap} min={0} onChange={value => updateProp({ verticalGap: value as number })} onDragStart={onSetBatchMode} onDragEnd={onCommitBatch}/>
 						{/if}
 					</div>
@@ -242,7 +229,7 @@
 		{/if}
 	</div>
 
-	{#if isFlexbox(parentProp) && sizeConstraints === undefined }
+	{#if du.isFlexbox(parentProp) && sizeConstraints === undefined }
 		<div class='mt-4 p-1 border'>
 			<div class="mb-1">오류</div>
 			<div class="text-red-500">
