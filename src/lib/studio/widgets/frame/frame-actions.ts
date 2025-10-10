@@ -165,6 +165,9 @@ export class FrameActions {
                         breakPoint
                     );
                 }
+				else if (updates.sizeConstraints?.hugContentsWidth !== currentProp.sizeConstraints?.hugContentsWidth && updates.sizeConstraints?.hugContentsWidth === true) {
+					du.clearChildrenFullWidth(widget.children, breakPoint);
+				}
 
                 widget.prop[breakPoint] = {
                     ...widget.prop[breakPoint],

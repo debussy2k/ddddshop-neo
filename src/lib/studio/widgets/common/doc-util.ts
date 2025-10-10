@@ -293,7 +293,7 @@ export function addDefaultSizeConstraints(
  * @param child 업데이트할 위젯
  * @param breakPoint 현재 breakpoint
  */
-function applyComputedValuesToChild(
+function normalizeToLeftTopPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
@@ -341,7 +341,7 @@ export function updateChildrenSizeConstraintsOnLayoutChange(
             }
 
             // computed 값으로 위치/크기 설정
-            applyComputedValuesToChild(child, breakPoint);
+            normalizeToLeftTopPosition(child, breakPoint);
         });
     } else {
         // children의 sizeConstraints를 제거함
@@ -355,7 +355,49 @@ export function updateChildrenSizeConstraintsOnLayoutChange(
             }
 			
 			// computed 값으로 위치/크기 설정
-			applyComputedValuesToChild(child, breakPoint);
+			normalizeToLeftTopPosition(child, breakPoint);
         });
     }
+}
+/*
+호출경로:
+
+1. LayoutSelector 컴포넌트 (사용자가 레이아웃 선택)
+   ↓ onChange 콜백
+   
+2. layout-section.svelte → onChangeLayout() (라인 74-103)
+   - 새로운 layout 타입으로 속성 객체 생성
+   - updateProp(obj) 호출 (라인 102)
+   ↓
+   
+3. common-property.svelte → updateProp() (라인 44-46)
+   - cmd.updateProp(data.id, newProp, bpm.current) 호출
+   ↓
+   
+4. command.ts → cmdFrame (FrameActions 인스턴스)
+   ↓
+   
+5. frame-actions.ts → updateProp() (라인 153-175)
+   - layout 변경 감지: if (updates.layout && updates.layout !== currentProp.layout)
+   - 라인 162-166에서 호출:
+     du.updateChildrenSizeConstraintsOnLayoutChange(
+         widget.children, 
+         updates.layout, 
+         breakPoint
+     )	
+*/
+
+
+/*
+	자식에 적용된 “fill container”가 있으면
+    - fill-container 해제
+    - fill 상태의 width를 고정폭으로 지정
+*/
+export function clearChildrenFullWidth(children: NonSectionWidget[], breakPoint: BreakPoint): void {
+	children.forEach(child => {
+		if (child.prop[breakPoint].sizeConstraints?.fullWidth) {
+			child.prop[breakPoint].sizeConstraints.fullWidth = false;
+			normalizeToLeftTopPosition(child, breakPoint);
+		}
+	})
 }
