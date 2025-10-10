@@ -224,6 +224,7 @@
 	{min} 
 	{max} 
 	showFill={currentProp.sizeConstraints?.fullWidth ?? false}
+	showHugContents={currentProp.sizeConstraints?.hugContentsWidth ?? false}
 	onChange={handleValueChange} 
 	onDragStart={onDragStart} 
 	onDragEnd={onDragEnd} 

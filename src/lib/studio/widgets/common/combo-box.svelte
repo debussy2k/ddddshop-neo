@@ -25,12 +25,13 @@
         min?: number;
         max?: number;
 		showFill?: boolean; // Fill 표시 여부
+		showHugContents?: boolean; // Hug Contents 표시 여부
         onChange?: (value: number) => void;
 		onDragStart?: () => void;
 		onDragEnd?: () => void;		
     }
 
-    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, showFill = false, onChange, onDragStart, onDragEnd }: Props = $props();
+    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, showFill = false, showHugContents = false, onChange, onDragStart, onDragEnd }: Props = $props();
     
     // popover 상태 관리
     let isPopoverOpen = $state(false);
@@ -157,10 +158,15 @@
         }}
     />
 
-	<!-- Fill 표시 -->
 	{#if !isHovering && showFill}
+		<!-- Fill 표시 -->
 		<div class='absolute top-0 left-6 right-0 h-full flex items-center justify-end pr-2 pointer-events-none'>
 			<span class='bg-gray-100 text-gray-600'>Fill</span>
+		</div>
+	{:else if !isHovering && showHugContents}
+		<!-- Hug Contents 표시 -->
+		<div class='absolute top-0 left-6 right-0 h-full flex items-center justify-end pr-2 pointer-events-none'>
+			<span class='bg-gray-100 text-gray-600'>Hug</span>
 		</div>
 	{/if}
 

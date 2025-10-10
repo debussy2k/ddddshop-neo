@@ -96,7 +96,20 @@ export function setupResizable(config: ResizableConfig): void {
             start: (event: ResizeEvent) => {
                 event.stopPropagation();
                 studioDoc.historyManager.setBatchMode();
-				ctx = newContext(config.getCurrentProp());
+				const currentProp = config.getCurrentProp();
+				ctx = newContext(currentProp);
+				
+				console.log('resizablestart', ctx);
+				if (currentProp.sizeConstraints?.hugContentsWidth) {
+					config.updateCallback(config.id, {
+						sizeConstraints: {
+							...currentProp.sizeConstraints,
+							fullWidth: false,
+							hugContentsWidth: false,
+						},
+						width: currentProp.width,
+					});
+				}
             },
             move: (event: ResizeEvent) => {
 				// console.log('move', event.deltaRect);
