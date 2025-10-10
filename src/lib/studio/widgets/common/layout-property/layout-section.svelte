@@ -28,6 +28,8 @@
 	import MaxHeightIcon from "$lib/assets/studio/max-height.svg?raw";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
+	import { bpm } from "../../../breakpoint-man.svelte";
+	import * as cmd from "../../../command";
 	interface Props {
 		class?: ClassValue;
 		data: Widget;
@@ -137,7 +139,12 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
-							currentProp={currentProp} {parentProp} {updateProp} {computedVal}
+							currentProp={currentProp} 
+							{parentProp} 
+							widgetId={data.id}
+							parentId={data.parentId}
+							{updateProp} 
+							{computedVal}
 							min={sizeConstraints.hasMinWidth ? sizeConstraints.minWidth : 1}
 							max={sizeConstraints.hasMaxWidth ? sizeConstraints.maxWidth : undefined}
 							bind:displayStatus={displayStatus}

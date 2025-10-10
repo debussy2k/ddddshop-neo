@@ -7,6 +7,9 @@
 	import * as constraintsUtilHorz from "../constraints-util-horz";
     import type { ComputedValue } from "../computed-value-util";
     import * as du from "../doc-util";
+    import { bpm } from "../../../breakpoint-man.svelte";
+    import * as cmd from "../../../command";
+	import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
     export type WidthComboBoxItemChangeValue = "select-fixed-width" | "hug-contents" | "fill-container" | "select-min-width" | "add-min-width" | "select-max-width" | "add-max-width" | "delete-min-max";
 
@@ -16,6 +19,8 @@
         value: number;
         currentProp: BaseWidgetProp; // min, max 값이 있는 경우는 frame 밖에 없음.
         parentProp: ContainerPropValue;
+		widgetId: string;  // 추가
+		parentId: string;  // 추가
         min?: number;
         max?: number;
         updateProp:(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
@@ -25,7 +30,7 @@
             showMaxWidth: boolean;
         };
     }
-    let { class: className, icon, value, currentProp, parentProp, min, max, updateProp, computedVal, displayStatus=$bindable() }: Props = $props();
+    let { class: className, icon, value, currentProp, parentProp, widgetId, parentId, min, max, updateProp, computedVal, displayStatus=$bindable() }: Props = $props();
 	let isHovering = $state(false);
 
     let comboBoxItems: ComboBoxItem[] = $derived.by(() => {
@@ -155,7 +160,25 @@
 
 			updateProp(updates);
 		} else if (value === 'fill-container') {
-			console.log('fill-container');
+			console.log('fill-container width');
+			
+			studioDoc.setBatchMode();
+			// 부모의 hugContentsWidth가 true이면 이것을 false로 해제하고, 부모의 width를 고정폭으로 설정
+			if ("sizeConstraints" in parentProp && parentProp.sizeConstraints?.hugContentsWidth) {
+				console.log('부모의 hugContentsWidth를 해제합니다');
+				const parent = du.findById(parentId, studioDoc.current);
+				if (parent && parent.type === 'frame') {
+					let parentComputedVal = getComputedVal(parent as any);
+					cmd.cmdFrame.updateProp(parentId, {
+						sizeConstraints: {
+							...parentProp.sizeConstraints,
+							hugContentsWidth: false,
+						},
+						width: parentComputedVal.width + 'px',
+					}, bpm.current);
+				}
+			}
+			// hugContentsWidth를 해제
 			updateProp({
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
@@ -163,6 +186,7 @@
 					hugContentsWidth: false,
 				}
 			});
+			studioDoc.commitBatch();
 		} else if (value === 'select-min-width' || value === 'add-min-width') {
 			displayStatus.showMinWidth = true;
 		} else if (value === 'select-max-width' || value === 'add-max-width') {

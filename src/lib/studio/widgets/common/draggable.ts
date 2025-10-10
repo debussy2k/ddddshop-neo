@@ -46,12 +46,12 @@ export function setupDraggable(config: DraggableConfig): void {
 				ctx = newContext(config.getCurrentProp());
             },
             move: (event: DragEvent) => {
-				let newPosition = getNewPosition(event, ctx);
+				const newPosition = getNewPosition(event, ctx);
                 config.updateCallback(config.id, newPosition);
                 event.stopPropagation();
             },
             end: (event: DragEvent) => {
-				let newPosition = getNewPosition(event, ctx);
+				const newPosition = getNewPosition(event, ctx);
                 config.updateCallback(config.id, newPosition);
 
                 studioDoc.historyManager.commitBatch();
@@ -61,10 +61,10 @@ export function setupDraggable(config: DraggableConfig): void {
     });
 
 	function newContext(prop: LayoutProp) : ContextInfo {
-        let parentSize = config.getParentSize();
+        const parentSize = config.getParentSize();
 
         // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
-        let ctxInfo: ContextInfo = {
+        const ctxInfo: ContextInfo = {
             left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
             right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
             top: constraintsUtilVert.getTopValue(prop, parentSize.height),
@@ -78,8 +78,8 @@ export function setupDraggable(config: DraggableConfig): void {
 
 	function getNewPosition(event: DragEvent, ctx: ContextInfo) : Partial<LayoutProp> {
 		const prop = config.getCurrentProp();
-		let horzPos: Partial<LayoutProp> =  calcHorzProps(event, prop, ctx);
-		let vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
+		const horzPos: Partial<LayoutProp> =  calcHorzProps(event, prop, ctx);
+		const vertPos: Partial<LayoutProp> = calcVertProps(event, prop, ctx);
 
 		return {
 			...horzPos,
@@ -105,16 +105,16 @@ export function setupDraggable(config: DraggableConfig): void {
 		}
 		else if (prop.horzAlign === 'both') {
 			// left가 정수값이 되도록 처리. 
-			let val = util.getNumberPart(prop.left || '0');
-			let deciaml = val - Math.floor(val);
-			let dx = event.dx - deciaml;
+			const val = util.getNumberPart(prop.left || '0');
+			const deciaml = val - Math.floor(val);
+			const dx = event.dx - deciaml;
 			horzPos = {
 				left: util.getNumberPart(prop.left || '0') + dx + 'px',
 				right: util.getNumberPart(prop.right || '0') - dx + 'px'
 			}
 		}
 		else if (prop.horzAlign === 'center') {
-			let newCenterOffsetX = (prop.centerOffsetX || 0) + event.dx;
+			const newCenterOffsetX = (prop.centerOffsetX || 0) + event.dx;
 			horzPos = {
 				left: `calc(50% + ${newCenterOffsetX}px - ${util.getNumberPart(prop.width || '0')/2}px)`,
 				centerOffsetX: newCenterOffsetX,
@@ -129,9 +129,9 @@ export function setupDraggable(config: DraggableConfig): void {
 			}
 			else {
 				// left가 정수값이 되도록 처리. 
-				let val = ctx.left;
-				let deciaml = val - Math.floor(val);
-				let dx = event.dx - deciaml;
+				const val = ctx.left;
+				const deciaml = val - Math.floor(val);
+				const dx = event.dx - deciaml;
 
 				// drag 하는 동안은 px값으로 계산함
 				ctx.left += dx;
@@ -169,9 +169,9 @@ export function setupDraggable(config: DraggableConfig): void {
 			}
 		}
 		else if (prop.vertAlign === 'both') {
-			let val = util.getNumberPart(prop.top || '0');
-			let deciaml = val - Math.floor(val);
-			let dy = event.dy - deciaml;
+			const val = util.getNumberPart(prop.top || '0');
+			const deciaml = val - Math.floor(val);
+			const dy = event.dy - deciaml;
 
 			vertPos = {
 				top: util.getNumberPart(prop.top || '0') + dy + 'px',
@@ -179,7 +179,7 @@ export function setupDraggable(config: DraggableConfig): void {
 			}
 		}
 		else if (prop.vertAlign === 'center') {
-			let newCenterOffsetY = (prop.centerOffsetY || 0) + event.dy;
+			const newCenterOffsetY = (prop.centerOffsetY || 0) + event.dy;
 			vertPos = {
 				top: `calc(50% + ${newCenterOffsetY}px - ${util.getNumberPart(prop.height || '0')/2}px)`,
 				centerOffsetY: newCenterOffsetY,
@@ -193,9 +193,9 @@ export function setupDraggable(config: DraggableConfig): void {
 				}
 			}
 			else {
-				let val = ctx.top;
-				let deciaml = val - Math.floor(val);
-				let dy = event.dy - deciaml;
+				const val = ctx.top;
+				const deciaml = val - Math.floor(val);
+				const dy = event.dy - deciaml;
 
 				ctx.top += dy;
 				ctx.bottom -= dy;

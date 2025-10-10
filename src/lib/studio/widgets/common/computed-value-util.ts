@@ -24,7 +24,8 @@ export function getComputedVal(data: Widget): ComputedValue {
 	
 	const parentEl = studioDoc.getWidgetSvelteComponent(data.parentId).getElement();
 	const svelteComp = studioDoc.getWidgetSvelteComponent(data.id);
-	if (svelteComp === undefined) {
+	if (svelteComp === undefined || svelteComp === null) {
+		console.error('svelteComp is undefined or null');
 		return defaultResult;
 	}
 	const el = svelteComp.getElement();
