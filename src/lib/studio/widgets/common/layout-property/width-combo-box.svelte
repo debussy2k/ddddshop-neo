@@ -135,14 +135,25 @@
 			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
-
-			updateProp({
+			let updates: Partial<FramePropValue> = {
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullWidth: false,
 					hugContentsWidth: true,
-				},
-			});
+				}
+			};
+
+			// hug-contents시 가로정렬이 both 또는 scale인 경우 center로 변경 
+			// (scale 및 center는 화면에 따라 width가 변경되어 hug-contents와 상충하므로 가운데 정렬로 변경함)
+			if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
+				let obj = constraintsUtilHorz.createHorzAlignProps("center", currentProp, computedVal);
+				updates = {
+					...updates,
+					...obj,
+				}
+			}
+
+			updateProp(updates);
 		} else if (value === 'fill-container') {
 			console.log('fill-container');
 			updateProp({

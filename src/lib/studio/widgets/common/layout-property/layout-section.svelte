@@ -75,6 +75,8 @@
 		let obj: Partial<FramePropValue | SectionPropValue> = {
 			layout: newLayout,
 			wrap: false,
+			width: computedVal.width + 'px',
+			height: computedVal.height + 'px',
 		}
 
 		if (newLayout === 'block') {
