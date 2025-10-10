@@ -43,8 +43,25 @@
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
-		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, computedVal);
-		cmd.updateProp(data.id, obj, bpm.current);
+
+		studioDoc.setBatchMode();
+		// hug-contents 상태에서 가로정렬이 both 또는 scale인 경우 hugContentsWidth를 해제함.
+		if (newHorzAlign === 'both' || newHorzAlign === 'scale') {
+			if (currentProp.sizeConstraints?.hugContentsWidth) {
+				updateProp({
+					sizeConstraints: {
+						...currentProp.sizeConstraints,
+						fullWidth: false,
+						hugContentsWidth: false,
+					},
+					width: computedVal.width + 'px',
+				});			
+			}
+		}
+
+		let obj = constraintsUtilHorz.createHorzAlignProps(newHorzAlign, currentProp, computedVal);	
+		updateProp(obj);
+		studioDoc.commitBatch();
 	}
 
 	function updateVertAlign(newVertAlign: VerticalAlign) {
