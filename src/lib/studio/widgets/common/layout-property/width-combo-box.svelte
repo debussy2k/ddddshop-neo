@@ -120,6 +120,59 @@
 		}
     }
 
+    function handleHugContents() {
+		console.log('hug-contents');
+		let updates: Partial<FramePropValue> = {
+			sizeConstraints: {
+				...currentProp.sizeConstraints!,
+				fullWidth: false,
+				hugContentsWidth: true,
+			}
+		};
+
+		// hug-contents시 가로정렬이 both 또는 scale인 경우 center로 변경 
+		// (scale 및 center는 화면에 따라 width가 변경되어 hug-contents와 상충하므로 가운데 정렬로 변경함)
+		if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
+			let obj = constraintsUtilHorz.createHorzAlignProps("center", currentProp, computedVal);
+			updates = {
+				...updates,
+				...obj,
+			}
+		}
+
+		updateProp(updates);
+	}
+
+	function handleFillContainer() {
+		console.log('fill-container width');
+		
+		studioDoc.setBatchMode();
+		// 부모의 hugContentsWidth가 true이면 이것을 false로 해제하고, 부모의 width를 고정폭으로 설정
+		if ("sizeConstraints" in parentProp && parentProp.sizeConstraints?.hugContentsWidth) {
+			console.log('부모의 hugContentsWidth를 해제합니다');
+			const parent = du.findById(parentId, studioDoc.current);
+			if (parent && parent.type === 'frame') {
+				let parentComputedVal = getComputedVal(parent as any);
+				cmd.cmdFrame.updateProp(parentId, {
+					sizeConstraints: {
+						...parentProp.sizeConstraints,
+						hugContentsWidth: false,
+					},
+					width: parentComputedVal.width + 'px',
+				}, bpm.current);
+			}
+		}
+		// hugContentsWidth를 해제
+		updateProp({
+			sizeConstraints: {
+				...currentProp.sizeConstraints!,
+				fullWidth: true,
+				hugContentsWidth: false,
+			}
+		});
+		studioDoc.commitBatch();
+	}
+
     function handleComboBoxItemChange(value: WidthComboBoxItemChangeValue) {
 		console.log('onWidthComboBoxItemChange', value);
 		if (!currentProp.sizeConstraints) {
@@ -138,54 +191,9 @@
 				width: computedVal.width + 'px',
 			});
 		} else if (value === 'hug-contents') {
-			console.log('hug-contents');
-			let updates: Partial<FramePropValue> = {
-				sizeConstraints: {
-					...currentProp.sizeConstraints,
-					fullWidth: false,
-					hugContentsWidth: true,
-				}
-			};
-
-			// hug-contents시 가로정렬이 both 또는 scale인 경우 center로 변경 
-			// (scale 및 center는 화면에 따라 width가 변경되어 hug-contents와 상충하므로 가운데 정렬로 변경함)
-			if (currentProp.horzAlign === 'both' || currentProp.horzAlign === 'scale') {
-				let obj = constraintsUtilHorz.createHorzAlignProps("center", currentProp, computedVal);
-				updates = {
-					...updates,
-					...obj,
-				}
-			}
-
-			updateProp(updates);
+			handleHugContents();
 		} else if (value === 'fill-container') {
-			console.log('fill-container width');
-			
-			studioDoc.setBatchMode();
-			// 부모의 hugContentsWidth가 true이면 이것을 false로 해제하고, 부모의 width를 고정폭으로 설정
-			if ("sizeConstraints" in parentProp && parentProp.sizeConstraints?.hugContentsWidth) {
-				console.log('부모의 hugContentsWidth를 해제합니다');
-				const parent = du.findById(parentId, studioDoc.current);
-				if (parent && parent.type === 'frame') {
-					let parentComputedVal = getComputedVal(parent as any);
-					cmd.cmdFrame.updateProp(parentId, {
-						sizeConstraints: {
-							...parentProp.sizeConstraints,
-							hugContentsWidth: false,
-						},
-						width: parentComputedVal.width + 'px',
-					}, bpm.current);
-				}
-			}
-			// hugContentsWidth를 해제
-			updateProp({
-				sizeConstraints: {
-					...currentProp.sizeConstraints,
-					fullWidth: true,
-					hugContentsWidth: false,
-				}
-			});
-			studioDoc.commitBatch();
+			handleFillContainer();
 		} else if (value === 'select-min-width' || value === 'add-min-width') {
 			displayStatus.showMinWidth = true;
 		} else if (value === 'select-max-width' || value === 'add-max-width') {

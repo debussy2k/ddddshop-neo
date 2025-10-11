@@ -156,7 +156,12 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- height -->
 						<HeightComboBox value={computedVal.height} 
-							currentProp={currentProp} {parentProp} {updateProp} {computedVal}
+							currentProp={currentProp}
+							{parentProp} 
+							widgetId={data.id}
+							parentId={data.parentId}
+							{updateProp} 
+							{computedVal}
 							min={sizeConstraints.hasMinHeight ? sizeConstraints.minHeight : 1}
 							max={sizeConstraints.hasMaxHeight ? sizeConstraints.maxHeight : undefined}
 							bind:displayStatus={displayStatus}
