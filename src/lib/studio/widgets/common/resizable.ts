@@ -100,7 +100,8 @@ export function setupResizable(config: ResizableConfig): void {
 				ctx = newContext(currentProp);
 				
 				console.log('resizablestart', ctx);
-				if (currentProp.sizeConstraints?.hugContentsWidth) {
+				// hugContentsWidth가 true이고 수평 방향으로 리사이즈 하는 경우 -> fullWidth나 hugContentsWidth를 해제
+				if (currentProp.sizeConstraints?.hugContentsWidth && (event.edges?.left || event.edges?.right)) {
 					config.updateCallback(config.id, {
 						sizeConstraints: {
 							...currentProp.sizeConstraints,
@@ -110,7 +111,8 @@ export function setupResizable(config: ResizableConfig): void {
 						width: currentProp.width,
 					});
 				}
-				if (currentProp.sizeConstraints?.hugContentsHeight) {
+				// hugContentsHeight가 true이고 수직 방향으로 리사이즈 하는 경우 -> fullHeight나 hugContentsHeight를 해제
+				if (currentProp.sizeConstraints?.hugContentsHeight && (event.edges?.top || event.edges?.bottom)) {
 					config.updateCallback(config.id, {
 						sizeConstraints: {
 							...currentProp.sizeConstraints,
