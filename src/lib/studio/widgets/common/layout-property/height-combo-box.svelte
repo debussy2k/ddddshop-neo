@@ -7,6 +7,9 @@
 	import * as constraintsUtilVert from '../constraints-util-vert';
 	import type { ComputedValue } from '../computed-value-util';
 	import * as du from '../doc-util';
+	import { bpm } from '../../../breakpoint-man.svelte';
+	import * as cmd from '../../../command';
+	import { getComputedVal } from '$lib/studio/widgets/common/computed-value-util';
 
 	export type HeightComboBoxItemChangeValue =
 		| 'select-fixed-height'
@@ -24,6 +27,8 @@
 		value: number;
 		currentProp: BaseWidgetProp;
 		parentProp: ContainerPropValue;
+		widgetId: string; // 추가
+		parentId: string; // 추가
 		min?: number;
 		max?: number;
 		updateProp: (newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
@@ -39,6 +44,8 @@
 		value,
 		currentProp,
 		parentProp,
+		widgetId,
+		parentId,
 		min,
 		max,
 		updateProp,
@@ -148,19 +155,59 @@
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullHeight: false,
+					hugContentsHeight: false,
 				},
 				height: computedVal.height + 'px',
 			});
 		} else if (value === 'hug-contents') {
 			console.log('hug-contents');
+			let updates: Partial<FramePropValue> = {
+				sizeConstraints: {
+					...currentProp.sizeConstraints,
+					fullHeight: false,
+					hugContentsHeight: true,
+				}
+			};
+
+			// hug-contents시 세로정렬이 both 또는 scale인 경우 center로 변경
+			// (scale 및 center는 화면에 따라 height가 변경되어 hug-contents와 상충하므로 가운데 정렬로 변경함)
+			if (currentProp.vertAlign === 'both' || currentProp.vertAlign === 'scale') {
+				let obj = constraintsUtilVert.createVertAlignProps("center", currentProp, computedVal);
+				updates = {
+					...updates,
+					...obj,
+				}
+			}
+
+			updateProp(updates);
 		} else if (value === 'fill-container') {
-			console.log('fill-container');
+			console.log('fill-container height');
+			
+			studioDoc.setBatchMode();
+			// 부모의 hugContentsHeight가 true이면 이것을 false로 해제하고, 부모의 height를 고정높이로 설정
+			if ("sizeConstraints" in parentProp && parentProp.sizeConstraints?.hugContentsHeight) {
+				console.log('부모의 hugContentsHeight를 해제합니다');
+				const parent = du.findById(parentId, studioDoc.current);
+				if (parent && parent.type === 'frame') {
+					let parentComputedVal = getComputedVal(parent as any);
+					cmd.cmdFrame.updateProp(parentId, {
+						sizeConstraints: {
+							...parentProp.sizeConstraints,
+							hugContentsHeight: false,
+						},
+						height: parentComputedVal.height + 'px',
+					}, bpm.current);
+				}
+			}
+			// hugContentsHeight를 해제
 			updateProp({
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
-					fullHeight: true
+					fullHeight: true,
+					hugContentsHeight: false,
 				}
 			});
+			studioDoc.commitBatch();
 		} else if (value === 'select-min-height' || value === 'add-min-height') {
 			displayStatus.showMinHeight = true;
 		} else if (value === 'select-max-height' || value === 'add-max-height') {
@@ -198,6 +245,7 @@
 	{min}
 	{max}
 	showFill={currentProp.sizeConstraints?.fullHeight ?? false}
+	showHugContents={currentProp.sizeConstraints?.hugContentsHeight ?? false}
 	onChange={handleValueChange}
 	{onDragStart}
 	{onDragEnd}

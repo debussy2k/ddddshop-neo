@@ -31,7 +31,6 @@
         };
     }
     let { class: className, icon, value, currentProp, parentProp, widgetId, parentId, min, max, updateProp, computedVal, displayStatus=$bindable() }: Props = $props();
-	let isHovering = $state(false);
 
     let comboBoxItems: ComboBoxItem[] = $derived.by(() => {
         let arr:ComboBoxItem[] = [];

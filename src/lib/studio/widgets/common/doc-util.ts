@@ -218,6 +218,9 @@ function getVerticalStyles(prop: BaseWidgetProp, parentLayout: LayoutType): Reco
             styleObj.height = '100%';
         }
     }
+    else if (prop.sizeConstraints?.hugContentsHeight) {
+        styleObj.height = 'fit-content';
+    }
 
     // min-height, max-height는 fullHeight 설정뒤에 할 것 (순서에 영향을 받음)
     if (prop.sizeConstraints?.hasMinHeight) {
