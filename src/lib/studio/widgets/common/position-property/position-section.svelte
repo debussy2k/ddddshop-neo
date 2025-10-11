@@ -69,7 +69,7 @@
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
-		let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, computedVal.parentHeight);
+		let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, computedVal);
 		cmd.updateProp(data.id, obj, bpm.current);
 	}
 

@@ -1,5 +1,6 @@
 import type { BaseWidgetProp, VerticalAlign } from "$lib/studio/types";
 import * as util from "$lib/studio/util";
+import type { ComputedValue } from "./computed-value-util";
 
 type VertProp = {
 	top: string;
@@ -10,54 +11,50 @@ type VertProp = {
 }
 
 
-export function createVertAlignProps(newVertAlign: VerticalAlign, currentProp: BaseWidgetProp, parentHeight: number) {
+export function createVertAlignProps(newVertAlign: VerticalAlign, currentProp: BaseWidgetProp, computedVal: ComputedValue) {
 	let obj: Partial<BaseWidgetProp> = {};
 	if (newVertAlign === 'top') {
-		const top = getTopValuePx(currentProp, parentHeight);
 		obj = {
 			vertAlign: "top",
-			top: top,
-			height: getHeightValuePx(currentProp, parentHeight),
+			top: computedVal.top + 'px',
+			height: computedVal.height + 'px',
 			bottom: 'auto',
 			centerOffsetY: 0
 		}
 	}
 	else if (newVertAlign === 'bottom') {
-		const bottom = getBottomValuePx(currentProp, parentHeight);
 		obj = {
 			vertAlign: "bottom",
 			top: 'auto',
-			height: getHeightValuePx(currentProp, parentHeight),
-			bottom: bottom,
+			height: computedVal.height + 'px',
+			bottom: computedVal.bottom + 'px',
 			centerOffsetY: 0
 		}
 	}
 	else if (newVertAlign === 'both') {
-		const top = getTopValuePx(currentProp, parentHeight);
-		const bottom = getBottomValuePx(currentProp, parentHeight);
 		obj = {
 			vertAlign: "both",
-			top: top,
-			bottom: bottom,
+			top: computedVal.top + 'px',
+			bottom: computedVal.bottom + 'px',
 			height: 'auto',
 			centerOffsetY: 0
 		}
 	}
 	else if (newVertAlign === 'center') {
-		const centerOffsetY = getCenterOffsetY(currentProp, parentHeight);
-		const child_height_half = getHeightValue(currentProp, parentHeight)/2;
+		const centerOffsetY = (computedVal.top + computedVal.height/2) - computedVal.parentHeight/2;
+		const child_height_half = computedVal.height/2;
 		const top = `calc(50% + ${centerOffsetY}px - ${child_height_half}px)`;
 		obj = {
 			vertAlign: "center",
 			top: top,
-			height: getHeightValuePx(currentProp, parentHeight),
+			height: computedVal.height + 'px',
 			bottom: 'auto',
-			centerOffsetY: centerOffsetY,
+			centerOffsetY: util.round(centerOffsetY, 2),
 		}
 	}
 	else if (newVertAlign === 'scale') {
-		const topPercent = util.toPercent(getTopValue(currentProp, parentHeight), parentHeight);
-		const bottomPercent = util.toPercent(getBottomValue(currentProp, parentHeight), parentHeight);
+		const topPercent = util.toPercent(computedVal.top, computedVal.parentHeight);
+		const bottomPercent = util.toPercent(computedVal.bottom, computedVal.parentHeight);
 		obj = {
 			vertAlign: "scale",
 			top: topPercent + '%',

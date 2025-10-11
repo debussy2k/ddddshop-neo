@@ -51,7 +51,7 @@
         */
        let obj: Partial<BaseWidgetProp> = {};
         if (currentProp.vertAlign === 'both' || currentProp.vertAlign === 'scale') {
-            obj = constraintsUtilVert.createVertAlignProps("top", currentProp, computedVal.parentHeight);
+            obj = constraintsUtilVert.createVertAlignProps("top", currentProp, computedVal);
         }
         updateProp({ 
             ...obj,
