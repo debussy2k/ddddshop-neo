@@ -69,8 +69,25 @@
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
+
+		studioDoc.setBatchMode();
+		// hug-contents 상태에서 세로정렬이 both 또는 scale인 경우 hugContentsHeight를 해제함.
+		if (newVertAlign === 'both' || newVertAlign === 'scale') {
+			if (currentProp.sizeConstraints?.hugContentsHeight) {
+				updateProp({
+					sizeConstraints: {
+						...currentProp.sizeConstraints,
+						fullHeight: false,
+						hugContentsHeight: false,
+					},
+					height: computedVal.height + 'px',
+				});			
+			}
+		}
+
 		let obj = constraintsUtilVert.createVertAlignProps(newVertAlign, currentProp, computedVal);
-		cmd.updateProp(data.id, obj, bpm.current);
+		updateProp(obj);
+		studioDoc.commitBatch();
 	}
 
 	function updateLeftProp(newLeft: number) {
