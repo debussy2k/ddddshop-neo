@@ -110,6 +110,16 @@ export function setupResizable(config: ResizableConfig): void {
 						width: currentProp.width,
 					});
 				}
+				if (currentProp.sizeConstraints?.hugContentsHeight) {
+					config.updateCallback(config.id, {
+						sizeConstraints: {
+							...currentProp.sizeConstraints,
+							fullHeight: false,
+							hugContentsHeight: false,
+						},
+						height: currentProp.height,
+					});
+				}
             },
             move: (event: ResizeEvent) => {
 				// console.log('move', event.deltaRect);
@@ -183,7 +193,7 @@ export function setupResizable(config: ResizableConfig): void {
 		const horzPos = calcHorzProps(event, prop, ctx);
 		const vertPos = calcVertProps(event, prop, ctx);
 
-		let result: Partial<BaseWidgetProp> = {
+		const result: Partial<BaseWidgetProp> = {
 			...horzPos,
 			...vertPos
 		};
