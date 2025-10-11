@@ -291,6 +291,48 @@ export function addDefaultSizeConstraints(
 }
 
 /**
+ * Widget의 computed 값을 사용하여 수평 관련 prop을 업데이트합니다.
+ * horzAlign을 left로 변경하고 computed 값으로 수평 위치/크기를 설정합니다.
+ * 
+ * @param child 업데이트할 위젯
+ * @param breakPoint 현재 breakpoint
+ */
+function normalizeToLeftPosition(
+    child: NonSectionWidget,
+    breakPoint: BreakPoint
+): void {
+    const computed = getComputedVal(child);
+    
+    // horzAlign을 left로 변경하고 수평 computed 값 설정
+    child.prop[breakPoint].horzAlign = 'left';
+    child.prop[breakPoint].left = `${computed.left}px`;
+    child.prop[breakPoint].width = `${computed.width}px`;
+    child.prop[breakPoint].right = `${computed.right}px`;
+    child.prop[breakPoint].centerOffsetX = 0;
+}
+
+/**
+ * Widget의 computed 값을 사용하여 수직 관련 prop을 업데이트합니다.
+ * vertAlign을 top으로 변경하고 computed 값으로 수직 위치/크기를 설정합니다.
+ * 
+ * @param child 업데이트할 위젯
+ * @param breakPoint 현재 breakpoint
+ */
+function normalizeToTopPosition(
+    child: NonSectionWidget,
+    breakPoint: BreakPoint
+): void {
+    const computed = getComputedVal(child);
+    
+    // vertAlign을 top으로 변경하고 수직 computed 값 설정
+    child.prop[breakPoint].vertAlign = 'top';
+    child.prop[breakPoint].top = `${computed.top}px`;
+    child.prop[breakPoint].height = `${computed.height}px`;
+    child.prop[breakPoint].bottom = `${computed.bottom}px`;
+    child.prop[breakPoint].centerOffsetY = 0;
+}
+
+/**
  * Widget의 computed 값을 사용하여 prop을 업데이트합니다.
  * align을 left, top으로 변경하고 computed 값으로 위치/크기를 설정합니다.
  * 
@@ -301,19 +343,8 @@ function normalizeToLeftTopPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
-    const computed = getComputedVal(child);
-    
-    // align을 left, top으로 변경하고 computed 값 설정
-    child.prop[breakPoint].horzAlign = 'left';
-    child.prop[breakPoint].vertAlign = 'top';
-    child.prop[breakPoint].left = `${computed.left}px`;
-    child.prop[breakPoint].top = `${computed.top}px`;
-    child.prop[breakPoint].width = `${computed.width}px`;
-    child.prop[breakPoint].height = `${computed.height}px`;
-    child.prop[breakPoint].right = `${computed.right}px`;
-    child.prop[breakPoint].bottom = `${computed.bottom}px`;
-    child.prop[breakPoint].centerOffsetX = 0;
-    child.prop[breakPoint].centerOffsetY = 0;
+    normalizeToLeftPosition(child, breakPoint);
+    normalizeToTopPosition(child, breakPoint);
 }
 
 /**
@@ -401,7 +432,21 @@ export function clearChildrenFullWidth(children: NonSectionWidget[], breakPoint:
 	children.forEach(child => {
 		if (child.prop[breakPoint].sizeConstraints?.fullWidth) {
 			child.prop[breakPoint].sizeConstraints.fullWidth = false;
-			normalizeToLeftTopPosition(child, breakPoint);
+			normalizeToLeftPosition(child, breakPoint);
+		}
+	})
+}
+
+/*
+	자식에 적용된 “fill container”가 있으면
+    - fill-container 해제
+    - fill 상태의 height를 고정높이로 지정
+*/
+export function clearChildrenFullHeight(children: NonSectionWidget[], breakPoint: BreakPoint): void {
+	children.forEach(child => {
+		if (child.prop[breakPoint].sizeConstraints?.fullHeight) {
+			child.prop[breakPoint].sizeConstraints.fullHeight = false;
+			normalizeToTopPosition(child, breakPoint);
 		}
 	})
 }

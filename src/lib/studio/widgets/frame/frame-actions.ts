@@ -165,10 +165,17 @@ export class FrameActions {
                         breakPoint
                     );
                 }
-				else if (updates.sizeConstraints?.hugContentsWidth !== currentProp.sizeConstraints?.hugContentsWidth && updates.sizeConstraints?.hugContentsWidth === true) {
-					// hugContentsWidth가 true로 변경되는 시점
-					console.log('hugContentsWidth가 true로 변경되는 시점');
-					du.clearChildrenFullWidth(widget.children, breakPoint);
+				else {
+					if (updates.sizeConstraints?.hugContentsWidth !== currentProp.sizeConstraints?.hugContentsWidth && updates.sizeConstraints?.hugContentsWidth === true) {
+						// hugContentsWidth가 true로 변경되는 시점
+						console.log('hugContentsWidth가 true로 변경되는 시점');
+						du.clearChildrenFullWidth(widget.children, breakPoint);
+					}
+					if (updates.sizeConstraints?.hugContentsHeight !== currentProp.sizeConstraints?.hugContentsHeight && updates.sizeConstraints?.hugContentsHeight === true) {
+						// hugContentsHeight가 true로 변경되는 시점
+						console.log('hugContentsHeight가 true로 변경되는 시점');
+						du.clearChildrenFullHeight(widget.children, breakPoint);
+					}
 				}
 
                 widget.prop[breakPoint] = {
