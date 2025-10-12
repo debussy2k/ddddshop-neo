@@ -389,7 +389,10 @@ export function setupResizable(config: ResizableConfig): void {
 			return;
 		}
 
-		// hugContentsWidth가 true이면 parent width 갱신
+		// 부모가 자식 컨텐츠의 너비에 맞춰 크기를 조정하는 경우 (hugContentsWidth)
+		// 1. 자식 요소들의 실제 너비를 기반으로 새로운 부모 너비 계산
+		// 2. 계산된 너비에 맞춰 수평 제약 조건(constraints) 업데이트
+		// 3. 변경사항을 updateCallback을 통해 부모 위젯에 적용
 		if (parentProp.sizeConstraints?.hugContentsWidth) {
 			const newWidth = docUtil.calcFrameWidth(parent, currentBreakPoint);
 			const parentComputedVal = getComputedVal(parent);
@@ -401,7 +404,10 @@ export function setupResizable(config: ResizableConfig): void {
 			config.updateCallback(parent.id, widthUpdates);
 		}
 		
-		// hugContentsHeight가 true이면 parent height 갱신
+		// 부모가 자식 컨텐츠의 높이에 맞춰 크기를 조정하는 경우 (hugContentsHeight)
+		// 1. 자식 요소들의 실제 높이를 기반으로 새로운 부모 높이 계산
+		// 2. 계산된 높이에 맞춰 수직 제약 조건(constraints) 업데이트
+		// 3. 변경사항을 updateCallback을 통해 부모 위젯에 적용
 		if (parentProp.sizeConstraints?.hugContentsHeight) {
 			const newHeight = docUtil.calcFrameHeight(parent, currentBreakPoint);
 			const parentComputedVal = getComputedVal(parent);
