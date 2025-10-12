@@ -2,7 +2,7 @@
 	import { studioDoc } from '../../../studio-doc.svelte';
 	import ComboBox, { type ComboBoxItem } from '../combo-box.svelte';
 	import type { BaseWidgetProp, ContainerPropValue } from '../../../types';
-	import type { FramePropValue } from '../../frame/frame.type';
+	import type { Frame, FramePropValue } from '../../frame/frame.type';
 	import type { SectionPropValue } from '../../section/section.type';
 	import * as constraintsUtilVert from '../constraints-util-vert';
 	import type { ComputedValue } from '../computed-value-util';
@@ -144,7 +144,12 @@
 
 	function handleHugContents() {
 		console.log('hug-contents');
-		let updates: Partial<FramePropValue> = {
+		
+		// hug-contents될 정확한 height를 계산함
+		const widget = du.findById(widgetId, studioDoc.current) as Frame;
+		const calculatedHeight = du.calcFrameHeight(widget, bpm.current);
+		
+		const baseUpdates: Partial<FramePropValue> = {
 			sizeConstraints: {
 				...currentProp.sizeConstraints!,
 				fullHeight: false,
@@ -152,17 +157,18 @@
 			}
 		};
 
-		// hug-contents시 세로정렬이 both 또는 scale인 경우 center로 변경
-		// (scale 및 center는 화면에 따라 height가 변경되어 hug-contents와 상충하므로 가운데 정렬로 변경함)
-		if (currentProp.vertAlign === 'both' || currentProp.vertAlign === 'scale') {
-			let obj = constraintsUtilVert.createVertAlignProps("center", currentProp, computedVal);
-			updates = {
-				...updates,
-				...obj,
-			}
+		const needsCenterAlign = ['center', 'both', 'scale'].includes(currentProp.vertAlign ?? '');
+		if (needsCenterAlign) {
+			/*
+				both, scale 경우 화면에 따라 height가 결정되는 특성상 hug-contents와 상충하므로 가운데 정렬로 변경함
+				center 경우 hug-contents가 지정되는 시점에 height를 한 번만 결정해 주고 centerOffsetY가 다시 계산되어야 함.
+			*/
+			const adjustedComputedVal = { ...computedVal, height: calculatedHeight };
+			const alignProps = constraintsUtilVert.createVertAlignProps("center", currentProp, adjustedComputedVal);
+			updateProp({ ...baseUpdates, ...alignProps });
+		} else {
+			updateProp({ ...baseUpdates, height: calculatedHeight + 'px' });
 		}
-
-		updateProp(updates);
 	}
 
 	function handleFillContainer() {

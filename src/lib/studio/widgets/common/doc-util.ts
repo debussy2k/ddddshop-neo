@@ -1,6 +1,6 @@
 import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget } from "../../types";
 import type { SectionPropValue } from "../section/section.type";
-import type { FramePropValue } from "../frame/frame.type";
+import type { Frame,FramePropValue } from "../frame/frame.type";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
@@ -452,4 +452,84 @@ export function clearChildrenFullHeight(children: NonSectionWidget[], breakPoint
 			normalizeToTopPosition(child, breakPoint);
 		}
 	})
+}
+
+
+/*
+	frame의 hugContentsWidth가 true가 되는 시점에만 사용되는 함수
+*/
+export function calcFrameWidth(data: Frame, breakPoint: BreakPoint): number {
+	const prop = data.prop[breakPoint];
+	
+	// children이 없으면 padding만 반환
+	if (!data.children || data.children.length === 0) {
+		return prop.paddingLeft + prop.paddingRight;
+	}
+	
+	let totalWidth = 0;
+	
+	// layout에 따라 다른 계산 방식 적용
+	if (prop.layout === 'flex-row') {
+		// flex-row: children의 width를 모두 합산하고 gap 추가
+		data.children.forEach((child, index) => {
+			const computed = getComputedVal(child);
+			totalWidth += computed.width;
+			
+			// 마지막 child가 아니면 gap 추가
+			if (index < data.children.length - 1) {
+				totalWidth += prop.gap;
+			}
+		});
+	} else if (prop.layout === 'flex-col' || prop.layout === 'block' || prop.layout === 'grid') {
+		// flex-col, block, grid: children 중 가장 큰 width 사용
+		let maxWidth = 0;
+		data.children.forEach((child) => {
+			const computed = getComputedVal(child);
+			maxWidth = Math.max(maxWidth, computed.width);
+		});
+		totalWidth = maxWidth;
+	}
+	
+	// padding 추가
+	totalWidth += prop.paddingLeft + prop.paddingRight;
+	
+	return Math.round(totalWidth);
+}
+
+export function calcFrameHeight(data: Frame, breakPoint: BreakPoint): number {
+	const prop = data.prop[breakPoint];
+	
+	// children이 없으면 padding만 반환
+	if (!data.children || data.children.length === 0) {
+		return prop.paddingTop + prop.paddingBottom;
+	}
+	
+	let totalHeight = 0;
+	
+	// layout에 따라 다른 계산 방식 적용
+	if (prop.layout === 'flex-col') {
+		// flex-col: children의 height를 모두 합산하고 gap 추가
+		data.children.forEach((child, index) => {
+			const computed = getComputedVal(child);
+			totalHeight += computed.height;
+			
+			// 마지막 child가 아니면 gap 추가
+			if (index < data.children.length - 1) {
+				totalHeight += prop.gap;
+			}
+		});
+	} else if (prop.layout === 'flex-row' || prop.layout === 'block' || prop.layout === 'grid') {
+		// flex-row, block, grid: children 중 가장 큰 height 사용
+		let maxHeight = 0;
+		data.children.forEach((child) => {
+			const computed = getComputedVal(child);
+			maxHeight = Math.max(maxHeight, computed.height);
+		});
+		totalHeight = maxHeight;
+	}
+	
+	// padding 추가
+	totalHeight += prop.paddingTop + prop.paddingBottom;
+	
+	return Math.round(totalHeight);
 }
