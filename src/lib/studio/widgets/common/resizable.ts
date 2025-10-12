@@ -103,28 +103,9 @@ export function setupResizable(config: ResizableConfig): void {
 				ctx = newContext(currentProp);
 				
 				console.log('resizablestart', ctx);
-				// hugContentsWidth가 true이고 수평 방향으로 리사이즈 하는 경우 -> fullWidth나 hugContentsWidth를 해제
-				if (currentProp.sizeConstraints?.hugContentsWidth && (event.edges?.left || event.edges?.right)) {
-					config.updateCallback(config.id, {
-						sizeConstraints: {
-							...currentProp.sizeConstraints,
-							fullWidth: false,
-							hugContentsWidth: false,
-						},
-						width: currentProp.width,
-					});
-				}
-				// hugContentsHeight가 true이고 수직 방향으로 리사이즈 하는 경우 -> fullHeight나 hugContentsHeight를 해제
-				if (currentProp.sizeConstraints?.hugContentsHeight && (event.edges?.top || event.edges?.bottom)) {
-					config.updateCallback(config.id, {
-						sizeConstraints: {
-							...currentProp.sizeConstraints,
-							fullHeight: false,
-							hugContentsHeight: false,
-						},
-						height: currentProp.height,
-					});
-				}
+				
+				// 리팩토링된 함수 호출
+				handleHugContentsConstraints(event, config, currentProp);
             },
             move: (event: ResizeEvent) => {
 				// console.log('move', event.deltaRect);
@@ -371,6 +352,44 @@ export function setupResizable(config: ResizableConfig): void {
 
         return vertPos;
     }
+
+	/**
+	 * HugContents 제약 조건 처리 함수
+	 * 리사이즈 시작 시 hugContentsWidth 또는 hugContentsHeight가 활성화된 경우
+	 * 해당 제약 조건을 해제하고 현재 크기를 고정값으로 설정
+	 */
+	function handleHugContentsConstraints(
+		event: ResizeEvent,
+		config: ResizableConfig,
+		currentProp: BaseWidgetProp
+	): void {
+		const sizeConstraints = currentProp.sizeConstraints;
+		if (!sizeConstraints) return;
+
+		// 수평 방향 리사이즈 처리
+		if (sizeConstraints.hugContentsWidth && (event.edges?.left || event.edges?.right)) {
+			config.updateCallback(config.id, {
+				sizeConstraints: {
+					...sizeConstraints,
+					fullWidth: false,
+					hugContentsWidth: false,
+				},
+				width: currentProp.width,
+			});
+		}
+
+		// 수직 방향 리사이즈 처리
+		if (sizeConstraints.hugContentsHeight && (event.edges?.top || event.edges?.bottom)) {
+			config.updateCallback(config.id, {
+				sizeConstraints: {
+					...sizeConstraints,
+					fullHeight: false,
+					hugContentsHeight: false,
+				},
+				height: currentProp.height,
+			});
+		}
+	}
 
 	/**
 	 * 부모 위젯의 hugContents 속성이 활성화된 경우 부모 크기를 업데이트
