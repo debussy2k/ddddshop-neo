@@ -2,9 +2,12 @@ import interact from 'interactjs'
 import type { ResizeEvent } from '@interactjs/types'
 import * as util from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
-import type { BaseWidgetProp, SizeConstraints } from '$lib/studio/types'
+import type { BaseWidgetProp, CompositeWidget, SizeConstraints } from '$lib/studio/types'
 import * as constraintsUtilHorz from './constraints-util-horz'
 import * as constraintsUtilVert from './constraints-util-vert'
+import * as docUtil from './doc-util';
+import { bpm } from '$lib/studio/breakpoint-man.svelte'
+import { getComputedVal } from './computed-value-util'
 
 export type WidthMinMax = {
 	hasMinWidth: boolean;
@@ -131,6 +134,9 @@ export function setupResizable(config: ResizableConfig): void {
             end: (event: ResizeEvent) => {
 				const newPosition = getNewPosition(event, ctx);
 				config.updateCallback(config.id, newPosition);
+
+				// 만약 parent의 hugContents가 true이면 부모 크기 갱신 (width 또는 offsetCenterX 변경됨)
+				updateParentHugContentsSize(config);
 
                 studioDoc.historyManager.commitBatch();
                 event.stopPropagation();
@@ -365,4 +371,46 @@ export function setupResizable(config: ResizableConfig): void {
 
         return vertPos;
     }
+
+	/**
+	 * 부모 위젯의 hugContents 속성이 활성화된 경우 부모 크기를 업데이트
+	 * @param config ResizableConfig
+	 */
+	function updateParentHugContentsSize(config: ResizableConfig): void {
+		const parent = studioDoc.getParentWidget<CompositeWidget>(config.id);
+		if (!parent) {
+			return;
+		}
+
+		const currentBreakPoint = bpm.current;
+		const parentProp = parent.prop[currentBreakPoint];
+		
+		if (!('sizeConstraints' in parentProp)) {
+			return;
+		}
+
+		// hugContentsWidth가 true이면 parent width 갱신
+		if (parentProp.sizeConstraints?.hugContentsWidth) {
+			const newWidth = docUtil.calcFrameWidth(parent, currentBreakPoint);
+			const parentComputedVal = getComputedVal(parent);
+			const widthUpdates = constraintsUtilHorz.updateWidthConstraints(
+				newWidth,
+				parentProp,
+				parentComputedVal
+			);
+			config.updateCallback(parent.id, widthUpdates);
+		}
+		
+		// hugContentsHeight가 true이면 parent height 갱신
+		if (parentProp.sizeConstraints?.hugContentsHeight) {
+			const newHeight = docUtil.calcFrameHeight(parent, currentBreakPoint);
+			const parentComputedVal = getComputedVal(parent);
+			const heightUpdates = constraintsUtilVert.updateHeightConstraints(
+				newHeight,
+				parentProp,
+				parentComputedVal
+			);
+			config.updateCallback(parent.id, heightUpdates);
+		}
+	}
 }

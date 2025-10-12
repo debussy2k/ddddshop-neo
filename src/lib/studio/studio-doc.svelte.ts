@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, CompositeWidget, WidgetComponentContract } from "./types";
+import type { DocState, CompositeWidget, WidgetComponentContract, Widget } from "./types";
 import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -43,6 +43,12 @@ class StudioDoc {
 		const parent = du.getParentByChildId(id, this.doc);
 		if (!parent) return null;
 		return this.widgetMap[parent.id] as T;
+	}
+
+	getParentWidget<T extends Widget>(id: string): T | null {
+		const parent = du.getParentByChildId(id, this.doc);
+		if (!parent) return null;
+		return parent as T;
 	}
 
     constructor() {

@@ -93,7 +93,6 @@
 		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
 
-
     function handleClick(event: MouseEvent) {
         studioDoc.activeId = data.id;
 

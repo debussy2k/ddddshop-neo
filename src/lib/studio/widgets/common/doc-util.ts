@@ -1,6 +1,6 @@
 import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget } from "../../types";
 import type { SectionPropValue } from "../section/section.type";
-import type { Frame,FramePropValue } from "../frame/frame.type";
+import type { FramePropValue } from "../frame/frame.type";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 
@@ -456,9 +456,10 @@ export function clearChildrenFullHeight(children: NonSectionWidget[], breakPoint
 
 
 /*
-	frame의 hugContentsWidth가 true가 되는 시점에만 사용되는 함수
+	hugContentsWidth가 true가 되는 시점에만 사용되는 함수
+	data는 CompositeWidget이지만 실제 Section인 경우는 없음
 */
-export function calcFrameWidth(data: Frame, breakPoint: BreakPoint): number {
+export function calcFrameWidth(data: CompositeWidget, breakPoint: BreakPoint): number {
 	const prop = data.prop[breakPoint];
 	
 	// children이 없으면 padding만 반환
@@ -496,7 +497,7 @@ export function calcFrameWidth(data: Frame, breakPoint: BreakPoint): number {
 	return Math.round(totalWidth);
 }
 
-export function calcFrameHeight(data: Frame, breakPoint: BreakPoint): number {
+export function calcFrameHeight(data: CompositeWidget, breakPoint: BreakPoint): number {
 	const prop = data.prop[breakPoint];
 	
 	// children이 없으면 padding만 반환
