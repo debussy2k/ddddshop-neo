@@ -103,7 +103,7 @@
     });
     
     function handleValueChange(value: number) {
-		const updatedProps = constraintsUtilHorz.updateWidthConstraints(value, currentProp, computedVal);
+		const updatedProps = constraintsUtilHorz.calculateWidthConstraints(value, currentProp, computedVal);
 
 		// height가 변경되었을 때 fullHeight 속성이 있으면 fullHeight를 false로 설정
 		if (currentProp.sizeConstraints?.fullWidth) {

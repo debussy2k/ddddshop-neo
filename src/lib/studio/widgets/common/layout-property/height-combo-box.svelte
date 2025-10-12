@@ -122,7 +122,7 @@
 	});
 
 	function handleValueChange(value: number) {
-		const updatedProps = constraintsUtilVert.updateHeightConstraints(
+		const updatedProps = constraintsUtilVert.calculateHeightConstraints(
 			value,
 			currentProp,
 			computedVal

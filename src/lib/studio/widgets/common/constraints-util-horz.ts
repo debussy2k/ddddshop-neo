@@ -185,7 +185,7 @@ export function updateLeftConstraints(
 /**
  * 위젯의 너비 변경 시 각 horzAlign에 따른 속성 업데이트 값을 계산합니다.
  */
-export function updateWidthConstraints(
+export function calculateWidthConstraints(
 	newWidth: number, 
 	currentProp: BaseWidgetProp, 
 	computedVal: { left: number; right: number; width: number; parentWidth: number }

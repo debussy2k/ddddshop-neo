@@ -193,7 +193,7 @@ export function updateTopConstraints(
 /**
  * 위젯의 높이 변경 시 각 vertAlign에 따른 속성 업데이트 값을 계산합니다.
  */
-export function updateHeightConstraints(
+export function calculateHeightConstraints(
 	newHeight: number, 
 	currentProp: BaseWidgetProp, 
 	computedVal: { top: number; bottom: number; height: number; parentHeight: number }

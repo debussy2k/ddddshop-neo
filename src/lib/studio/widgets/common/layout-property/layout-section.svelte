@@ -94,12 +94,12 @@
 	}
 
 	function updateWidthProp(newWidth: number) {
-		const updatedProps = constraintsUtilHorz.updateWidthConstraints(newWidth, currentProp, computedVal);
+		const updatedProps = constraintsUtilHorz.calculateWidthConstraints(newWidth, currentProp, computedVal);
 		updateProp(updatedProps);
 	}
 
 	function updateHeightProp(newHeight: number) {
-		const updatedProps = constraintsUtilVert.updateHeightConstraints(newHeight, currentProp, computedVal);
+		const updatedProps = constraintsUtilVert.calculateHeightConstraints(newHeight, currentProp, computedVal);
 		updateProp(updatedProps);
 	}
 

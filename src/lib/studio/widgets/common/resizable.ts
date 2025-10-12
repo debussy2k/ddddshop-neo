@@ -393,7 +393,7 @@ export function setupResizable(config: ResizableConfig): void {
 		if (parentProp.sizeConstraints?.hugContentsWidth) {
 			const newWidth = docUtil.calcFrameWidth(parent, currentBreakPoint);
 			const parentComputedVal = getComputedVal(parent);
-			const widthUpdates = constraintsUtilHorz.updateWidthConstraints(
+			const widthUpdates = constraintsUtilHorz.calculateWidthConstraints(
 				newWidth,
 				parentProp,
 				parentComputedVal
@@ -405,7 +405,7 @@ export function setupResizable(config: ResizableConfig): void {
 		if (parentProp.sizeConstraints?.hugContentsHeight) {
 			const newHeight = docUtil.calcFrameHeight(parent, currentBreakPoint);
 			const parentComputedVal = getComputedVal(parent);
-			const heightUpdates = constraintsUtilVert.updateHeightConstraints(
+			const heightUpdates = constraintsUtilVert.calculateHeightConstraints(
 				newHeight,
 				parentProp,
 				parentComputedVal
