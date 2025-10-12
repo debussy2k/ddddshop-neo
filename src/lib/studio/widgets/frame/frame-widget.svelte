@@ -27,7 +27,7 @@
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
         refreshTrigger;
-        return getComputedVal(data);
+		return getComputedVal(data);
     })
     const tracker = new ChangeTracker();
 
@@ -150,6 +150,12 @@
 			style += `row-gap: ${currentProp.gap}px;`
 		}
 
+		// console.log("style:", style);
+
+		// style 변경 후 computedVal을 다시 계산되도록 하기 위해 refreshTrigger를 증가시킴
+		requestAnimationFrame(() => {
+			refreshTrigger++;
+		});
         return style;
     }
 

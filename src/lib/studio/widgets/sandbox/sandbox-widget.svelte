@@ -124,6 +124,12 @@
     function getCurrentStyle() {
 		let parentLayout = parent?.prop[bpm.current].layout || 'block';
         let style = du.getBaseStyleOfLeafWidget(currentProp, parentLayout);
+
+		// style 변경 후 computedVal을 다시 계산되도록 하기 위해 refreshTrigger를 증가시킴
+		requestAnimationFrame(() => {
+			refreshTrigger++;
+		});
+
         return style;
     }
 
