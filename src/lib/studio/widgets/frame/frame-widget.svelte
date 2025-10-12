@@ -27,9 +27,14 @@
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
         refreshTrigger;
-		return getComputedVal(data);
+		console.log('Frame computedVal', data.id);
+		return _getComputedVal();
     })
     const tracker = new ChangeTracker();
+
+	function _getComputedVal() {
+		return getComputedVal(data);
+	}
 
 	$effect(() => {
 		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
