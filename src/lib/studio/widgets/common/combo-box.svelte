@@ -52,6 +52,11 @@
     let dragTimer: number | null = $state(null); // 타이머 ID 저장
     let mouseDownEvent: MouseEvent | null = $state(null); // mousedown 이벤트 저장
     let isPointerLocked = $state(false); // Pointer Lock 상태 추적 추가
+    
+    // 가상 커서 관련 상태 추가
+    let cursorX = $state(0);
+    let cursorY = $state(0);
+    let showCustomCursor = $state(false);
 
     function handleMouseDown(event: MouseEvent) {
         // 마우스 선택 방지
@@ -64,12 +69,12 @@
         dragStartValue = value ?? 1;
         accumulatedDelta = 0;
         
-        // 300ms 후에 드래그 시작
+        // 200ms 후에 드래그 시작
         dragTimer = window.setTimeout(() => {
             if (mouseDownEvent) {
                 startDragging(mouseDownEvent);
             }
-        }, 300);
+        }, 200);
         
         // 전역 mouseup 이벤트 등록 (타이머 취소 및 클릭 처리용)
         document.addEventListener('mouseup', handleMouseUp);
@@ -77,6 +82,11 @@
 
     function startDragging(event: MouseEvent) {
         isDragging = true;
+        
+        // 초기 커서 위치 설정
+        cursorX = event.clientX;
+        cursorY = event.clientY;
+        showCustomCursor = true;
         
         // Pointer Lock 요청
         const target = event.target as HTMLElement;
@@ -110,6 +120,7 @@
 
         // Pointer Lock이 활성화된 경우 movementX 사용
         const deltaX = event.movementX || 0;
+        const deltaY = event.movementY || 0;
         
         // 비정상적으로 큰 값 필터링 (임계값 설정)
         const MAX_MOVEMENT = 100; // 정상적인 마우스 움직임의 최대값
@@ -118,7 +129,6 @@
             return; // 비정상적인 값은 무시
         }
         
-        // console.log("deltaX", deltaX);
 		// 움직임이 없으면 처리하지 않음
 		if (deltaX === 0) return;
 
@@ -133,6 +143,23 @@
         const clampedValue = clampValue(Math.round(newValue));
 
         onChange?.(clampedValue);
+        
+        // 가상 커서 위치 업데이트 (화면 끝에서 래핑)
+        cursorX += deltaX;
+        cursorY += deltaY;
+        
+        // 화면 경계를 벗어나면 반대쪽에서 나타나도록
+        if (cursorX < 0) {
+            cursorX = window.innerWidth;
+        } else if (cursorX > window.innerWidth) {
+            cursorX = 0;
+        }
+        
+        if (cursorY < 0) {
+            cursorY = window.innerHeight;
+        } else if (cursorY > window.innerHeight) {
+            cursorY = 0;
+        }
     }
 
     function handleMouseUp() {
@@ -152,6 +179,7 @@
             isDragging = false;
             isPointerLocked = false; // 상태 초기화
             accumulatedDelta = 0;
+            showCustomCursor = false; // 가상 커서 숨기기
             
             // Pointer Lock 해제
             document.exitPointerLock?.();
@@ -167,6 +195,26 @@
         mouseDownEvent = null;
     }
 </script>
+
+<!-- 가상 커서 추가 -->
+{#if showCustomCursor}
+    <div 
+        class="fixed pointer-events-none z-[9999] cursor-ew-resize"
+        style="left: {cursorX}px; top: {cursorY}px; transform: translate(-50%, -50%);">
+        <!-- 가상 커서 아이콘 -->
+        <svg width="64" height="24" viewBox="0 0 64 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="shadow" x="-10" y="-10" width="84" height="44" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="black" flood-opacity="0.5"/>
+              </filter>
+            </defs>
+            <!-- Left arrow -->
+            <path filter="url(#shadow)" d="M20 12l6-6v4h8v4h-8v4l-6-6z" fill="black" stroke="white" stroke-width="2" />
+            <!-- Right arrow -->
+            <path filter="url(#shadow)" d="M44 12l-6 6v-4h-8v-4h8v-4l6 6z" fill="black" stroke="white" stroke-width="2" />
+          </svg>
+    </div>
+{/if}
 
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <!-- svelte-ignore a11y_mouse_events_have_key_events -->
