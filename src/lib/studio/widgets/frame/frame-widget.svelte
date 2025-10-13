@@ -101,6 +101,7 @@
 			id: data.id,
 			element: element,
 			getCurrentProp: () => currentProp,
+            getComputedVal: () => computedVal,
             getParentSize: () => getParentSize(),
 			updateCallback: (id, updatedProps) => {
 				cmdFrame.updateProp(id, updatedProps, bpm.current);

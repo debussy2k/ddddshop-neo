@@ -7,7 +7,7 @@ import * as constraintsUtilHorz from './constraints-util-horz'
 import * as constraintsUtilVert from './constraints-util-vert'
 import * as docUtil from './doc-util';
 import { bpm } from '$lib/studio/breakpoint-man.svelte'
-import { getComputedVal } from './computed-value-util'
+import { getComputedVal, type ComputedValue } from './computed-value-util'
 
 export type WidthMinMax = {
 	hasMinWidth: boolean;
@@ -33,6 +33,7 @@ export interface ResizableConfig {
     id: string;
     element: HTMLElement|SVGElement;
     getCurrentProp: () => BaseWidgetProp; // 현재 크기/위치 정보는 reactive하기 때문에 함수로 전달
+    getComputedVal: () => ComputedValue;
 	getParentSize: () => { width: number; height: number };
     updateCallback: (id: string, updatedProps: Partial<BaseWidgetProp>) => void;
     minSize?: { width: number; height: number };
@@ -164,23 +165,48 @@ export function setupResizable(config: ResizableConfig): void {
 	function newContext(prop: BaseWidgetProp) : ContextInfo {
         const parentSize = config.getParentSize();
         // prop.horzAlign이 'scale'인 경우에만 필요한 설정임.
+        
+        let left: number;
+        let right: number;
+        
+        // fullWidth가 true이면 computedVal에서 left, right 값을 가져옴
+        if (prop.sizeConstraints?.fullWidth) {
+            const computedVal = config.getComputedVal();
+            left = computedVal.left;
+            right = computedVal.right;
+        } else {
+            left = constraintsUtilHorz.getLeftValue(prop, parentSize.width);
+            right = constraintsUtilHorz.getRightValue(prop, parentSize.width);
+        }
+        
         const ctxInfo: ContextInfo = {
-            left: constraintsUtilHorz.getLeftValue(prop, parentSize.width),
-            right: constraintsUtilHorz.getRightValue(prop, parentSize.width),
+            left: left,
+            right: right,
             top: constraintsUtilVert.getTopValue(prop, parentSize.height),
             bottom: constraintsUtilVert.getBottomValue(prop, parentSize.height),
             parentWidth: parentSize.width,
             parentHeight: parentSize.height
-
         };
 
-		return ctxInfo;
-	}
+        return ctxInfo;
+    }
 
 	function getNewPosition(event: ResizeEvent, ctx: ContextInfo) : Partial<BaseWidgetProp> {
 		const prop = config.getCurrentProp();
-		const horzPos = calcHorzProps(event, prop, ctx);
-		const vertPos = calcVertProps(event, prop, ctx);
+		const computedVal = config.getComputedVal();
+		
+		// fill-container 상태이면 (이 경우 prop.horzAlign 및 prop.vertAlign은  반드시 "left" / "top"임)
+		// computedVal의 width/height를 사용하도록 prop을 수정
+		const effectiveProp: BaseWidgetProp = { ...prop };
+		if (prop.sizeConstraints?.fullWidth) {
+			effectiveProp.width = computedVal.width + 'px';
+		}
+		if (prop.sizeConstraints?.fullHeight) {
+			effectiveProp.height = computedVal.height + 'px';
+		}
+			
+		const horzPos = calcHorzProps(event, effectiveProp, ctx);
+		const vertPos = calcVertProps(event, effectiveProp, ctx);
 
 		const result: Partial<BaseWidgetProp> = {
 			...horzPos,
