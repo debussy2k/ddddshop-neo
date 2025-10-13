@@ -49,38 +49,84 @@
     let isDragging = $state(false);
     let dragStartValue = $state(0);
     let accumulatedDelta = $state(0);
+    let dragTimer: number | null = $state(null); // 타이머 ID 저장
+    let mouseDownEvent: MouseEvent | null = $state(null); // mousedown 이벤트 저장
+    let isPointerLocked = $state(false); // Pointer Lock 상태 추적 추가
 
     function handleMouseDown(event: MouseEvent) {
-        isDragging = true;
+        // 마우스 선택 방지
+        event.preventDefault();
+        
+        // mousedown 이벤트 저장
+        mouseDownEvent = event;
+        
         // value가 undefined인 경우 1에서 시작
         dragStartValue = value ?? 1;
         accumulatedDelta = 0;
+        
+        // 300ms 후에 드래그 시작
+        dragTimer = window.setTimeout(() => {
+            if (mouseDownEvent) {
+                startDragging(mouseDownEvent);
+            }
+        }, 300);
+        
+        // 전역 mouseup 이벤트 등록 (타이머 취소 및 클릭 처리용)
+        document.addEventListener('mouseup', handleMouseUp);
+    }
+
+    function startDragging(event: MouseEvent) {
+        isDragging = true;
         
         // Pointer Lock 요청
         const target = event.target as HTMLElement;
         target.requestPointerLock?.();
         
+        // Pointer Lock 상태 변화 감지
+        document.addEventListener('pointerlockchange', handlePointerLockChange);
+        
         // 전역 마우스 이벤트 등록
         document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
         
-        // 마우스 선택 방지
-        event.preventDefault();
         onDragStart?.();
+    }
+
+    function handlePointerLockChange() {
+        // Pointer Lock 상태 업데이트
+        isPointerLocked = document.pointerLockElement !== null;
+        
+        // Pointer Lock이 예상치 못하게 해제되면 드래깅 종료
+        if (!isPointerLocked && isDragging) {
+            console.log("Pointer Lock lost unexpectedly");
+            handleMouseUp();
+        }
     }
 
     function handleMouseMove(event: MouseEvent) {
         if (!isDragging) return;
+        
+        // Pointer Lock이 활성화되지 않았으면 처리하지 않음
+        if (!isPointerLocked) return;
 
         // Pointer Lock이 활성화된 경우 movementX 사용
         const deltaX = event.movementX || 0;
-		
+        
+        // 비정상적으로 큰 값 필터링 (임계값 설정)
+        const MAX_MOVEMENT = 100; // 정상적인 마우스 움직임의 최대값
+        if (Math.abs(deltaX) > MAX_MOVEMENT) {
+            console.warn("Abnormal movementX detected:", deltaX);
+            return; // 비정상적인 값은 무시
+        }
+        
+        // console.log("deltaX", deltaX);
 		// 움직임이 없으면 처리하지 않음
 		if (deltaX === 0) return;
 
         const sensitivity = 1; // 드래그 민감도 조절
         
         accumulatedDelta += deltaX;
+        // console.log("accumulatedDelta", accumulatedDelta);
+
         const newValue = dragStartValue + (accumulatedDelta * sensitivity);
         
         // min, max 범위로 제한
@@ -90,15 +136,35 @@
     }
 
     function handleMouseUp() {
-        isDragging = false;
-        accumulatedDelta = 0;
+        // 타이머가 있으면 취소
+        if (dragTimer !== null) {
+            clearTimeout(dragTimer);
+            dragTimer = null;
+        }
         
-        // Pointer Lock 해제
-        document.exitPointerLock?.();
+        // 드래깅이 시작되지 않았으면 클릭으로 처리
+        if (!isDragging) {
+            console.log("click");
+        }
         
-        document.removeEventListener('mousemove', handleMouseMove);
+        // 드래깅 상태였으면 정리
+        if (isDragging) {
+            isDragging = false;
+            isPointerLocked = false; // 상태 초기화
+            accumulatedDelta = 0;
+            
+            // Pointer Lock 해제
+            document.exitPointerLock?.();
+            
+            // 이벤트 리스너 제거
+            document.removeEventListener('pointerlockchange', handlePointerLockChange);
+            document.removeEventListener('mousemove', handleMouseMove);
+            onDragEnd?.();
+        }
+        
+        // mouseup 리스너 제거
         document.removeEventListener('mouseup', handleMouseUp);
-        onDragEnd?.();
+        mouseDownEvent = null;
     }
 </script>
 
@@ -109,7 +175,7 @@
 	 onmouseout={() => isHovering = false}>
     <div 
         class={cn('w-6  flex-shrink-0 select-none', 
-                  isDragging ? 'cursor-ew-resize' : 'cursor-ew-resize hover:bg-gray-200')}
+                  isDragging ? 'cursor-ew-resize' : 'hover:bg-gray-200')}
         onmousedown={handleMouseDown}
         title={title}
         role="button"
