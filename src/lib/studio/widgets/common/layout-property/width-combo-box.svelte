@@ -53,13 +53,6 @@
 		displayStatus = $bindable()
 	}: Props = $props();
 
-	// widgetId가 변경되면 displayStatus를 초기화
-	$effect(() => {
-		widgetId; // 의존성 추적
-		displayStatus.showMinWidth = false;
-		displayStatus.showMaxWidth = false;
-	});
-
 	let comboBoxItems: ComboBoxItem[] = $derived.by(() => {
 		let arr: ComboBoxItem[] = [];
 

@@ -20,8 +20,6 @@
 	}
 	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
 
-    let parentComp: any = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
-	
 	export type DisplayStatus = {
 		showMinWidth: boolean;
 		showMaxWidth: boolean;
@@ -35,7 +33,20 @@
 		showMaxHeight: false,
 	})
 
+	let dataId = $derived(data.id);
+	$effect(() => {
+		// data.id가 변경될 때마다 displayStatus 초기화
+		dataId;
+		displayStatus = {
+			showMinWidth: false,
+			showMaxWidth: false,
+			showMinHeight: false,
+			showMaxHeight: false,
+		};
+	});
+
 	onMount(() => {
+		console.log('CommonProperty onMount');
 		if ('layout' in currentProp && (currentProp.layout === 'flex-row' || currentProp.layout === 'flex-col')) {
 		}
 	})
