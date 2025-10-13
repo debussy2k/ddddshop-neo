@@ -68,7 +68,8 @@
 			height: computedVal.height + 'px',
 		}
 
-		if (newLayout === 'block') {
+		if (newLayout === 'block' && parentProp.layout === 'block') {
+			// frame의 sizeConstraints가 제거되는 시점은 본인도 부모도 모두 block이 될 때임.
 			obj = {
 				...obj,
 				sizeConstraints: undefined
