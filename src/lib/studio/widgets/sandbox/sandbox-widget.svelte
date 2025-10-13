@@ -32,22 +32,20 @@
 
     const tracker = new ChangeTracker();
 
-    $effect(() => {
-        // width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
-        // currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
+    function handleSizeConstraintsChange() {
         if (currentProp.sizeConstraints) {
             if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
-                // console.log('min,max changed');
                 setupResizableWidget();
             }
         }
-
-        // sizeConstraints가 undefined가 되면 Resizable 설정을 다시해야 함. 
-        // (부모가 flexbox에서 block으로 변경되면 sizeConstraints가 undefined가 됨.)
-        if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined ) && currentProp.sizeConstraints === undefined) {
+        
+        if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined) 
+            && currentProp.sizeConstraints === undefined) {
             setupResizableWidget();
         }
+    }
 
+    function handleParentLayoutChange() {
         if (parent?.prop[bpm.current].layout) {
             if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
                 console.log('parent layout changed');
@@ -55,7 +53,6 @@
                     setupDraggableWidget();
                 }
                 else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
-                    // console.log('unsetupDraggable');
                     unsetupDraggable(element);
                 }
                 else {
@@ -63,6 +60,11 @@
                 }
             }
         }
+    }
+
+    $effect(() => {
+        handleSizeConstraintsChange();
+        handleParentLayoutChange();
     });
 
 	export function getElement() {
