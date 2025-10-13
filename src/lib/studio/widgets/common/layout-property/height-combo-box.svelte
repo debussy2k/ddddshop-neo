@@ -53,6 +53,13 @@
 		displayStatus = $bindable()
 	}: Props = $props();
 
+	// widgetId가 변경되면 displayStatus를 초기화
+	$effect(() => {
+		widgetId; // 의존성 추적
+		displayStatus.showMinHeight = false;
+		displayStatus.showMaxHeight = false;
+	});
+
 	let comboBoxItems: ComboBoxItem[] = $derived.by(() => {
 		let arr: ComboBoxItem[] = [];
 
@@ -144,16 +151,16 @@
 
 	function handleHugContents() {
 		console.log('hug-contents');
-		
+
 		// hug-contents될 정확한 height를 계산함
 		const widget = du.findById(widgetId, studioDoc.current) as Frame;
 		const calculatedHeight = du.calcFrameHeight(widget, bpm.current);
-		
+
 		const baseUpdates: Partial<FramePropValue> = {
 			sizeConstraints: {
 				...currentProp.sizeConstraints!,
 				fullHeight: false,
-				hugContentsHeight: true,
+				hugContentsHeight: true
 			}
 		};
 
@@ -164,7 +171,11 @@
 				center 경우 hug-contents가 지정되는 시점에 height를 한 번만 결정해 주고 centerOffsetY가 다시 계산되어야 함.
 			*/
 			const adjustedComputedVal = { ...computedVal, height: calculatedHeight };
-			const alignProps = constraintsUtilVert.createVertAlignProps("center", currentProp, adjustedComputedVal);
+			const alignProps = constraintsUtilVert.createVertAlignProps(
+				'center',
+				currentProp,
+				adjustedComputedVal
+			);
 			updateProp({ ...baseUpdates, ...alignProps });
 		} else {
 			updateProp({ ...baseUpdates, height: calculatedHeight + 'px' });
@@ -173,21 +184,25 @@
 
 	function handleFillContainer() {
 		console.log('fill-container height');
-		
+
 		studioDoc.setBatchMode();
 		// 부모의 hugContentsHeight가 true이면 이것을 false로 해제하고, 부모의 height를 고정높이로 설정
-		if ("sizeConstraints" in parentProp && parentProp.sizeConstraints?.hugContentsHeight) {
+		if ('sizeConstraints' in parentProp && parentProp.sizeConstraints?.hugContentsHeight) {
 			console.log('부모의 hugContentsHeight를 해제합니다');
 			const parent = du.findById(parentId, studioDoc.current);
 			if (parent && parent.type === 'frame') {
 				let parentComputedVal = getComputedVal(parent as any);
-				cmd.cmdFrame.updateProp(parentId, {
-					sizeConstraints: {
-						...parentProp.sizeConstraints!,
-						hugContentsHeight: false,
+				cmd.cmdFrame.updateProp(
+					parentId,
+					{
+						sizeConstraints: {
+							...parentProp.sizeConstraints!,
+							hugContentsHeight: false
+						},
+						height: parentComputedVal.height + 'px'
 					},
-					height: parentComputedVal.height + 'px',
-				}, bpm.current);
+					bpm.current
+				);
 			}
 		}
 		// hugContentsHeight를 해제
@@ -195,7 +210,7 @@
 			sizeConstraints: {
 				...currentProp.sizeConstraints!,
 				fullHeight: true,
-				hugContentsHeight: false,
+				hugContentsHeight: false
 			}
 		});
 		studioDoc.commitBatch();
@@ -214,9 +229,9 @@
 				sizeConstraints: {
 					...currentProp.sizeConstraints,
 					fullHeight: false,
-					hugContentsHeight: false,
+					hugContentsHeight: false
 				},
-				height: computedVal.height + 'px',
+				height: computedVal.height + 'px'
 			});
 		} else if (value === 'hug-contents') {
 			handleHugContents();
@@ -248,12 +263,23 @@
 	function onDragEnd() {
 		studioDoc.commitBatch();
 	}
+
+	function onClick() {
+		if (displayStatus.showMinHeight || displayStatus.showMaxHeight) {
+			displayStatus.showMinHeight = false;
+			displayStatus.showMaxHeight = false;
+		} else {
+			displayStatus.showMinHeight = currentProp.sizeConstraints?.hasMinHeight ?? false;
+			displayStatus.showMaxHeight = currentProp.sizeConstraints?.hasMaxHeight ?? false;
+		}
+	}	
 </script>
 
 <ComboBox
 	class={className}
 	name="H"
-	showNameSideBar={currentProp.sizeConstraints?.hasMinHeight || currentProp.sizeConstraints?.hasMaxHeight}
+	showNameSideBar={currentProp.sizeConstraints?.hasMinHeight ||
+		currentProp.sizeConstraints?.hasMaxHeight}
 	{icon}
 	{value}
 	{comboBoxItems}
@@ -264,4 +290,5 @@
 	onChange={handleValueChange}
 	{onDragStart}
 	{onDragEnd}
+	onClick={onClick}
 />
