@@ -16,6 +16,7 @@
 
     type Props = {
         name?: string;
+		showNameSideBar?: boolean;
 		icon?: string; // svg 문자열을 받음
         title?: string; // tooltip 타이틀
         placeholder?: string; // input 플레이스홀더
@@ -31,7 +32,7 @@
 		onDragEnd?: () => void;		
     }
 
-    let { class: className, name, icon, title, placeholder, value, comboBoxItems, min, max, showFill = false, showHugContents = false, onChange, onDragStart, onDragEnd }: Props = $props();
+    let { class: className, name, showNameSideBar, icon, title, placeholder, value, comboBoxItems, min, max, showFill = false, showHugContents = false, onChange, onDragStart, onDragEnd }: Props = $props();
     
     // popover 상태 관리
     let isPopoverOpen = $state(false);
@@ -118,8 +119,9 @@
 				{@html icon}
 			</div>
         {:else}
-			<div class="px-2 text-gray-600">
-				{name}
+			<div class="px-1 text-gray-600 text-center">
+				<!-- <span class="px-[1px] border-r border-l border-gray-500">{name}</span> -->
+				<span class="relative px-[1px]" class:side-bar={showNameSideBar}>{name}</span>
 			</div>
         {/if}
     </div>
@@ -205,3 +207,16 @@
 		</Popover.Content>
 	</Popover.Root>    
 </div>
+
+<style>
+    .side-bar::before {
+        content: "";
+        position: absolute;
+        left: -1px;
+        right: -1px;
+        top: 2px;      /* 위로부터 2px 내려감 */
+        bottom: 2px;   /* 아래서부터 2px 올라감 */
+        border-left: 1px solid darkgray;
+        border-right: 1px solid darkgray;
+    }    
+</style>

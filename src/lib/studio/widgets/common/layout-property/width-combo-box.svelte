@@ -231,6 +231,7 @@
 <ComboBox 
 	class={className} 
 	name='W' 
+	showNameSideBar={currentProp.sizeConstraints?.hasMinWidth || currentProp.sizeConstraints?.hasMaxWidth}
 	{icon} 
 	{value} 
 	{comboBoxItems} 

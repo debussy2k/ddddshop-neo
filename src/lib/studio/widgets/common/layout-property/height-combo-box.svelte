@@ -253,6 +253,7 @@
 <ComboBox
 	class={className}
 	name="H"
+	showNameSideBar={currentProp.sizeConstraints?.hasMinHeight || currentProp.sizeConstraints?.hasMaxHeight}
 	{icon}
 	{value}
 	{comboBoxItems}
