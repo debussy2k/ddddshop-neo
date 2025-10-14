@@ -87,7 +87,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 
     
     getParentSize() {
-		const parentComp  = studioDoc.getParentWidgetSvelteComponent<any>(this.data.id);
+		const parentComp = studioDoc.getParentWidgetSvelteComponent<any>(this.data.id);
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, this.data.id);
 			return { width: 0,height: 0 }

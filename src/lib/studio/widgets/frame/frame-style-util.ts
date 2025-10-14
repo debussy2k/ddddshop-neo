@@ -9,8 +9,7 @@ import * as du from "$lib/studio/widgets/common/doc-util";
  */
 export function getFrameCurrentStyle(
 	currentProp: Readonly<BaseWidgetProp & BaseContainerProp>,
-	parentProp: Readonly<BaseWidgetProp & BaseContainerProp>,
-	onStyleApplied?: () => void
+	parentProp: Readonly<BaseWidgetProp & BaseContainerProp>
 ): string {
 	let style = du.getBaseStyleOfLeafWidget(currentProp, parentProp.layout || 'block');
 
@@ -19,13 +18,6 @@ export function getFrameCurrentStyle(
 	}
 	else if (currentProp.layout === 'flex-col') {
 		style += `row-gap: ${currentProp.gap}px;`;
-	}
-
-	// style 변경 후 computedVal을 다시 계산되도록 하기 위해 콜백 실행
-	if (onStyleApplied) {
-		requestAnimationFrame(() => {
-			onStyleApplied();
-		});
 	}
 
 	return style;

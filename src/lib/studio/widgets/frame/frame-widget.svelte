@@ -62,29 +62,23 @@
 		controller.refreshTrigger++;
 	});
 
-	// setupDraggableWidget, setupResizableWidget, getParentSize 함수 제거됨 (base-widget-controller로 이동)
 
-
-    function getFrameClasses(isActive: boolean): string {
+    function getFrameClasses(): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white `;
         const activeClasses = 'outline outline-blue-400';
         const inactiveClasses = 'hover:outline hover:outline-gray-200';
-
-        return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
+        return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }
 
     function getCurrentStyle() {
-        return getFrameCurrentStyle(
-			currentProp, 
-			parentProp, 
-			() => { controller.refreshTrigger++; }
-		);
+		let style = getFrameCurrentStyle(currentProp, parentProp);
+		requestAnimationFrame(() => controller.refreshTrigger++); // style 변경 후 computedVal을 다시 계산되도록 하기 위해 콜백 실행
+        return style;
     }
 
 	function getLayoutStyle() {
 		return getFrameLayoutStyle(currentProp);
 	}
-
 
 	export function getElement() {
 		return controller.element;
@@ -102,7 +96,7 @@
 
 <div 
 	bind:this={controller.element}
-    class={getFrameClasses(viewData.isActive)}
+    class={getFrameClasses()}
     style={getCurrentStyle()}
     onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
     role="button"
