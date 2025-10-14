@@ -95,4 +95,29 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 		}
 		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
 	}
+
+	setupDraggableWidget() {
+		setupDraggable({
+			id: this.data.id,
+			element: this.element,
+			getCurrentProp: () => this.currentProp,
+			getParentSize: () => this.getParentSize(),
+			updateCallback: (id, updatedProps) => {
+				this.config.updateCallback(id, updatedProps, bpm.current);
+			}
+		});
+	}
+
+	setupResizableWidget() {
+		setupResizable({
+			id: this.data.id,
+			element: this.element,
+			getCurrentProp: () => this.currentProp,
+			getComputedVal: () => this.computedVal,
+			getParentSize: () => this.getParentSize(),
+			updateCallback: (id, updatedProps) => {
+				this.config.updateCallback(id, updatedProps, bpm.current);
+			}
+		});
+	}
 }

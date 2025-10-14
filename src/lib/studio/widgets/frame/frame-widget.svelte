@@ -64,7 +64,7 @@
 		if (currentProp.sizeConstraints) {
             if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
                 // console.log('min,max changed');
-                setupResizableWidget();
+                controller.setupResizableWidget();
             }
 		}
 		
@@ -72,7 +72,7 @@
 		// (부모가 block이고, 자신이 flex 에서 block 으로 변경되면 발생)
 		if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined ) && currentProp.sizeConstraints === undefined) {
 			// console.log('frame sizeConstraints undefined');
-			setupResizableWidget();
+			controller.setupResizableWidget();
 		}
 
 	}
@@ -81,7 +81,7 @@
             if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
                 console.log('parent layout changed');
                 if (parent.prop[bpm.current].layout === 'block') {
-                    setupDraggableWidget();
+                    controller.setupDraggableWidget();
                 }
                 else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
                     // console.log('unsetupDraggable');
@@ -110,45 +110,12 @@
             console.error('parent not found', data.id);
         }
         
-		setupDraggableWidget();
-		setupResizableWidget();
+		controller.setupDraggableWidget();
+		controller.setupResizableWidget();
 		controller.refreshTrigger++;
 	});
 
-	function setupDraggableWidget() {
-		setupDraggable({
-			id: data.id,
-			element: controller.element,
-            getCurrentProp: () => controller.currentProp,
-            getParentSize: () => getParentSize(),
-			updateCallback: (id, updatedProps) => {
-				cmdFrame.updateProp(id, updatedProps, bpm.current);
-			}
-		});
-	}
-
-	function setupResizableWidget() {
-		setupResizable({
-			id: data.id,
-			element: controller.element,
-			getCurrentProp: () => controller.currentProp,
-            getComputedVal: () => computedVal,
-            getParentSize: () => getParentSize(),
-			updateCallback: (id, updatedProps) => {
-				cmdFrame.updateProp(id, updatedProps, bpm.current);
-			}
-		});
-	}
-
-    
-    function getParentSize() {
-		let parentComp  = studioDoc.getParentWidgetSvelteComponent<any>(data.id);
-		if (parentComp === null) {
-			console.error(`parent not found for sandbox`, data.id);
-			return { width: 0,height: 0 }
-		}
-		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
-	}
+	// setupDraggableWidget, setupResizableWidget, getParentSize 함수 제거됨 (base-widget-controller로 이동)
 
     function handleMousedown(event: MouseEvent) {
         studioDoc.activeId = data.id;
