@@ -27,7 +27,7 @@ export interface WidgetControllerConfig {
 export class BaseWidgetController<T extends BaseWidgetData> {
     // 설정
     protected config: WidgetControllerConfig;
-	element: HTMLElement | undefined;    
+	element!: HTMLElement;    
     data: T;
     currentProp!: BaseWidgetProp&BaseContainerProp;
     parentProp!: BaseWidgetProp&BaseContainerProp;
@@ -99,7 +99,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 		// console.log('setupDraggableWidget', this.data.id);
 		setupDraggable({
 			id: this.data.id,
-			element: this.element,
+			element: this.element as HTMLElement,
 			getCurrentProp: () => this.currentProp,
 			getParentSize: () => this.getParentSize(),
 			updateCallback: (id, updatedProps) => {
@@ -112,7 +112,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 		// console.log('setupResizableWidget', this.data.id);
 		setupResizable({
 			id: this.data.id,
-			element: this.element,
+			element: this.element as HTMLElement,
 			getCurrentProp: () => this.currentProp,
 			getComputedVal: () => this.computedVal,
 			getParentSize: () => this.getParentSize(),
