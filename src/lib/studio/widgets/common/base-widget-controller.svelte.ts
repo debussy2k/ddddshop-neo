@@ -29,9 +29,9 @@ export class BaseWidgetController<T extends BaseWidgetData> {
     protected config: WidgetControllerConfig;
 	element: HTMLElement | undefined;    
     data: T;
-    currentProp: BaseWidgetProp&BaseContainerProp;
-    parentProp: BaseWidgetProp&BaseContainerProp;
-    computedVal: ComputedValue;
+    currentProp!: BaseWidgetProp&BaseContainerProp;
+    parentProp!: BaseWidgetProp&BaseContainerProp;
+    computedVal!: ComputedValue;
 
     tracker = new ChangeTracker();
 
