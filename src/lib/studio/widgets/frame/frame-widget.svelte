@@ -13,28 +13,50 @@
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
+    import { BaseWidgetController } from "../common/base-widget-controller.svelte";
 
-
-	let element: HTMLElement;
+	// let element: HTMLElement;
     let { data: data }: { data: Frame } = $props();
-    // 현재 프레임이 활성화되어 있는지 확인
-    let isActive = $derived(studioDoc.activeId === data.id);
     // 현재 breakpoint에 맞는 스타일 가져오기
-    let currentProp = $derived(data.prop?.[bpm.current]);
-    let parent = $derived(studioDoc.getParentByChildId(data.id));
-	let refreshTrigger = $state(0);
+    let currentProp = $derived.by(() => {
+		controller.setCurrentProp(data.prop?.[bpm.current]);
+		return data.prop?.[bpm.current]
+	});
+    let parent = $derived.by(() => {
+		let parent = studioDoc.getParentByChildId(data.id);
+		controller.setParent(parent);
+		return parent;
+	});
+	// let refreshTrigger = $state(0);
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
-        refreshTrigger;
+        controller.refreshTrigger;
 		console.log('Frame computedVal', data.id);
-		return _getComputedVal();
+		let val = getComputedVal(data);
+		controller.setComputedVal(val);
+		return val;
     })
     const tracker = new ChangeTracker();
 
-	function _getComputedVal() {
-		return getComputedVal(data);
-	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////
+
+	const controller = new BaseWidgetController(data, {
+		updateCallback: (id, updatedProps) => {
+			cmdFrame.updateProp(id, updatedProps, bpm.current);
+		},
+		removeCallback: (id) => {
+			cmdFrame.remove(id);
+		}
+	});
+    // 뷰 데이터 - $derived로 자동 업데이트
+    const viewData = $derived(controller.getViewData());
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////
+
 
     function handleSizeConstraintsChange() {
 		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
@@ -63,7 +85,7 @@
                 }
                 else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
                     // console.log('unsetupDraggable');
-                    unsetupDraggable(element);
+                    unsetupDraggable(controller.element);
                 }
                 else {
                     console.error('layout not supported', parent.prop[bpm.current].layout);
@@ -79,7 +101,7 @@
 	});
 
 	export function getElement() {
-		return element;
+		return controller.element;
 	}
 
 
@@ -90,14 +112,14 @@
         
 		setupDraggableWidget();
 		setupResizableWidget();
-		refreshTrigger++;
+		controller.refreshTrigger++;
 	});
 
 	function setupDraggableWidget() {
 		setupDraggable({
 			id: data.id,
-			element: element,
-            getCurrentProp: () => currentProp,
+			element: controller.element,
+            getCurrentProp: () => controller.currentProp,
             getParentSize: () => getParentSize(),
 			updateCallback: (id, updatedProps) => {
 				cmdFrame.updateProp(id, updatedProps, bpm.current);
@@ -108,8 +130,8 @@
 	function setupResizableWidget() {
 		setupResizable({
 			id: data.id,
-			element: element,
-			getCurrentProp: () => currentProp,
+			element: controller.element,
+			getCurrentProp: () => controller.currentProp,
             getComputedVal: () => computedVal,
             getParentSize: () => getParentSize(),
 			updateCallback: (id, updatedProps) => {
@@ -132,7 +154,7 @@
         studioDoc.activeId = data.id;
 		
 		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
-		element.focus();	
+		controller.element?.focus();	
 
         // 이벤트 버블링 방지
         event.stopPropagation();
@@ -169,7 +191,7 @@
 
 		// style 변경 후 computedVal을 다시 계산되도록 하기 위해 refreshTrigger를 증가시킴
 		requestAnimationFrame(() => {
-			refreshTrigger++;
+			controller.refreshTrigger++;
 		});
         return style;
     }
@@ -263,23 +285,23 @@
 	}
 
 	export function getWidth() : number {
-		if (!element) return 0;
+		if (!controller.element) return 0;
 		
-		let w = window.getComputedStyle(element).width;
+		let w = window.getComputedStyle(controller.element).width;
 		return util.getNumberPart(w);
 	}
     export function getHeight() : number {
-		if (!element) return 0;
+		if (!controller.element) return 0;
 		
-		let h = window.getComputedStyle(element).height;
+		let h = window.getComputedStyle(controller.element).height;
 		return util.getNumberPart(h);
 	}    
 
 </script>
 
 <div 
-	bind:this={element}
-    class={getFrameClasses(isActive)}
+	bind:this={controller.element}
+    class={getFrameClasses(viewData.isActive)}
     style={getCurrentStyle()}
     onmousedown={(e) => handleMousedown(e as MouseEvent)}
     role="button"
@@ -290,7 +312,7 @@
         <WidgetRenderer widgets={data.children} />
     </div>
 
-    {#if isActive}
+    {#if viewData.isActive}
         <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
     {/if}    
 </div>

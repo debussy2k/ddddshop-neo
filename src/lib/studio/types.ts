@@ -7,7 +7,7 @@ export type { Section, Frame, Sandbox, SimpleImage, Showcase };
 
 export type BreakPoint = "desktop" | "tablet" | "mobile";
 
-type Widget = Section | Frame | Sandbox | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임
+type Widget = Section | Frame | Sandbox;// | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임
 export type { Widget };
 
 type NonSectionWidget = Frame | Sandbox;
