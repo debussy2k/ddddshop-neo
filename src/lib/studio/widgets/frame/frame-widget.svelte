@@ -36,7 +36,7 @@
 		return getComputedVal(data);
 	}
 
-	$effect(() => {
+    function handleSizeConstraintsChange() {
 		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
 		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
 		if (currentProp.sizeConstraints) {
@@ -53,6 +53,8 @@
 			setupResizableWidget();
 		}
 
+	}
+    function handleParentLayoutChange() {
 		if (parent?.prop[bpm.current].layout) {
             if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
                 console.log('parent layout changed');
@@ -68,6 +70,12 @@
                 }
             }
         }		
+
+	}
+
+	$effect(() => {
+		handleSizeConstraintsChange();
+		handleParentLayoutChange();
 	});
 
 	export function getElement() {
