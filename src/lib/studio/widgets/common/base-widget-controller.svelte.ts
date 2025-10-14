@@ -9,6 +9,8 @@ import { canvasManager } from "../../canvas-manager.svelte";
 import { getComputedVal, type ComputedValue } from "./computed-value-util";
 import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
+import * as util from "$lib/studio/util";
+import { cmdFrame } from "$lib/studio/command";
 
 
 export interface BaseWidgetData {
@@ -33,6 +35,8 @@ export class BaseWidgetController<T extends BaseWidgetData> {
     parent: CompositeWidget;
     computedVal: ComputedValue;
 
+    tracker = new ChangeTracker();
+
     get isActive() {
         return studioDoc.activeId === this.data.id;
     }
@@ -48,8 +52,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         // $effect를 사용하여 변화 감지
         $effect(() => {
             console.log('a_data', this.data);
-            // this.handleSizeConstraintsChange();
-            // this.handleParentLayoutChange();
+            console.log('>>>>>> currentProp', this.currentProp);
         });
 
         this.config = config;
@@ -61,17 +64,18 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 
     setCurrentProp(prop: BaseWidgetProp&BaseContainerProp) {
         this.currentProp = prop;
-        console.log('currentProp', this.currentProp);
+        // console.log('currentProp', this.currentProp);
+        this.handleSizeConstraintsChange();
     }
 
     setParent(parent: Readonly<CompositeWidget>) {
         this.parent = parent;
-        console.log('parent', this.parent);
+        // console.log('parent', this.parent);
+        this.handleParentLayoutChange();
     }
 
     setComputedVal(computedVal: ComputedValue) {
         this.computedVal = computedVal;
-        console.log('>>>>>> computedVal', this.computedVal);
     }
 
     /**
@@ -120,4 +124,79 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 			}
 		});
 	}
+
+    handleSizeConstraintsChange() {
+        if (this.element === undefined)
+            return;
+
+		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
+		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
+		if (this.currentProp.sizeConstraints) {
+            if (this.tracker.hasChanged('sizeConstraints', this.currentProp.sizeConstraints)) {
+                // console.log('min,max changed');
+                this.setupResizableWidget();
+            }
+		}
+		
+		// sizeConstraints가 undefined가 되면 Resizable 설정을 다시해야 함. 
+		// (부모가 block이고, 자신이 flex 에서 block 으로 변경되면 발생)
+		if (this.tracker.hasChanged('sizeConstraints-is-undefined', this.currentProp.sizeConstraints === undefined ) && this.currentProp.sizeConstraints === undefined) {
+			// console.log('frame sizeConstraints undefined');
+			this.setupResizableWidget();
+		}
+	}    
+
+    handleParentLayoutChange() {
+        if (this.element === undefined)
+            return;
+
+		if (this.parent?.prop[bpm.current].layout) {
+            if (this.tracker.hasChanged('layout', this.parent.prop[bpm.current].layout)) {
+                console.log('parent layout changed');
+                if (this.parent.prop[bpm.current].layout === 'block') {
+                    this.setupDraggableWidget();
+                }
+                else if (du.isLayoutFlexBox(this.parent.prop[bpm.current].layout)) {
+                    // console.log('unsetupDraggable');
+                    unsetupDraggable(this.element);
+                }
+                else {
+                    console.error('layout not supported', this.parent.prop[bpm.current].layout);
+                }
+            }
+        }		
+
+	}    
+
+    handleMousedown(event: MouseEvent) {
+        studioDoc.activeId = this.data.id;
+		
+		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
+		this.element?.focus();	
+
+        // 이벤트 버블링 방지
+        event.stopPropagation();
+        event.preventDefault();
+    }    
+
+    handleKeyDown(e: KeyboardEvent) {
+        if (e.key === 'Delete') {
+            e.preventDefault();
+            e.stopPropagation();
+            cmdFrame.remove(this.data.id);
+        }
+    }    
+
+    getWidth() : number {
+		if (!this.element) return 0;
+		
+		const w = window.getComputedStyle(this.element).width;
+		return util.getNumberPart(w);
+	}
+    getHeight() : number {
+		if (!this.element) return 0;
+		
+		const h = window.getComputedStyle(this.element).height;
+		return util.getNumberPart(h);
+	}       
 }

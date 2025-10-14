@@ -32,13 +32,11 @@
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
         controller.refreshTrigger;
-		console.log('Frame computedVal', data.id);
+		// console.log('Frame computedVal', data.id);
 		let val = getComputedVal(data);
 		controller.setComputedVal(val);
 		return val;
     })
-    const tracker = new ChangeTracker();
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -58,48 +56,6 @@
 	//////////////////////////////////////////////////////////////////////////////////////////
 
 
-    function handleSizeConstraintsChange() {
-		// width, height의 min,max값이 변하면 Resizable 설정을 다시해야 함.
-		// currentProp은 모든 변화에 반응하기 때문에 min,max값 변화를 추적하여 설정 다시 함. 
-		if (currentProp.sizeConstraints) {
-            if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
-                // console.log('min,max changed');
-                controller.setupResizableWidget();
-            }
-		}
-		
-		// sizeConstraints가 undefined가 되면 Resizable 설정을 다시해야 함. 
-		// (부모가 block이고, 자신이 flex 에서 block 으로 변경되면 발생)
-		if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined ) && currentProp.sizeConstraints === undefined) {
-			// console.log('frame sizeConstraints undefined');
-			controller.setupResizableWidget();
-		}
-
-	}
-    function handleParentLayoutChange() {
-		if (parent?.prop[bpm.current].layout) {
-            if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
-                console.log('parent layout changed');
-                if (parent.prop[bpm.current].layout === 'block') {
-                    controller.setupDraggableWidget();
-                }
-                else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
-                    // console.log('unsetupDraggable');
-                    unsetupDraggable(controller.element);
-                }
-                else {
-                    console.error('layout not supported', parent.prop[bpm.current].layout);
-                }
-            }
-        }		
-
-	}
-
-	$effect(() => {
-		handleSizeConstraintsChange();
-		handleParentLayoutChange();
-	});
-
 	export function getElement() {
 		return controller.element;
 	}
@@ -117,24 +73,6 @@
 
 	// setupDraggableWidget, setupResizableWidget, getParentSize 함수 제거됨 (base-widget-controller로 이동)
 
-    function handleMousedown(event: MouseEvent) {
-        studioDoc.activeId = data.id;
-		
-		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
-		controller.element?.focus();	
-
-        // 이벤트 버블링 방지
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    function handleKeyDown(e: KeyboardEvent) {
-        if (e.key === 'Delete') {
-            e.preventDefault();
-            e.stopPropagation();
-            cmdFrame.remove(data.id);
-        }
-    }
 
     function getFrameClasses(isActive: boolean): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white `;
@@ -252,16 +190,10 @@
 	}
 
 	export function getWidth() : number {
-		if (!controller.element) return 0;
-		
-		let w = window.getComputedStyle(controller.element).width;
-		return util.getNumberPart(w);
+		return controller.getWidth();
 	}
     export function getHeight() : number {
-		if (!controller.element) return 0;
-		
-		let h = window.getComputedStyle(controller.element).height;
-		return util.getNumberPart(h);
+		return controller.getHeight();
 	}    
 
 </script>
@@ -270,10 +202,10 @@
 	bind:this={controller.element}
     class={getFrameClasses(viewData.isActive)}
     style={getCurrentStyle()}
-    onmousedown={(e) => handleMousedown(e as MouseEvent)}
+    onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
     role="button"
     tabindex="0"
-    onkeydown={handleKeyDown}
+    onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
     <div class="relative h-full" style={getLayoutStyle()}>
         <WidgetRenderer widgets={data.children} />
