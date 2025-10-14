@@ -103,7 +103,7 @@ export function setupResizable(config: ResizableConfig): void {
 				const currentProp = config.getCurrentProp();
 				ctx = newContext(currentProp);
 				
-				console.log('resizablestart', ctx);
+				// console.log('resizablestart', ctx);
 				
 				// 리팩토링된 함수 호출
 				handleHugContentsConstraints(event, config, currentProp);

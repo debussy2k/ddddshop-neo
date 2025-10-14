@@ -44,8 +44,10 @@ export function setupDraggable(config: DraggableConfig): void {
                 event.stopPropagation();
                 studioDoc.historyManager.setBatchMode();
 				ctx = newContext(config.getCurrentProp());
+				// console.log("ctx start", ctx);
             },
             move: (event: DragEvent) => {
+				// console.log("ctx move", ctx);
 				const newPosition = getNewPosition(event, ctx);
                 config.updateCallback(config.id, newPosition);
                 event.stopPropagation();

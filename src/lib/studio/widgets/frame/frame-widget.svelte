@@ -1,42 +1,47 @@
 <script lang="ts">
 	import { onMount } from "svelte";
+    import type { BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
     import type { Frame } from "./frame.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
-	import { setupDraggable, unsetup as unsetupDraggable } from "$lib/studio/widgets/common/draggable";
-	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import * as du from "$lib/studio/widgets/common/doc-util";
-	import * as util from "$lib/studio/util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
-    import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
     import { BaseWidgetController } from "../common/base-widget-controller.svelte";
 
-	// let element: HTMLElement;
-    let { data: data }: { data: Frame } = $props();
+    let { data }: { data: Frame } = $props();
+
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived.by(() => {
-		controller.setCurrentProp(data.prop?.[bpm.current]);
 		return data.prop?.[bpm.current]
 	});
-    let parent = $derived.by(() => {
-		let parent = studioDoc.getParentByChildId(data.id);
-		controller.setParent(parent);
-		return parent;
+	$effect(() => {
+		controller.setCurrentProp(data.prop?.[bpm.current]);		
 	});
-	// let refreshTrigger = $state(0);
+
+	let parentProp = $derived.by(() => {
+		let parent = studioDoc.getParentByChildId(data.id);
+		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp&BaseContainerProp>;
+	});
+	$effect(() => {
+		if (parentProp) {
+			controller.setParentProp(parentProp);
+		}
+	});
+
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
         controller.refreshTrigger;
 		// console.log('Frame computedVal', data.id);
-		let val = getComputedVal(data);
-		controller.setComputedVal(val);
-		return val;
+		return getComputedVal(data);
     })
+	$effect(() => {
+		controller.setComputedVal(computedVal);
+	});
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -62,10 +67,6 @@
 
 
 	onMount(() => {
-        if (!parent) {
-            console.error('parent not found', data.id);
-        }
-        
 		controller.setupDraggableWidget();
 		controller.setupResizableWidget();
 		controller.refreshTrigger++;
@@ -83,7 +84,7 @@
     }
 
     function getCurrentStyle() {
-        let style = du.getBaseStyleOfLeafWidget(currentProp, parent?.prop[bpm.current].layout || 'block');
+        let style = du.getBaseStyleOfLeafWidget(currentProp, parentProp.layout || 'block');
 
 		if (currentProp.layout === 'flex-row') {
 			style += `column-gap: ${currentProp.gap}px;`

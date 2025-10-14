@@ -1,12 +1,10 @@
-import { onMount } from "svelte";
-import type { BaseContainerProp, Widget, CompositeWidget } from "$lib/studio/types";
+import type { BaseContainerProp} from "$lib/studio/types";
 import type { BaseWidgetProp } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
 import { bpm } from "$lib/studio/breakpoint-man.svelte";
 import { setupDraggable, unsetup as unsetupDraggable } from "./draggable";
 import { setupResizable } from "./resizable";
-import { canvasManager } from "../../canvas-manager.svelte";
-import { getComputedVal, type ComputedValue } from "./computed-value-util";
+import { type ComputedValue } from "./computed-value-util";
 import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
 import * as util from "$lib/studio/util";
@@ -32,7 +30,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 	element: HTMLElement | undefined;    
     data: T;
     currentProp: BaseWidgetProp&BaseContainerProp;
-    parent: CompositeWidget;
+    parentProp: BaseWidgetProp&BaseContainerProp;
     computedVal: ComputedValue;
 
     tracker = new ChangeTracker();
@@ -41,9 +39,9 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         return studioDoc.activeId === this.data.id;
     }
 
-    get parentProp() {
-        return studioDoc.getParentByChildId(this.data.id)?.prop?.[bpm.current];
-    }
+    // get parentProp() {
+    //     return studioDoc.getParentByChildId(this.data.id)?.prop?.[bpm.current];
+    // }
 
     // 내부 상태
     refreshTrigger = $state(0);
@@ -51,26 +49,23 @@ export class BaseWidgetController<T extends BaseWidgetData> {
     constructor(data:T, config: WidgetControllerConfig) {
         // $effect를 사용하여 변화 감지
         $effect(() => {
-            console.log('a_data', this.data);
-            console.log('>>>>>> currentProp', this.currentProp);
+            // console.log('a_data', this.data);
         });
 
         this.config = config;
         this.data = $derived.by(() => {
-            console.log('data', data);
+            // console.log('data', data);
             return data;
         });
     }
 
     setCurrentProp(prop: BaseWidgetProp&BaseContainerProp) {
         this.currentProp = prop;
-        // console.log('currentProp', this.currentProp);
         this.handleSizeConstraintsChange();
     }
 
-    setParent(parent: Readonly<CompositeWidget>) {
-        this.parent = parent;
-        // console.log('parent', this.parent);
+    setParentProp(parentProp: Readonly<BaseWidgetProp&BaseContainerProp>) {
+        this.parentProp = parentProp;
         this.handleParentLayoutChange();
     }
 
@@ -101,6 +96,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 	}
 
 	setupDraggableWidget() {
+		// console.log('setupDraggableWidget', this.data.id);
 		setupDraggable({
 			id: this.data.id,
 			element: this.element,
@@ -113,6 +109,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 	}
 
 	setupResizableWidget() {
+		// console.log('setupResizableWidget', this.data.id);
 		setupResizable({
 			id: this.data.id,
 			element: this.element,
@@ -150,18 +147,18 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         if (this.element === undefined)
             return;
 
-		if (this.parent?.prop[bpm.current].layout) {
-            if (this.tracker.hasChanged('layout', this.parent.prop[bpm.current].layout)) {
+		if (this.parentProp?.layout) {
+            if (this.tracker.hasChanged('layout', this.parentProp.layout)) {
                 console.log('parent layout changed');
-                if (this.parent.prop[bpm.current].layout === 'block') {
+                if (this.parentProp.layout === 'block') {
                     this.setupDraggableWidget();
                 }
-                else if (du.isLayoutFlexBox(this.parent.prop[bpm.current].layout)) {
+                else if (du.isLayoutFlexBox(this.parentProp.layout)) {
                     // console.log('unsetupDraggable');
                     unsetupDraggable(this.element);
                 }
                 else {
-                    console.error('layout not supported', this.parent.prop[bpm.current].layout);
+                    console.error('layout not supported', this.parentProp.layout);
                 }
             }
         }		
