@@ -27,9 +27,7 @@
 		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp&BaseContainerProp>;
 	});
 	$effect(() => {
-		if (parentProp) {
-			controller.setParentProp(parentProp);
-		}
+		controller.setParentProp(parentProp);
 	});
 
     let computedVal = $derived.by(() => {
