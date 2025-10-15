@@ -77,22 +77,10 @@
         canvasManager.updateNeedUpdate();
 	}
 
-	export function getWidth() : number {
-		if (!sectionElement) return 0;
-		
-		let w = window.getComputedStyle(sectionElement).width;
-		return util.getNumberPart(w);
-	}
-    export function getHeight() : number {
-		if (!sectionElement) return 0;
-		
-		let h = window.getComputedStyle(sectionElement).height;
-		return util.getNumberPart(h);
-	}
-
 </script>
 
 <div 
+    id={data.id}
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
     style:height={currentProp.height}

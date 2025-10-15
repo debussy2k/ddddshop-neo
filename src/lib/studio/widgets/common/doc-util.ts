@@ -3,6 +3,7 @@ import type { SectionPropValue } from "../section/section.type";
 import type { FramePropValue } from "../frame/frame.type";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
+import * as util from "$lib/studio/util";
 
 export function findById(id: string, draft: DocState) {
     // 재귀적으로 Widget을 찾는 헬퍼 함수
@@ -59,6 +60,14 @@ function styleObjectToString(styleObj: Record<string, string | number>): string 
         .join('\n            ');
 }
 
+export function getElementWidth(element: HTMLElement): number {
+    const w = window.getComputedStyle(element).width;
+    return util.getNumberPart(w);
+}
+export function getElementHeight(element: HTMLElement): number {
+    const h = window.getComputedStyle(element).height;
+    return util.getNumberPart(h);
+}
 
 /**
  * 리프 위젯(자식이 없는 위젯)의 기본 스타일 문자열을 생성합니다.

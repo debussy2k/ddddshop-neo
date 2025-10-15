@@ -43,10 +43,6 @@
 		controller.setComputedVal(computedVal);
 	});
 
-	export const getElement = () => controller.element; 
-	export const getWidth = () => controller.getWidth();
-    export const getHeight = () => controller.getHeight();
-
 	const controller = new BaseWidgetController(data, {
 		updateProp: (id, updatedProps) => {
 			cmdFrame.updateProp(id, updatedProps, bpm.current);
@@ -92,6 +88,7 @@
 </script>
 
 <div 
+	id={data.id}
 	bind:this={controller.element}
     class={getStateClasses()}
     style={positionStyle}

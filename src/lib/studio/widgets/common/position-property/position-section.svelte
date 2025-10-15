@@ -27,7 +27,7 @@
 
 	let { class: className, data, cmd, currentProp, parentProp, computedVal }: Props = $props();
 
-	let parentComp: any = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
+	let parentEl: any = studioDoc.getElement(data.parentId);
 
 	// 타입 가드 함수 - 위치 섹션에서 사용
 	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
@@ -39,7 +39,7 @@
 	}
 
 	function updateHorzAlign(newHorzAlign: HorizontalAlign) {
-		if (parentComp === null) {
+		if (parentEl === null) {
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}
@@ -65,7 +65,7 @@
 	}
 
 	function updateVertAlign(newVertAlign: VerticalAlign) {
-		if (parentComp === null) {
+		if (parentEl === null) {
 			console.error(`parent not found for sandbox`, data.id);
 			return;
 		}

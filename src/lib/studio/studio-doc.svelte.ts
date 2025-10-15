@@ -36,13 +36,9 @@ class StudioDoc {
 
 	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
 	widgetMap: Record<string, WidgetComponentContract> = {};
+    
 	getWidgetSvelteComponent<T extends WidgetComponentContract>(id: string): T {
 		return this.widgetMap[id] as T;
-	}
-	getParentWidgetSvelteComponent<T extends WidgetComponentContract>(id: string): T | null {
-		const parent = du.getParentByChildId(id, this.doc);
-		if (!parent) return null;
-		return this.widgetMap[parent.id] as T;
 	}
 
 	getParentWidget<T extends Widget>(id: string): T | null {
@@ -50,6 +46,13 @@ class StudioDoc {
 		if (!parent) return null;
 		return parent as T;
 	}
+
+    getElement(id: string): HTMLElement|null {
+        const el = document.getElementById(id);
+        // if (!el) 
+        //     console.error(`Element with id ${id} not found`);
+        return el;
+    }
 
     constructor() {
         this.unsub = this.historyManager.subscribe((state) => {

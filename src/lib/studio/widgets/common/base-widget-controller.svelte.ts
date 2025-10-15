@@ -1,4 +1,4 @@
-import type { NonSectionWidget, BaseWidgetProp, BaseContainerProp, WidgetComponentContract } from "$lib/studio/types";
+import type { NonSectionWidget, BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
 import { bpm } from "$lib/studio/breakpoint-man.svelte";
 import { setupDraggable, unsetup as unsetupDraggable } from "./draggable";
@@ -68,12 +68,12 @@ export class BaseWidgetController<T extends NonSectionWidget> {
 
     
     getParentSize() {
-		const parentComp = studioDoc.getParentWidgetSvelteComponent<WidgetComponentContract>(this.data.id);
-		if (parentComp === null) {
-			console.error(`parent not found for sandbox`, this.data.id);
-			return { width: 0,height: 0 }
-		}
-		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
+        const parentEl = studioDoc.getElement(this.data.parentId);
+        if (parentEl === null) {
+            console.error(`parentEl is null (id: ${this.data.parentId})`);
+            return { width: 0, height: 0 };
+        }
+        return { width: du.getElementWidth(parentEl), height: du.getElementHeight(parentEl) };
 	}
 
 	setupDraggableWidget() {
@@ -165,16 +165,16 @@ export class BaseWidgetController<T extends NonSectionWidget> {
         }
     }    
 
-    getWidth() : number {
-		if (!this.element) return 0;
+    // getWidth() : number {
+	// 	if (!this.element) return 0;
 		
-		const w = window.getComputedStyle(this.element).width;
-		return util.getNumberPart(w);
-	}
-    getHeight() : number {
-		if (!this.element) return 0;
+	// 	const w = window.getComputedStyle(this.element).width;
+	// 	return util.getNumberPart(w);
+	// }
+    // getHeight() : number {
+	// 	if (!this.element) return 0;
 		
-		const h = window.getComputedStyle(this.element).height;
-		return util.getNumberPart(h);
-	}       
+	// 	const h = window.getComputedStyle(this.element).height;
+	// 	return util.getNumberPart(h);
+	// }       
 }

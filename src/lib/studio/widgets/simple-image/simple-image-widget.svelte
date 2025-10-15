@@ -46,12 +46,12 @@
     }
 
     function getParentSize() {
-        let parentComp = studioDoc.getParentWidgetSvelteComponent<any>(data.id);
-        if (parentComp === null) {
-            console.error(`parent not found for simple-image`, data.id);
-            return { width: 0, height: 0 }
+        const parentEl = studioDoc.getElement(data.parentId);
+        if (parentEl === null) {
+            console.error(`parentEl is null (id: ${data.parentId})`);
+            return { width: 0, height: 0 };
         }
-        return { width: parentComp.getWidth(), height: parentComp.getHeight() };
+        return { width: du.getElementWidth(parentEl), height: du.getElementHeight(parentEl) };
     }
 
     function handleMoutdown(event: MouseEvent) {

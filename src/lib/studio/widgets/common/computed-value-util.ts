@@ -21,22 +21,15 @@ export interface ComputedValue {
  */
 export function getComputedVal(data: Widget): ComputedValue {
 	const defaultResult = { parentWidth: 0, parentHeight: 0, left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
-	
-	const parentComp = studioDoc.getWidgetSvelteComponent(data.parentId);
-	if (parentComp === undefined || parentComp === null) {
-		console.error('parentComp is undefined or null');
-		return defaultResult;
-	}
 
-	const parentEl = parentComp.getElement();
-	const svelteComp = studioDoc.getWidgetSvelteComponent(data.id);
-	if (svelteComp === undefined || svelteComp === null) {
-		console.error('svelteComp is undefined or null');
+	const parentEl = studioDoc.getElement(data.parentId);
+	const el = studioDoc.getElement(data.id);
+	if (parentEl === null) {
+		console.error(`parentEl is null (id: ${data.parentId})`);
 		return defaultResult;
 	}
-	const el = svelteComp.getElement();
-	if (el === undefined || el === null) {
-		console.error('svelteComp.getElement() is undefined or null.');
+	if (el === null) {
+		console.error(`el is null (id: ${data.id})`);
 		return defaultResult;
 	}
 
