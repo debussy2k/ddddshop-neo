@@ -48,10 +48,10 @@
     export const getHeight = () => controller.getHeight();
 
 	const controller = new BaseWidgetController(data, {
-		updateCallback: (id, updatedProps) => {
+		updateProp: (id, updatedProps) => {
 			cmdFrame.updateProp(id, updatedProps, bpm.current);
 		},
-		removeCallback: (id) => {
+		remove: (id) => {
 			cmdFrame.remove(id);
 		}
 	});
@@ -59,6 +59,7 @@
 	// 뷰 데이터 - $derived로 자동 업데이트
     const viewData = $derived(controller.getViewData());
 
+	/////////////////////////
 
 	onMount(() => {
 		controller.setupDraggableWidget();

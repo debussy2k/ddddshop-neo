@@ -1,5 +1,4 @@
-import type { BaseContainerProp} from "$lib/studio/types";
-import type { BaseWidgetProp } from "$lib/studio/types";
+import type { BaseWidgetProp, BaseContainerProp, WidgetComponentContract } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
 import { bpm } from "$lib/studio/breakpoint-man.svelte";
 import { setupDraggable, unsetup as unsetupDraggable } from "./draggable";
@@ -8,8 +7,6 @@ import { type ComputedValue } from "./computed-value-util";
 import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
 import * as util from "$lib/studio/util";
-import { cmdFrame } from "$lib/studio/command";
-
 
 export interface BaseWidgetData {
     id: string;
@@ -20,8 +17,8 @@ export interface BaseWidgetData {
 }
 
 export interface WidgetControllerConfig {
-    updateCallback: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;
-    removeCallback: (id: string) => void;
+    updateProp: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;
+    remove: (id: string) => void;
 }
 
 export class BaseWidgetController<T extends BaseWidgetData> {
@@ -79,7 +76,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 
     
     getParentSize() {
-		const parentComp = studioDoc.getParentWidgetSvelteComponent<any>(this.data.id);
+		const parentComp = studioDoc.getParentWidgetSvelteComponent<WidgetComponentContract>(this.data.id);
 		if (parentComp === null) {
 			console.error(`parent not found for sandbox`, this.data.id);
 			return { width: 0,height: 0 }
@@ -95,7 +92,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 			getCurrentProp: () => this.currentProp,
 			getParentSize: () => this.getParentSize(),
 			updateCallback: (id, updatedProps) => {
-				this.config.updateCallback(id, updatedProps, bpm.current);
+				this.config.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}
@@ -109,7 +106,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
 			getComputedVal: () => this.computedVal,
 			getParentSize: () => this.getParentSize(),
 			updateCallback: (id, updatedProps) => {
-				this.config.updateCallback(id, updatedProps, bpm.current);
+				this.config.updateProp(id, updatedProps, bpm.current);
 			}
 		});
 	}
@@ -172,7 +169,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         if (e.key === 'Delete') {
             e.preventDefault();
             e.stopPropagation();
-            cmdFrame.remove(this.data.id);
+            this.config.remove(this.data.id);
         }
     }    
 
