@@ -12,11 +12,12 @@
 
     let { data }: { data: Section } = $props();
 
-    let sectionElement = $state<HTMLElement>();
+    let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);
     let currentProp = $derived(data.prop?.[bpm.current]);
 
-	export function getElement() {
+	export function getElement(): HTMLElement {
+		if (!sectionElement) throw new Error('Section element not mounted');
 		return sectionElement;
 	}
 

@@ -29,7 +29,6 @@ export interface DocState {
 
 export type WidgetComponentContract = {
 	getElement: () => HTMLElement;
-	getBoundingRect: () => { left: number; top: number; width: number; height: number };
 	getWidth: () => number;
 	getHeight: () => number;
 }
