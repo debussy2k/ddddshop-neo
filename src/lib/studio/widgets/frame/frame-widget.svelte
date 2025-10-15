@@ -22,6 +22,7 @@
 		controller.setCurrentProp(data.prop?.[bpm.current]);		
 	});
 
+	// parentProp은 부모 위젯의 속성을 가져옴
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
 		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp&BaseContainerProp>;
@@ -30,6 +31,7 @@
 		controller.setParentProp(parentProp);
 	});
 
+	// computedVal은 위젯의 계산된 값을 가져옴
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
@@ -41,6 +43,9 @@
 		controller.setComputedVal(computedVal);
 	});
 
+	export const getElement = () => controller.element; 
+	export const getWidth = () => controller.getWidth();
+    export const getHeight = () => controller.getHeight();
 
 	const controller = new BaseWidgetController(data, {
 		updateCallback: (id, updatedProps) => {
@@ -61,7 +66,6 @@
 		controller.refreshTrigger++;
 	});
 
-
     function getStateClasses(): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white `;
         const activeClasses = 'outline outline-blue-400';
@@ -78,18 +82,6 @@
 	function getChildrenLayoutStyle() {
 		return getFrameChildrenLayoutStyle(currentProp);
 	}
-
-	export function getElement() {
-		return controller.element;
-	}
-
-	export function getWidth() : number {
-		return controller.getWidth();
-	}
-
-    export function getHeight() : number {
-		return controller.getHeight();
-	}    
 
 </script>
 
