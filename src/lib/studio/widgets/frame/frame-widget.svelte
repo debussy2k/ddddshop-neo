@@ -6,12 +6,11 @@
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
-    import * as du from "$lib/studio/widgets/common/doc-util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     import { BaseWidgetController } from "../common/base-widget-controller.svelte";
-    import { getFrameCurrentStyle, getFrameLayoutStyle } from "./frame-style-util";
+    import { getFramePositionStyle, getFrameChildrenLayoutStyle } from "./frame-style-util";
 
     let { data }: { data: Frame } = $props();
 
@@ -63,21 +62,21 @@
 	});
 
 
-    function getFrameClasses(): string {
+    function getStateClasses(): string {
         const baseClasses = `es-frame-widget cursor-pointer bg-white `;
         const activeClasses = 'outline outline-blue-400';
         const inactiveClasses = 'hover:outline hover:outline-gray-200';
         return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }
 
-    function getCurrentStyle() {
-		let style = getFrameCurrentStyle(currentProp, parentProp);
-		requestAnimationFrame(() => controller.refreshTrigger++); // style 변경 후 computedVal을 다시 계산되도록 하기 위해 콜백 실행
+    function getPositionStyle() {
+		let style = getFramePositionStyle(currentProp, parentProp);
+		requestAnimationFrame(() => controller.refreshTrigger++); // style 변경 후 computedVal을 다시 계산되도록 하기 위함
         return style;
     }
 
-	function getLayoutStyle() {
-		return getFrameLayoutStyle(currentProp);
+	function getChildrenLayoutStyle() {
+		return getFrameChildrenLayoutStyle(currentProp);
 	}
 
 	export function getElement() {
@@ -96,14 +95,14 @@
 
 <div 
 	bind:this={controller.element}
-    class={getFrameClasses()}
-    style={getCurrentStyle()}
-    onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
+    class={getStateClasses()}
+    style={getPositionStyle()}
     role="button"
     tabindex="0"
+    onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
     onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
-    <div class="relative h-full" style={getLayoutStyle()}>
+    <div class="relative h-full" style={getChildrenLayoutStyle()}>
         <WidgetRenderer widgets={data.children} />
     </div>
 

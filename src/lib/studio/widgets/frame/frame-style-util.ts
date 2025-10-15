@@ -7,7 +7,7 @@ import * as du from "$lib/studio/widgets/common/doc-util";
  * @param parentProp - 부모 요소의 속성
  * @param onStyleApplied - 스타일 적용 후 실행할 콜백 (refreshTrigger 업데이트용)
  */
-export function getFrameCurrentStyle(
+export function getFramePositionStyle(
 	currentProp: Readonly<BaseWidgetProp & BaseContainerProp>,
 	parentProp: Readonly<BaseWidgetProp & BaseContainerProp>
 ): string {
@@ -27,7 +27,7 @@ export function getFrameCurrentStyle(
  * Frame 위젯의 레이아웃 스타일을 생성합니다.
  * @param currentProp - 현재 프레임의 속성
  */
-export function getFrameLayoutStyle(
+export function getFrameChildrenLayoutStyle(
 	currentProp: Readonly<BaseWidgetProp & BaseContainerProp>
 ): string {
 	let style = "";

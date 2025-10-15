@@ -32,22 +32,14 @@ export class BaseWidgetController<T extends BaseWidgetData> {
     currentProp!: BaseWidgetProp&BaseContainerProp;
     parentProp!: BaseWidgetProp&BaseContainerProp;
     computedVal!: ComputedValue;
-
     tracker = new ChangeTracker();
+    refreshTrigger = $state(0);
 
     get isActive() {
         return studioDoc.activeId === this.data.id;
     }
 
-    // get parentProp() {
-    //     return studioDoc.getParentByChildId(this.data.id)?.prop?.[bpm.current];
-    // }
-
-    // 내부 상태
-    refreshTrigger = $state(0);
-
     constructor(data:T, config: WidgetControllerConfig) {
-        // $effect를 사용하여 변화 감지
         $effect(() => {
             // console.log('a_data', this.data);
         });
