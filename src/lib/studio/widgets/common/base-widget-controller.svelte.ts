@@ -6,7 +6,6 @@ import { setupResizable } from "./resizable";
 import { type ComputedValue } from "./computed-value-util";
 import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
-import * as util from "$lib/studio/util";
 
 export interface WidgetControllerConfig {
     updateProp: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;

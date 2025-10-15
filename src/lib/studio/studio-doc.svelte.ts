@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, CompositeWidget, WidgetComponentContract, Widget } from "./types";
+import type { DocState, CompositeWidget, Widget } from "./types";
 import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -33,9 +33,6 @@ class StudioDoc {
 
 	// 현재 활성화 되어있는 항목 id
 	activeId = $state<string | null>(null);
-
-	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
-	widgetMap: Record<string, WidgetComponentContract> = {};
 
 	getParentWidget<T extends Widget>(id: string): T | null {
 		const parent = du.getParentByChildId(id, this.doc);

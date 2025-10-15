@@ -158,7 +158,6 @@ export class FrameActions {
 
                 // layout이 변경되면 children의 sizeConstraints를 재설정함
                 if (updates.layout && updates.layout !== currentProp.layout) {
-                    // studioDoc의 widgetMap 전달
                     du.updateChildrenSizeConstraintsOnLayoutChange(
                         widget.children, 
                         updates.layout, 

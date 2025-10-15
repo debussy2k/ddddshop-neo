@@ -37,9 +37,7 @@
     <div class='absolute inset-0 overflow-y-scroll flex justify-center' >
         <div class='canvas @container absolute shadow-lg shadow-gray-400 mt-4 ' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
-                <SectionWidget data={section} 
-                    bind:this={studioDoc.widgetMap[section.id]}
-                />
+                <SectionWidget data={section} />
             {/each}
             <!-- <div class="text-xs pt-4 border-t border-gray-200">
                 <JsonView json={currentActiveItem} />

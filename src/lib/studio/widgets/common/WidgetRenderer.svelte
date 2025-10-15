@@ -22,25 +22,21 @@
 {#each widgets || [] as widgetData (widgetData.id)}
 	{#if (widgetData as any).type === 'frame'}
 		<FrameWidget 
-			data={widgetData as Frame} 
-			bind:this={studioDoc.widgetMap[widgetData.id]}
+			data={widgetData as Frame}			
 		/>
 	{:else if (widgetData as any).type === 'sandbox'}
 		<SandboxWidget 
 			data={widgetData as Sandbox} 
-			bind:this={studioDoc.widgetMap[widgetData.id]}
 		/>
 	{:else if (widgetData as any).type === 'simple-image'}
 		{#key widgetData.id + (widgetData as SimpleImage).url}
 			<SimpleImageWidget 
 				data={widgetData as SimpleImage} 
-				bind:this={studioDoc.widgetMap[widgetData.id]}
 			/>
 		{/key}
 	{:else if (widgetData as any).type === 'showcase'}
 		<ShowcaseWidget 
 			data={widgetData as Showcase} 
-			bind:this={studioDoc.widgetMap[widgetData.id]}
 		/>
 	{/if}
 {/each}
