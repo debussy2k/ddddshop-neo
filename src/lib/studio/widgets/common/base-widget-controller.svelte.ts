@@ -163,17 +163,4 @@ export class BaseWidgetController<T extends NonSectionWidget> {
             this.config.remove(this.data.id);
         }
     }    
-
-    // getWidth() : number {
-	// 	if (!this.element) return 0;
-		
-	// 	const w = window.getComputedStyle(this.element).width;
-	// 	return util.getNumberPart(w);
-	// }
-    // getHeight() : number {
-	// 	if (!this.element) return 0;
-		
-	// 	const h = window.getComputedStyle(this.element).height;
-	// 	return util.getNumberPart(h);
-	// }       
 }
