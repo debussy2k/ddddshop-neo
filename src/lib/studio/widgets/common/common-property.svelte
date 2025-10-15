@@ -10,6 +10,7 @@
 	import type { ComputedValue } from "./computed-value-util";
 	import { LayoutSection } from "./layout-property";	
 	import { PositionSection } from "./position-property";
+	import { FillSection } from "./fill-property";
 
 	interface Props {
 		data: Widget;
@@ -72,6 +73,12 @@
 	{parentProp}
 	bind:displayStatus={displayStatus}
 	{updateProp} 
+/>
+
+<FillSection 
+	{data}
+	{currentProp}
+	{updateProp}
 />
 
 <div class='px-3 py-4 text-xs border-b border-gray-200'>

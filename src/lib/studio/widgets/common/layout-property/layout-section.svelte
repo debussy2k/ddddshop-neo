@@ -28,8 +28,7 @@
 	import MaxHeightIcon from "$lib/assets/studio/max-height.svg?raw";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
-	import { bpm } from "../../../breakpoint-man.svelte";
-	import * as cmd from "../../../command";
+
 	interface Props {
 		class?: ClassValue;
 		data: Widget;
