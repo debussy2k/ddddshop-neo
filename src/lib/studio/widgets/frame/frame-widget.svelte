@@ -25,7 +25,7 @@
 	// parentProp은 부모 위젯의 속성을 가져옴
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
-		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp&BaseContainerProp>;
+		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp & BaseContainerProp>;
 	});
 	$effect(() => {
 		controller.setParentProp(parentProp);

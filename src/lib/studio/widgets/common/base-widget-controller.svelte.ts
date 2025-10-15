@@ -29,8 +29,8 @@ export class BaseWidgetController<T extends BaseWidgetData> {
     protected config: WidgetControllerConfig;
 	element!: HTMLElement;    
     data: T;
-    currentProp!: BaseWidgetProp&BaseContainerProp;
-    parentProp!: BaseWidgetProp&BaseContainerProp;
+    currentProp!: BaseWidgetProp & BaseContainerProp;
+    parentProp!: BaseWidgetProp & BaseContainerProp;
     computedVal!: ComputedValue;
     tracker = new ChangeTracker();
     refreshTrigger = $state(0);
@@ -51,12 +51,12 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         });
     }
 
-    setCurrentProp(prop: BaseWidgetProp&BaseContainerProp) {
+    setCurrentProp(prop: BaseWidgetProp & BaseContainerProp) {
         this.currentProp = prop;
         this.handleSizeConstraintsChange();
     }
 
-    setParentProp(parentProp: Readonly<BaseWidgetProp&BaseContainerProp>) {
+    setParentProp(parentProp: Readonly<BaseWidgetProp & BaseContainerProp>) {
         this.parentProp = parentProp;
         this.handleParentLayoutChange();
     }
