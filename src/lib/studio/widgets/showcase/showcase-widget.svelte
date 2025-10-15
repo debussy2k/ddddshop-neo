@@ -4,10 +4,21 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import  { getShopicusAPI }  from '$lib/service/api.config';
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
 
     let { data: data }: { data: Showcase } = $props();
 
 	let showcaseData:any  = $state<any>({});
+    let tracker = new ChangeTracker();
+
+    $effect(() => {
+        if (tracker.hasChanged('showcaseCode', data.showcaseCode)) {
+            console.log("-----> data.showcaseCode", data.showcaseCode);
+            if (data.showcaseCode) {
+                loadShowcaseData();
+            }
+        }
+    });        
 
 	onMount(async () => {
 		console.log('SandboxWidget mounted', data);

@@ -3,7 +3,6 @@
     import { ShowcaseActions } from "./showcase-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
-    import type ShowcaseWidget from "./showcase-widget.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
 
     let { showcase }: { showcase: Showcase } = $props();
@@ -18,9 +17,6 @@
 		console.log('showcase', showcase);
 		console.log('updateShowcaseCode', newCode);
         await cmdShowcase.update(showcase.id, { showcaseCode: newCode });
-
-		let widget = studioDoc.getWidgetSvelteComponent<ShowcaseWidget>(showcase.id);
-		widget.loadShowcaseData();
     }
 
 	function updateShowcaseTitleFontSize(newFontSize: number) {

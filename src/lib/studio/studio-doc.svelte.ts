@@ -36,10 +36,6 @@ class StudioDoc {
 
 	// widgetMap = new Map<string, any>(); // id를 key로 하는 위젯 맵
 	widgetMap: Record<string, WidgetComponentContract> = {};
-    
-	getWidgetSvelteComponent<T extends WidgetComponentContract>(id: string): T {
-		return this.widgetMap[id] as T;
-	}
 
 	getParentWidget<T extends Widget>(id: string): T | null {
 		const parent = du.getParentByChildId(id, this.doc);
