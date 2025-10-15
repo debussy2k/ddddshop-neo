@@ -35,6 +35,10 @@ export function getComputedVal(data: Widget): ComputedValue {
 		return defaultResult;
 	}
 	const el = svelteComp.getElement();
+	if (el === undefined || el === null) {
+		console.error('svelteComp.getElement() is undefined or null.');
+		return defaultResult;
+	}
 
 	// parent와 현재 element의 bounding rect 가져오기
 	const parentRect = parentEl.getBoundingClientRect();

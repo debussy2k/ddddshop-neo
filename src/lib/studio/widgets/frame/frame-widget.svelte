@@ -74,28 +74,33 @@
         return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }
 
-    function getPositionStyle() {
-		let style = getFramePositionStyle(currentProp, parentProp);
+	/*
+		모든 studioDoc.doc의 모든 변화에 반응한다.
+	*/
+	let {positionStyle, childrenLayoutStyle} = $derived.by(() => {	
+        // console.log('(A)Frame currentStyle', data.id);
+		let positionStyle = getFramePositionStyle(currentProp, parentProp);
+		let childrenLayoutStyle = getFrameChildrenLayoutStyle(currentProp);
+		return { positionStyle, childrenLayoutStyle };
+	});
+	$effect(() => {
+		positionStyle;
+		childrenLayoutStyle;
 		requestAnimationFrame(() => controller.refreshTrigger++); // style 변경 후 computedVal을 다시 계산되도록 하기 위함
-        return style;
-    }
-
-	function getChildrenLayoutStyle() {
-		return getFrameChildrenLayoutStyle(currentProp);
-	}
+	});
 
 </script>
 
 <div 
 	bind:this={controller.element}
     class={getStateClasses()}
-    style={getPositionStyle()}
+    style={positionStyle}
     role="button"
     tabindex="0"
     onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
     onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
-    <div class="relative h-full" style={getChildrenLayoutStyle()}>
+    <div class="relative h-full" style={childrenLayoutStyle}>
         <WidgetRenderer widgets={data.children} />
     </div>
 

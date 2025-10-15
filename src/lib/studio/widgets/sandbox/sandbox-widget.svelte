@@ -2,161 +2,108 @@
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { bpm } from "$lib/studio/breakpoint-man.svelte";
-	import { setupDraggable, unsetup as unsetupDraggable } from "$lib/studio/widgets/common/draggable";
-	import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSandbox } from "$lib/studio/command";
     import * as du from "$lib/studio/widgets/common/doc-util";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
     import { canvasManager } from "../../canvas-manager.svelte";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
-    import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
+    import { BaseWidgetController } from "../common/base-widget-controller.svelte";
+    import type { BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
     
-	let element: HTMLElement;
-    let { data: data }: { data: Sandbox } = $props();
+    let { data }: { data: Sandbox } = $props();
+
+    // 현재 breakpoint에 맞는 속성 가져오기
+    let currentProp = $derived.by(() => {
+        return data.prop?.[bpm.current];
+    });
+    $effect(() => {
+        controller.setCurrentProp(data.prop?.[bpm.current]);
+    });
+
+    // parentProp은 부모 위젯의 속성을 가져옴
+    let parentProp = $derived.by(() => {
+        let parent = studioDoc.getParentByChildId(data.id);
+        return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp & BaseContainerProp>;
+    });
+    $effect(() => {
+        controller.setParentProp(parentProp);
+    });
+
     let isActive = $derived(studioDoc.activeId === data.id);
-    let currentProp = $derived(data.prop?.[bpm.current]);
-    let parent = $derived(studioDoc.getParentByChildId(data.id));
-	let refreshTrigger = $state(0);
+
+    // computedVal은 위젯의 계산된 값을 가져옴
     let computedVal = $derived.by(() => {
         canvasManager.currentWidth; // 의존성만 추가. canvas크기가 변경되어도 반응하도록 함.
         canvasManager.needUpdate;   // 의존성만 추가. 
-		refreshTrigger;
-		console.log('Sandbox computedVal', data.id);
-        return _getComputedVal();
-    })
-
-	function _getComputedVal() {
-		return getComputedVal(data);
-	}
-
-    const tracker = new ChangeTracker();
-
-    function handleSizeConstraintsChange() {
-        if (currentProp.sizeConstraints) {
-            if (tracker.hasChanged('sizeConstraints', currentProp.sizeConstraints)) {
-                setupResizableWidget();
-            }
-        }
-        
-        if (tracker.hasChanged('sizeConstraints-is-undefined', currentProp.sizeConstraints === undefined) 
-            && currentProp.sizeConstraints === undefined) {
-            setupResizableWidget();
-        }
-    }
-
-    function handleParentLayoutChange() {
-        if (parent?.prop[bpm.current].layout) {
-            if (tracker.hasChanged('layout', parent.prop[bpm.current].layout)) {
-                console.log('parent layout changed');
-                if (parent.prop[bpm.current].layout === 'block') {
-                    setupDraggableWidget();
-                }
-                else if (du.isLayoutFlexBox(parent.prop[bpm.current].layout)) {
-                    unsetupDraggable(element);
-                }
-                else {
-                    console.error('layout not supported', parent.prop[bpm.current].layout);
-                }
-            }
-        }
-    }
-
+        controller.refreshTrigger;
+        isActive; // 선택 상태 변경에 반응하도록 함
+        console.log('(B)Sandbox computedVal', data.id);
+        return getComputedVal(data);
+    });
     $effect(() => {
-        handleSizeConstraintsChange();
-        handleParentLayoutChange();
+        controller.setComputedVal(computedVal);
     });
 
-	export function getElement() {
-		return element;
-	}
+    export const getElement = () => controller.element;
+    export const getWidth = () => controller.getWidth();
+    export const getHeight = () => controller.getHeight();
 
-
-    onMount(() => {        
-		setupDraggableWidget();
-		setupResizableWidget();
-		refreshTrigger++;
-    });
-
-	function setupDraggableWidget() {
-		setupDraggable({
-			id: data.id,
-			element: element,
-            getCurrentProp: () => currentProp,
-            getParentSize: () => getParentSize(),
-			updateCallback: (id, updatedProps) => {
-				cmdSandbox.updateProp(id, updatedProps, bpm.current);
-			}
-		});
-	}
-
-	function setupResizableWidget() {
-		setupResizable({
-			id: data.id,
-			element: element,
-			getCurrentProp: () => currentProp,
-            getComputedVal: () => computedVal,
-            getParentSize: () => getParentSize(),
-			updateCallback: (id, updatedProps) => {
-				cmdSandbox.updateProp(id, updatedProps, bpm.current);
-			}
-		});
-	}
-
-    function getParentSize() {
-        let parentComp = studioDoc.getWidgetSvelteComponent<any>(data.parentId);
-		return { width: parentComp.getWidth(), height: parentComp.getHeight() };
-	}
-
-    function handleClick(event: MouseEvent) {
-        studioDoc.activeId = data.id;
-
-		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
-		element.focus();		
-		
-        // 이벤트 버블링 방지
-        event.stopPropagation();
-        event.preventDefault();
-    }
-
-    function handleKeyDown(event: KeyboardEvent) {
-        if (event.key === 'Delete') {
-            cmdSandbox.remove(data.id);
-            event.preventDefault();
-            event.stopPropagation();
+    const controller = new BaseWidgetController(data, {
+        updateProp: (id, updatedProps) => {
+            cmdSandbox.updateProp(id, updatedProps, bpm.current);
+        },
+        remove: (id) => {
+            cmdSandbox.remove(id);
         }
-    }
+    });
 
-    function getSandboxClasses(isActive: boolean): string {
+    // 뷰 데이터 - $derived로 자동 업데이트
+    const viewData = $derived(controller.getViewData());
+
+    /////////////////////////
+
+    onMount(() => {
+        controller.setupDraggableWidget();
+        controller.setupResizableWidget();
+        controller.refreshTrigger++;
+    });
+
+    function getSandboxClasses(): string {
         const baseClasses = `border border-green-400 cursor-pointer`;
         const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
         const inactiveClasses = 'bg-green-50 hover:bg-green-100';
 
-        return `${baseClasses}  ${isActive ? activeClasses : inactiveClasses} `;
+        return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }
 
-    function getCurrentStyle() {
-		let parentLayout = parent?.prop[bpm.current].layout || 'block';
-        let style = du.getBaseStyleOfLeafWidget(currentProp, parentLayout);
-
-		// style 변경 후 computedVal을 다시 계산되도록 하기 위해 refreshTrigger를 증가시킴
-		requestAnimationFrame(() => {
-			refreshTrigger++;
-		});
-
-        return style;
-    }
+    /*
+        du.getBaseStyleOfLeafWidget()가 studioDoc.doc에 의존하고 있는 관계로 모든 변화에 반응하게 됨
+        그러나 currentStyle의 값이 동일하면 $effect()가 실행되지 않음.
+    */
+    let positionStyle = $derived.by(() => {
+        // console.log('(A)Sandbox currentStyle', data.id);
+        let parentLayout = parentProp?.layout || 'block';
+        return du.getBaseStyleOfLeafWidget(currentProp, parentLayout);
+    });
+    $effect(() => {
+        positionStyle;
+        // style 변경 후 computedVal을 다시 계산되도록 하기 위해 refreshTrigger를 증가시킴
+        requestAnimationFrame(() => {
+            controller.refreshTrigger++;
+        });
+    });
 
 </script>
 
 <div 
-    bind:this={element}
-    class={getSandboxClasses(isActive)}
-    style={getCurrentStyle()}
-    onmousedown={(e) => handleClick(e as MouseEvent)}
-    onkeydown={(e) => handleKeyDown(e as KeyboardEvent)}
+    bind:this={controller.element}
+    class={getSandboxClasses()}
+    style={positionStyle}
     role="button"
     tabindex="0"
+    onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
+    onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
     <div class="flex flex-col items-center justify-center select-none">
         <div class="text-center text-gray-700 font-medium">
@@ -164,7 +111,7 @@
         </div>
     </div>
 
-    {#if isActive}
+    {#if viewData.isActive}
         <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
     {/if}
 </div>

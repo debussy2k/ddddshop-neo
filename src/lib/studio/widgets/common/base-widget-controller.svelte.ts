@@ -1,4 +1,4 @@
-import type { BaseWidgetProp, BaseContainerProp, WidgetComponentContract } from "$lib/studio/types";
+import type { NonSectionWidget, BaseWidgetProp, BaseContainerProp, WidgetComponentContract } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
 import { bpm } from "$lib/studio/breakpoint-man.svelte";
 import { setupDraggable, unsetup as unsetupDraggable } from "./draggable";
@@ -8,25 +8,17 @@ import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
 import * as util from "$lib/studio/util";
 
-export interface BaseWidgetData {
-    id: string;
-    type: string;
-    name: string;
-    parentId: string;
-    prop: Record<string, BaseWidgetProp>;
-}
-
 export interface WidgetControllerConfig {
     updateProp: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;
     remove: (id: string) => void;
 }
 
-export class BaseWidgetController<T extends BaseWidgetData> {
+export class BaseWidgetController<T extends NonSectionWidget> {
     // 설정
     protected config: WidgetControllerConfig;
 	element!: HTMLElement;    
     data: T;
-    currentProp!: BaseWidgetProp & BaseContainerProp;
+    currentProp!: BaseWidgetProp;
     parentProp!: BaseWidgetProp & BaseContainerProp;
     computedVal!: ComputedValue;
     tracker = new ChangeTracker();
@@ -48,7 +40,7 @@ export class BaseWidgetController<T extends BaseWidgetData> {
         });
     }
 
-    setCurrentProp(prop: BaseWidgetProp & BaseContainerProp) {
+    setCurrentProp(prop: BaseWidgetProp) {
         this.currentProp = prop;
         this.handleSizeConstraintsChange();
     }
