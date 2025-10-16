@@ -9,8 +9,10 @@
 	import * as util from "$lib/studio/util";
 	import { cn } from "$lib/utils";
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { data }: { data: Section } = $props();
+
+    let { data, context }: { data: Section; context: Context } = $props();
 
     let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);

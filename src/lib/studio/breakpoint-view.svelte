@@ -9,11 +9,18 @@
     import { getScreenInfo, type BreakPoint } from "$lib/config/screen-info.config";
     import { bpm } from "./breakpoint-man.svelte";
     import { canvasManager } from "./canvas-manager.svelte"; // 추가
+	import { Context } from "./context.svelte";
+
 
     let doc = $derived(studioDoc.document);
     let currentResizableWidth = $state(300);
     let currentActiveItem = $derived(studioDoc.activeItem);
-    
+
+	let context = new Context(bpm.current as BreakPoint);
+	$effect(() => {
+		context.breakPoint = bpm.current;
+	});
+	
     let screenInfo = $derived(getScreenInfo(bpm.current as BreakPoint));
 
     onMount(() => {
@@ -34,7 +41,7 @@
     <div class='absolute inset-0 overflow-y-scroll flex justify-center' >
         <div class='page @container absolute shadow-lg shadow-gray-400 mt-4 ' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
-                <SectionWidget data={section} />
+                <SectionWidget data={section} {context} />
             {/each}
             <!-- <div class="text-xs pt-4 border-t border-gray-200">
                 <JsonView json={currentActiveItem} />
