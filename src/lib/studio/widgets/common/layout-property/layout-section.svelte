@@ -28,6 +28,7 @@
 	import MaxHeightIcon from "$lib/assets/studio/max-height.svg?raw";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
+	import type { Context } from "$lib/studio/context.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -37,6 +38,7 @@
 		parentProp: ContainerPropValue;
 		displayStatus: DisplayStatus;
 		updateProp: (newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) => void;
+		context: Context;
 	}
 
 	let { 
@@ -46,7 +48,8 @@
 		computedVal, 
 		parentProp,
 		displayStatus = $bindable(), 
-		updateProp, 
+		updateProp,
+		context,
 	}: Props = $props();
 
 	let sizeConstraints = $derived(currentProp.sizeConstraints);
@@ -135,6 +138,7 @@
 							min={sizeConstraints.hasMinWidth ? sizeConstraints.minWidth : 1}
 							max={sizeConstraints.hasMaxWidth ? sizeConstraints.maxWidth : undefined}
 							bind:displayStatus={displayStatus}
+							{context}
 							/>
 						<!-- min width -->
 						{#if displayStatus.showMinWidth}
@@ -165,6 +169,7 @@
 							min={sizeConstraints.hasMinHeight ? sizeConstraints.minHeight : 1}
 							max={sizeConstraints.hasMaxHeight ? sizeConstraints.maxHeight : undefined}
 							bind:displayStatus={displayStatus}
+							{context}
 							/>
 						<!-- min height -->
 						{#if displayStatus.showMinHeight}

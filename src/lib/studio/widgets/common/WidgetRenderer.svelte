@@ -11,32 +11,39 @@
 	import type { Showcase } from "$lib/studio/widgets/showcase";
 	import { studioDoc } from "$lib/studio/studio-doc.svelte";
 	import type { Widget } from "$lib/studio/types";
+	import type { Context } from "$lib/studio/context.svelte";
+	
 	interface Props {
 		widgets: Widget[] | undefined;
+		context?: Context;
 		class?: ClassValue;
 	}
 
-	let { widgets, class: className }: Props = $props();
+	let { widgets, context, class: className }: Props = $props();
 </script>
 
 {#each widgets || [] as widgetData (widgetData.id)}
 	{#if (widgetData as any).type === 'frame'}
 		<FrameWidget 
-			data={widgetData as Frame}			
+			data={widgetData as Frame}
+			{context}
 		/>
 	{:else if (widgetData as any).type === 'sandbox'}
 		<SandboxWidget 
-			data={widgetData as Sandbox} 
+			data={widgetData as Sandbox}
+			{context}
 		/>
 	{:else if (widgetData as any).type === 'simple-image'}
 		{#key widgetData.id + (widgetData as SimpleImage).url}
 			<SimpleImageWidget 
-				data={widgetData as SimpleImage} 
+				data={widgetData as SimpleImage}
+				{context}
 			/>
 		{/key}
 	{:else if (widgetData as any).type === 'showcase'}
 		<ShowcaseWidget 
-			data={widgetData as Showcase} 
+			data={widgetData as Showcase}
+			{context}
 		/>
 	{/if}
 {/each}

@@ -7,9 +7,9 @@
 	import * as constraintsUtilHorz from '../constraints-util-horz';
 	import type { ComputedValue } from '../computed-value-util';
 	import * as du from '../doc-util';
-	import { bpm } from '../../../breakpoint-man.svelte';
 	import * as cmd from '../../../command';
 	import { getComputedVal } from '$lib/studio/widgets/common/computed-value-util';
+	import type { Context } from '$lib/studio/context.svelte';
 
 	export type WidthComboBoxItemChangeValue =
 		| 'select-fixed-width'
@@ -37,6 +37,7 @@
 			showMinWidth: boolean;
 			showMaxWidth: boolean;
 		};
+		context: Context;
 	};
 	let {
 		class: className,
@@ -50,7 +51,8 @@
 		max,
 		updateProp,
 		computedVal,
-		displayStatus = $bindable()
+		displayStatus = $bindable(),
+		context
 	}: Props = $props();
 
 	let comboBoxItems: ComboBoxItem[] = $derived.by(() => {
@@ -147,7 +149,7 @@
 
 		// hug-contents될 정확한 width를 계산함
 		const widget = du.findById(widgetId, studioDoc.current) as Frame;
-		const calculatedWidth = du.calcFrameWidth(widget, bpm.current);
+		const calculatedWidth = du.calcFrameWidth(widget, context.break);
 
 		const baseUpdates: Partial<FramePropValue> = {
 			sizeConstraints: {
@@ -194,7 +196,7 @@
 						},
 						width: parentComputedVal.width + 'px'
 					},
-					bpm.current
+					context.break
 				);
 			}
 		}

@@ -21,7 +21,7 @@
 		context.breakPoint = bpm.current;
 	});
 	
-    let screenInfo = $derived(getScreenInfo(bpm.current as BreakPoint));
+    let screenInfo = $derived(getScreenInfo(context.break));
 
     onMount(() => {
     });

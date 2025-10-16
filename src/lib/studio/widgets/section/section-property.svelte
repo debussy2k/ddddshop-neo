@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { Section } from "./section.type";
     import type { LayoutType } from "../../types";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
     import { cmdSection as cmd } from "$lib/studio/command";
     import LayoutSelector from "../common/layout-property/layout-selector.svelte";
     import InputVal from "../common/input-val.svelte";
@@ -9,12 +8,13 @@
     import { canvasManager } from "$lib/studio/canvas-manager.svelte";
     import { MiniButton } from "$lib/components/ui/min-button";
     import ResizeToFitIcon from "$lib/components/ui/min-button/resize-to-fit.svg?raw";
+	import type { Context } from "$lib/studio/context.svelte";
     
-    let { data }: { data: Section } = $props();
-    let currentProp = $derived(data.prop?.[bpm.current]);
+    let { data, context }: { data: Section; context: Context } = $props();
+    let currentProp = $derived(data.prop?.[context.break]);
 
 	function updateLayout(newLayout: LayoutType) {
-        cmd.updateProp(data.id, { layout: newLayout }, bpm.current);
+        cmd.updateProp(data.id, { layout: newLayout }, context.break);
     }
     
     function resizeToFit() {
@@ -51,7 +51,7 @@
     </div>	
 
     <div class='px-3 py-4 text-xs border-b border-gray-200'>
-        <div class="mb-3">정보: {bpm.current}</div>
+        <div class="mb-3">정보: {context.break}</div>
         <div class='overflow-x-scroll'>
             <JsonView json={currentProp}/>
         </div>

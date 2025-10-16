@@ -2,15 +2,15 @@
     import { onMount } from "svelte";
     import type { Sandbox } from "./sandbox.type";
     import { studioDoc } from "../../studio-doc.svelte";
-    import { bpm } from "../../breakpoint-man.svelte";
     import { canvasManager } from "../../canvas-manager.svelte"; // 추가
     import { cmdSandbox as cmd } from "$lib/studio/command";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 	import CommonProperty from "../common/common-property.svelte";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { data }: { data: Sandbox } = $props();
-    let currentProp = $derived(data.prop?.[bpm.current]);
-    let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[bpm.current]);
+    let { data, context }: { data: Sandbox; context: Context } = $props();
+    let currentProp = $derived(data.prop?.[context.break]);
+    let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[context.break]);
 	let refreshTrigger = $state(0);
     let computedVal = $derived.by(() => {
         // console.log("parentSize", canvasManager.currentWidth)
@@ -58,6 +58,6 @@
     </div> -->
 
 	{#if parentProp}
-		<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} />
+		<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} {context} />
 	{/if}
 </div>

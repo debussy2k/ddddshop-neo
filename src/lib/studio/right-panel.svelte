@@ -7,11 +7,12 @@
 	import SimpleImageProperty from './widgets/simple-image/simple-image-property.svelte';
 	import ShowcaseProperty from './widgets/showcase/showcase-property.svelte';
 	import { JsonView } from '@zerodevx/svelte-json-view';
+	import type { Context } from './context.svelte';
 
 	type Mode = 'design' | 'json';
 
 	let state: Mode = $state('design');
-	let { width }: { width: string } = $props();
+	let { width, context }: { width: string; context: Context } = $props();
 
 	let style = `width: ${width}`;
 
@@ -48,15 +49,15 @@
                 {#if studioDoc.activeItem}
                     {@const item = studioDoc.activeItem}
                     {#if item.type === 'section'}
-                        <SectionProperty data={item} />
+                        <SectionProperty data={item} {context} />
                     {:else if item.type === 'sandbox'}
-                        <SandboxProperty data={item} />
+                        <SandboxProperty data={item} {context} />
                     {:else if item.type === 'frame'}
-                        <FrameProperty data={item} />
+                        <FrameProperty data={item} {context} />
                     {:else if item.type === 'simple-image'}
-                        <SimpleImageProperty simpleImage={item} />
+                        <SimpleImageProperty simpleImage={item} {context} />
                     {:else if item.type === 'showcase'}
-                        <ShowcaseProperty showcase={item} />
+                        <ShowcaseProperty showcase={item} {context} />
                     {/if}
                 {/if}
             {:else if state === 'json'}

@@ -2,11 +2,10 @@ import interact from 'interactjs'
 import type { ResizeEvent } from '@interactjs/types'
 import * as util from '$lib/studio/util'
 import { studioDoc } from '$lib/studio/studio-doc.svelte'
-import type { BaseWidgetProp, CompositeWidget, SizeConstraints } from '$lib/studio/types'
+import type { BaseWidgetProp, CompositeWidget, SizeConstraints, BreakPoint } from '$lib/studio/types'
 import * as constraintsUtilHorz from './constraints-util-horz'
 import * as constraintsUtilVert from './constraints-util-vert'
 import * as docUtil from './doc-util';
-import { bpm } from '$lib/studio/breakpoint-man.svelte'
 import { getComputedVal, type ComputedValue } from './computed-value-util'
 
 export type WidthMinMax = {
@@ -36,6 +35,7 @@ export interface ResizableConfig {
     getComputedVal: () => ComputedValue;
 	getParentSize: () => { width: number; height: number };
     updateCallback: (id: string, updatedProps: Partial<BaseWidgetProp>) => void;
+	getBreakPoint?: () => BreakPoint;
     minSize?: { width: number; height: number };
     maxSize?: { width: number; height: number };
     edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
@@ -427,7 +427,7 @@ export function setupResizable(config: ResizableConfig): void {
 			return;
 		}
 
-		const currentBreakPoint = bpm.current;
+		const currentBreakPoint = config.getBreakPoint?.() || 'desktop';
 		const parentProp = parent.prop[currentBreakPoint];
 		
 		if (!('sizeConstraints' in parentProp)) {

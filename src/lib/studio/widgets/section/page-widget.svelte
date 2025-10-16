@@ -29,7 +29,7 @@
 <div class='page @container absolute shadow-lg shadow-gray-400 mt-4 ' style="top:{top}px; left:{left}px; width:{width}px;"
 >
     {#each doc.sections as section (section.id)}
-        <SectionWidget data={section} />
+        <SectionWidget data={section} {context} />
     {/each}
 </div>
 

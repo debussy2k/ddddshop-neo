@@ -5,7 +5,6 @@
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import { ResizeHandle } from "$lib/components/ui/resize-handle";
     import { toPixelValue } from "$lib/utils/drag-resize";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import * as util from "$lib/studio/util";
 	import { cn } from "$lib/utils";
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
@@ -16,7 +15,7 @@
 
     let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);
-    let currentProp = $derived(data.prop?.[bpm.current]);
+    let currentProp = $derived(data.prop?.[context.break]);
 
 	export function getElement(): HTMLElement {
 		if (!sectionElement) throw new Error('Section element not mounted');
@@ -73,7 +72,7 @@
 
 	// 편의 함수들
 	function updateSectionHeight(newHeight: number) {
-        cmdSection.updateProp(data.id, { height: toPixelValue(newHeight) }, bpm.current);
+        cmdSection.updateProp(data.id, { height: toPixelValue(newHeight) }, context.break);
 
         // section을 parent로 가지는 컴포넌트의 수치계산을 다시 할 기회를 제공함
         canvasManager.updateNeedUpdate();
@@ -111,7 +110,7 @@
             <div class={cn("es-section-widget-inner", getInnerClass())}
                 style:height={currentProp.height}
             >
-                <WidgetRenderer widgets={childWidgets()} />
+                <WidgetRenderer widgets={childWidgets()} {context} />
             </div>
         {/if}
     </div>

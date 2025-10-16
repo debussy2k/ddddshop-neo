@@ -3,9 +3,9 @@
     import { ShowcaseActions } from "./showcase-actions";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { studioDoc } from "../../studio-doc.svelte";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { showcase }: { showcase: Showcase } = $props();
+    let { showcase, context }: { showcase: Showcase; context: Context } = $props();
 
     const cmdShowcase = new ShowcaseActions(studioDoc.historyManager);
 
@@ -20,11 +20,11 @@
     }
 
 	function updateShowcaseTitleFontSize(newFontSize: number) {
-		cmdShowcase.updateProp(showcase.id, { titleFontSize: newFontSize }, bpm.current);
+		cmdShowcase.updateProp(showcase.id, { titleFontSize: newFontSize }, context.break);
 	}
 
 	function updateShowcaseTitleFontWeight(newFontEight: string) {
-		cmdShowcase.updateProp(showcase.id, { titleFontWeight: newFontEight }, bpm.current);
+		cmdShowcase.updateProp(showcase.id, { titleFontWeight: newFontEight }, context.break);
 	}
 
 </script>
@@ -60,7 +60,7 @@
 				<span>폰트 크기</span>
 				<input
 					type="number"
-					value={showcase.prop?.[bpm.current]?.titleFontSize || 16}
+					value={showcase.prop?.[context.break]?.titleFontSize || 16}
 					onchange={(e) => updateShowcaseTitleFontSize((e.target as HTMLInputElement).valueAsNumber)}
 					placeholder="폰트 크기를 입력하세요"
 					class="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
@@ -70,7 +70,7 @@
 				<span>폰트 두께</span>
 				<input
 					type="text"
-					value={showcase.prop?.[bpm.current]?.titleFontWeight || "normal"}
+					value={showcase.prop?.[context.break]?.titleFontWeight || "normal"}
 					onchange={(e) => updateShowcaseTitleFontWeight((e.target as HTMLInputElement).value)}
 					placeholder="폰트 스타일을 입력하세요"
 					class="w-full mt-1 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"

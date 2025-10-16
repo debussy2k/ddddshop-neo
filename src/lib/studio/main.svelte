@@ -7,6 +7,13 @@
     import LeftPanel from './left-panel.svelte';
     import RightPanel from './right-panel.svelte';
     import CenterPanel from './center-panel.svelte';
+	import { Context } from './context.svelte';
+	import type { BreakPoint } from './types';
+
+	let context = new Context(bpm.current as BreakPoint);
+	$effect(() => {
+		context.breakPoint = bpm.current;
+	});
 
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
@@ -60,6 +67,6 @@
     <div class="flex flex-1">
         <LeftPanel width="240px" />
         <CenterPanel class="flex-1" />
-        <RightPanel width="240px" />
+        <RightPanel width="240px" {context} />
     </div>
 </div>

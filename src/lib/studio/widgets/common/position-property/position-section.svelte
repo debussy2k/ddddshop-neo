@@ -6,7 +6,6 @@
 	import type { FramePropValue } from "../../../widgets/frame/frame.type";
 	import type { ComputedValue } from "../computed-value-util";
 	import type { Cmd } from "$lib/studio/command";
-	import { bpm } from "../../../breakpoint-man.svelte";
 	import { studioDoc } from "../../../studio-doc.svelte";
 	import * as constraintsUtilHorz from "../constraints-util-horz";
 	import * as constraintsUtilVert from "../constraints-util-vert";
@@ -15,6 +14,7 @@
 	import InputVal from "../input-val.svelte";
 	import HorzAlignDropdownBox from "./horz-align-dropdown-box.svelte";
 	import VertAlignDropdownBox from "./vert-align-dropdown-box.svelte";
+	import type { Context } from "$lib/studio/context.svelte";
 
 	interface Props {
 		class?: ClassValue;
@@ -23,9 +23,10 @@
 		currentProp: BaseWidgetProp | FramePropValue;
 		parentProp: SectionPropValue | FramePropValue;
 		computedVal: ComputedValue;
+		context: Context;
 	}
 
-	let { class: className, data, cmd, currentProp, parentProp, computedVal }: Props = $props();
+	let { class: className, data, cmd, currentProp, parentProp, computedVal, context }: Props = $props();
 
 	let parentEl: any = studioDoc.getElement(data.parentId);
 
@@ -35,7 +36,7 @@
 	}
 
 	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
-		cmd.updateProp(data.id, newProp, bpm.current);
+		cmd.updateProp(data.id, newProp, context.break);
 	}
 
 	function updateHorzAlign(newHorzAlign: HorizontalAlign) {

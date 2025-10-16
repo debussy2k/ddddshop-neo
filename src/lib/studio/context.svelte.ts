@@ -6,4 +6,8 @@ export class Context {
 	constructor(breakPoint: BreakPoint) {
 		this.breakPoint = breakPoint;
 	}
+
+	get break(): BreakPoint {
+		return this.breakPoint;
+	}
 }

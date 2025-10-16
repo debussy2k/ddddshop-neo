@@ -3,10 +3,10 @@
     import type { Showcase } from "./showcase.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
     import  { getShopicusAPI }  from '$lib/service/api.config';
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
     import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { data: data }: { data: Showcase } = $props();
+    let { data, context }: { data: Showcase; context?: Context } = $props();
 
 	let showcaseData:any  = $state<any>({});
     let tracker = new ChangeTracker();
@@ -71,7 +71,7 @@
     }}
 >
 	<div class='text-center text-gray-700 font-medium'
-		style={`font-size: ${data.prop?.[bpm.current]?.titleFontSize}px; font-weight: ${data.prop?.[bpm.current]?.titleFontWeight};`}
+		style={`font-size: ${data.prop?.[context?.break || 'desktop']?.titleFontSize}px; font-weight: ${data.prop?.[context?.break || 'desktop']?.titleFontWeight};`}
 	>
 		{showcaseData.title}
 	</div>

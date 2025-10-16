@@ -1,20 +1,20 @@
 <script lang="ts">
     import type { SimpleImage } from "./simple-image.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
     import { setupDraggable } from "$lib/studio/widgets/common/draggable";
     import { setupResizable } from "$lib/studio/widgets/common/resizable";
     import { onMount } from "svelte";
     import { cmdSimpleImage } from "$lib/studio/command";
     import * as du from "$lib/studio/widgets/common/doc-util";
+	import type { Context } from "$lib/studio/context.svelte";
 
     let element: HTMLElement;
-    let { data: data }: { data: SimpleImage } = $props();
+    let { data, context }: { data: SimpleImage; context?: Context } = $props();
 
     let isActive = $derived(studioDoc.activeId === data.id);
     let parent = $derived(studioDoc.getParentByChildId(data.id));
 
-    let currentProp = $derived(data.prop?.[bpm.current]);
+    let currentProp = $derived(data.prop?.[context?.break || 'desktop']);
 
     onMount(() => {
         setupDraggableWidget();
@@ -28,7 +28,7 @@
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
             updateCallback: (id, updatedProps) => {
-                cmdSimpleImage.updateProp(id, updatedProps, bpm.current);
+                cmdSimpleImage.updateProp(id, updatedProps, context?.break || 'desktop');
             }
         });
     }
@@ -40,8 +40,9 @@
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
             updateCallback: (id, updatedProps) => {
-                cmdSimpleImage.updateProp(id, updatedProps, bpm.current);
-            }
+                cmdSimpleImage.updateProp(id, updatedProps, context?.break || 'desktop');
+            },
+			getBreakPoint: () => context?.break || 'desktop'
         });
     }
 
@@ -95,7 +96,7 @@
             horzAlign: 'left' as const,
             vertAlign: 'top' as const
         };
-        let style = du.getBaseStyleOfLeafWidget(extendedProp, parent?.prop[bpm.current].layout || 'block');
+        let style = du.getBaseStyleOfLeafWidget(extendedProp, parent?.prop[context?.break || 'desktop'].layout || 'block');
         return style;
     }
 </script>

@@ -4,9 +4,9 @@
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     import { EditableSize } from "$lib/components/studio-ui/editable-size";
     import { studioDoc } from "../../studio-doc.svelte";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { simpleImage }: { simpleImage: SimpleImage } = $props();
+    let { simpleImage, context }: { simpleImage: SimpleImage; context: Context } = $props();
 
     const cmdSimpleImage = new SimpleImageActions(studioDoc.historyManager);
 
@@ -23,11 +23,11 @@
     }
 
     async function updateSimpleImageWidth(newWidth: string) {
-        cmdSimpleImage.updateProp(simpleImage.id, { width: newWidth }, bpm.current);
+        cmdSimpleImage.updateProp(simpleImage.id, { width: newWidth }, context.break);
     }
 
     async function updateSimpleImageHeight(newHeight: string) {
-        cmdSimpleImage.updateProp(simpleImage.id, { height: newHeight }, bpm.current);
+        cmdSimpleImage.updateProp(simpleImage.id, { height: newHeight }, context.break);
     }
 </script>
 
@@ -67,7 +67,7 @@
     <div class='p-2 flex items-center gap-2'>
         <span>너비 :</span>
         <EditableSize 
-            value={simpleImage.prop?.[bpm.current]?.width || ''} 
+            value={simpleImage.prop?.[context.break]?.width || ''} 
             onSave={updateSimpleImageWidth}
             placeholder="예: 300px, 100%"
             class="flex-1"
@@ -77,7 +77,7 @@
     <div class='p-2 flex items-center gap-2'>
         <span>높이 :</span>
         <EditableSize 
-            value={simpleImage.prop?.[bpm.current]?.height || ''} 
+            value={simpleImage.prop?.[context.break]?.height || ''} 
             onSave={updateSimpleImageHeight}
             placeholder="예: 200px, auto"
             class="flex-1"

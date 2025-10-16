@@ -1,6 +1,5 @@
-import type { NonSectionWidget, BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
+import type { NonSectionWidget, BaseWidgetProp, BaseContainerProp, BreakPoint } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
-import { bpm } from "$lib/studio/breakpoint-man.svelte";
 import { setupDraggable, unsetup as unsetupDraggable } from "./draggable";
 import { setupResizable } from "./resizable";
 import { type ComputedValue } from "./computed-value-util";
@@ -10,6 +9,7 @@ import * as du from "./doc-util";
 export interface WidgetControllerConfig {
     updateProp: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;
     remove: (id: string) => void;
+	getBreakPoint: () => BreakPoint;
 }
 
 export class BaseWidgetController<T extends NonSectionWidget> {
@@ -83,7 +83,7 @@ export class BaseWidgetController<T extends NonSectionWidget> {
 			getCurrentProp: () => this.currentProp,
 			getParentSize: () => this.getParentSize(),
 			updateCallback: (id, updatedProps) => {
-				this.config.updateProp(id, updatedProps, bpm.current);
+				this.config.updateProp(id, updatedProps, this.config.getBreakPoint());
 			}
 		});
 	}
@@ -97,8 +97,9 @@ export class BaseWidgetController<T extends NonSectionWidget> {
 			getComputedVal: () => this.computedVal,
 			getParentSize: () => this.getParentSize(),
 			updateCallback: (id, updatedProps) => {
-				this.config.updateProp(id, updatedProps, bpm.current);
-			}
+				this.config.updateProp(id, updatedProps, this.config.getBreakPoint());
+			},
+			getBreakPoint: this.config.getBreakPoint
 		});
 	}
 

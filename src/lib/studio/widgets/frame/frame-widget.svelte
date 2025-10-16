@@ -3,7 +3,6 @@
     import type { BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
     import type { Frame } from "./frame.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
-    import { bpm } from "$lib/studio/breakpoint-man.svelte";
 	import { cmdFrame } from "$lib/studio/command";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import SizeTip from "$lib/studio/widgets/common/size-tip.svelte";
@@ -11,21 +10,22 @@
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
     import { BaseWidgetController } from "../common/base-widget-controller.svelte";
     import { getFramePositionStyle, getFrameChildrenLayoutStyle } from "./frame-style-util";
+	import type { Context } from "$lib/studio/context.svelte";
 
-    let { data }: { data: Frame } = $props();
+    let { data, context }: { data: Frame; context?: Context } = $props();
 
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived.by(() => {
-		return data.prop?.[bpm.current]
+		return data.prop?.[context?.break || 'desktop']
 	});
 	$effect(() => {
-		controller.setCurrentProp(data.prop?.[bpm.current]);		
+		controller.setCurrentProp(data.prop?.[context?.break || 'desktop']);		
 	});
 
 	// parentProp은 부모 위젯의 속성을 가져옴
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
-		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp & BaseContainerProp>;
+		return parent?.prop?.[context?.break || 'desktop'] as Readonly<BaseWidgetProp & BaseContainerProp>;
 	});
 	$effect(() => {
 		controller.setParentProp(parentProp);
@@ -45,11 +45,12 @@
 
 	const controller = new BaseWidgetController(data, {
 		updateProp: (id, updatedProps) => {
-			cmdFrame.updateProp(id, updatedProps, bpm.current);
+			cmdFrame.updateProp(id, updatedProps, context?.break || 'desktop');
 		},
 		remove: (id) => {
 			cmdFrame.remove(id);
-		}
+		},
+		getBreakPoint: () => context?.break || 'desktop'
 	});
 
 	// 뷰 데이터 - $derived로 자동 업데이트
@@ -98,7 +99,7 @@
     onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
     <div class="relative h-full" style={childrenLayoutStyle}>
-        <WidgetRenderer widgets={data.children} />
+        <WidgetRenderer widgets={data.children} {context} />
     </div>
 
     {#if viewData.isActive}

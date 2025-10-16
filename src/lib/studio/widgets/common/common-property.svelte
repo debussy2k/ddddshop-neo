@@ -3,7 +3,6 @@
 	import { JsonView } from "@zerodevx/svelte-json-view";
     import { studioDoc } from "../../studio-doc.svelte";
     import type { Cmd } from "$lib/studio/command";
-    import { bpm } from "../../breakpoint-man.svelte";
     import type { Widget, BaseWidgetProp, HorizontalAlign, VerticalAlign, ContainerPropValue } from "../../types";
 	import type { SectionPropValue } from "../../widgets/section/section.type";
 	import type { FramePropValue } from "../../widgets/frame/frame.type";
@@ -11,6 +10,7 @@
 	import { LayoutSection } from "./layout-property";	
 	import { PositionSection } from "./position-property";
 	import { FillSection } from "./fill-property";
+	import type { Context } from "$lib/studio/context.svelte";
 
 	interface Props {
 		data: Widget;
@@ -18,8 +18,9 @@
 		currentProp: BaseWidgetProp | FramePropValue; // Section은 common-property를 사용하지 않음
 		parentProp: ContainerPropValue;
 		computedVal: ComputedValue;
+		context: Context;
 	}
-	let {data, cmd, currentProp, parentProp, computedVal	}: Props = $props();	
+	let {data, cmd, currentProp, parentProp, computedVal, context}: Props = $props();	
 
 	export type DisplayStatus = {
 		showMinWidth: boolean;
@@ -54,7 +55,7 @@
 
 
 	function updateProp(newProp: Partial<BaseWidgetProp | FramePropValue | SectionPropValue>) {
-		cmd.updateProp(data.id, newProp, bpm.current);
+		cmd.updateProp(data.id, newProp, context.break);
 	}
 </script>
 
@@ -64,6 +65,7 @@
 	{currentProp}
 	{parentProp}
 	{computedVal}
+	{context}
 />
 
 <LayoutSection 
@@ -72,7 +74,8 @@
 	{computedVal} 
 	{parentProp}
 	bind:displayStatus={displayStatus}
-	{updateProp} 
+	{updateProp}
+	{context}
 />
 
 <FillSection 

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Sandbox } from './sandbox.type';
 	import { studioDoc } from '$lib/studio/studio-doc.svelte';
-	import { bpm } from '$lib/studio/breakpoint-man.svelte';
 	import { onMount } from 'svelte';
 	import { cmdSandbox } from '$lib/studio/command';
 	import * as du from '$lib/studio/widgets/common/doc-util';
@@ -10,21 +9,22 @@
 	import { getComputedVal } from '$lib/studio/widgets/common/computed-value-util';
 	import { BaseWidgetController } from '../common/base-widget-controller.svelte';
 	import type { BaseWidgetProp, BaseContainerProp } from '$lib/studio/types';
+	import type { Context } from '$lib/studio/context.svelte';
 
-	let { data }: { data: Sandbox } = $props();
+	let { data, context }: { data: Sandbox; context?: Context } = $props();
 
 	// 현재 breakpoint에 맞는 속성 가져오기
 	let currentProp = $derived.by(() => {
-		return data.prop?.[bpm.current];
+		return data.prop?.[context?.break || 'desktop'];
 	});
 	$effect(() => {
-		controller.setCurrentProp(data.prop?.[bpm.current]);
+		controller.setCurrentProp(data.prop?.[context?.break || 'desktop']);
 	});
 
 	// parentProp은 부모 위젯의 속성을 가져옴
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
-		return parent?.prop?.[bpm.current] as Readonly<BaseWidgetProp & BaseContainerProp>;
+		return parent?.prop?.[context?.break || 'desktop'] as Readonly<BaseWidgetProp & BaseContainerProp>;
 	});
 	$effect(() => {
 		controller.setParentProp(parentProp);
@@ -47,11 +47,12 @@
 
 	const controller = new BaseWidgetController(data, {
 		updateProp: (id, updatedProps) => {
-			cmdSandbox.updateProp(id, updatedProps, bpm.current);
+			cmdSandbox.updateProp(id, updatedProps, context?.break || 'desktop');
 		},
 		remove: (id) => {
 			cmdSandbox.remove(id);
-		}
+		},
+		getBreakPoint: () => context?.break || 'desktop'
 	});
 
 	// 뷰 데이터 - $derived로 자동 업데이트
