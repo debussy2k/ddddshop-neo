@@ -68,7 +68,7 @@
     function getSandboxClasses(): string {
         const baseClasses = `es-sandbox-widget cursor-pointer`;
         const activeClasses = 'outline outline-blue-400';
-        const inactiveClasses = 'hover:outline hover:outline-gray-200';
+        const inactiveClasses = 'hover:outline hover:outline-blue-300';
 
         return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }
