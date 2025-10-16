@@ -1,9 +1,10 @@
 <script lang="ts">
+	import type { CanvasMode } from "../types";
 	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { canvasManager } from "../canvas-manager.svelte";
 	import { bpm, type BreakPoint } from "../breakpoint-man.svelte";
-
 	interface Props {
 		class?: ClassValue;
 	}
@@ -14,11 +15,15 @@
 		bpm.breakPoint = breakPoint;
 	}
 
+	function toggleCanvasMode() {
+		canvasManager.mode = canvasManager.mode === 'infinite-canvas' ? 'fixed-canvas' : 'infinite-canvas';
+	}
+
 </script>
 
 <div class={cn('w-1/3 flex justify-center items-center gap-1 px-2', className || '')}>
 	<!-- 중앙 영역 내용 - 추후 확장 가능 -->
-	<div class="text-sm text-gray-600">
+	<div class="text-sm text-gray-600 flex gap-x-4">
 		<div class="flex gap-x-2">
 			<Button variant="outline" size="sm" 
 				class={cn("h-6 w-8 p-0", bpm.isDesktop ? 'bg-gray-300' : '')} 
@@ -39,6 +44,17 @@
 				title="Mobile : 767px 이하" 
 				onclick={() => handleBreakPointClick('mobile')}>
 				<div class="w-4 h-4"><svg data-wf-icon="MobileBreakpointIcon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 12H9V11H7V12Z" fill="currentColor"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M4 4C4 2.89543 4.89543 2 6 2H10C11.1046 2 12 2.89543 12 4V12C12 13.1046 11.1046 14 10 14H6C4.89543 14 4 13.1046 4 12V4ZM6 3H10C10.5523 3 11 3.44772 11 4V12C11 12.5523 10.5523 13 10 13H6C5.44772 13 5 12.5523 5 12V4C5 3.44772 5.44772 3 6 3Z" fill="currentColor"></path></svg></div>
+			</Button>
+		</div>
+
+		<div>
+			<Button variant="outline" size="sm" 
+				class={cn("h-6 px-2", canvasManager.mode === 'infinite-canvas' ? 'bg-gray-300' : '')} 
+				title="3 view" 
+				onclick={() => toggleCanvasMode()}>
+				<div class="h-4 flex items-center">
+					3 view
+				</div>
 			</Button>
 
 		</div>

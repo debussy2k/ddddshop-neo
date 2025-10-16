@@ -5,6 +5,7 @@ import type { SimpleImage } from "./widgets/simple-image/simple-image.type";
 import type { Showcase } from "./widgets/showcase/showcase.type";
 export type { Section, Frame, Sandbox, SimpleImage, Showcase };
 
+export type CanvasMode = "infinite-canvas" | "fixed-canvas";
 export type BreakPoint = "desktop" | "tablet" | "mobile";
 
 type Widget = Section | Frame | Sandbox | Showcase; // | SimpleImage | Showcase; // Widget은 Sandbox외 다른 type이 추가될 예정임

@@ -1,4 +1,17 @@
+import type { CanvasMode } from "./types";
 class CanvasManager {
+    canvasMode = $state<CanvasMode>('fixed-canvas');
+
+    get mode() {
+        return this.canvasMode;
+    }
+    
+    set mode(value: CanvasMode) {
+        this.canvasMode = value;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+
     width = $state<number>(300);
     needUpdate = $state<number>(0);
     
