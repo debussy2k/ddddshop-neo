@@ -1,16 +1,47 @@
 <script lang="ts">
-    let { prop }: { prop: { width: string, height: string } } = $props();
+	import type { SizeConstraints } from '$lib/studio/types';
 
-    function stripUnit(value: string) {
-        return value.replace('px', '');
+    interface Props {
+        prop: { width: string; height: string; sizeConstraints: SizeConstraints | undefined };
     }
 
+	let { prop }: Props = $props();
+
+	let sizeInfo = $derived.by(() => {
+		const constraints = prop.sizeConstraints;
+
+		let widthDisplay = stripUnit(prop.width);
+		let heightDisplay = stripUnit(prop.height);
+
+		// width constraint 추가
+		if (constraints?.hugContentsWidth) {
+			widthDisplay += ' Hug';
+		} else if (constraints?.fullWidth) {
+			widthDisplay += ' Fill';
+		}
+
+		// height constraint 추가
+		if (constraints?.hugContentsHeight) {
+			heightDisplay += ' Hug';
+		} else if (constraints?.fullHeight) {
+			heightDisplay += ' Fill';
+		}
+
+		return `${widthDisplay} x ${heightDisplay}`;
+	});
+
+	function stripUnit(value: string) {
+		return value.replace('px', '');
+	}
 </script>
 
-<div class="absolute left-0 bottom-[-24px] w-full z-10">
-    <div class="relative w-full flex justify-center">
-        <div class="flex items-center justify-center text-xs bg-blue-400 text-white rounded-xs px-2 pb-[2px] whitespace-nowrap">
-            {stripUnit(prop.width)} x {stripUnit(prop.height)}
-        </div>
-    </div>
+<div class="absolute bottom-[-24px] left-0 z-10 w-full">
+	<div class="relative flex w-full justify-center">
+		<div
+			class="flex items-center justify-center rounded-xs bg-blue-400 px-2 pb-[2px] text-xs whitespace-nowrap text-white"
+		>
+			{sizeInfo}
+			<!-- {stripUnit(prop.width)} x {stripUnit(prop.height)} -->
+		</div>
+	</div>
 </div>

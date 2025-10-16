@@ -102,7 +102,11 @@
     </div>
 
     {#if viewData.isActive}
-        <SizeTip prop={{width: computedVal.width.toString(), height: computedVal.height.toString()}} />
+        <SizeTip prop={{
+			width: computedVal.width.toString(), 
+			height: computedVal.height.toString(),
+			sizeConstraints: currentProp.sizeConstraints
+		}} />
     {/if}    
 </div>
 
