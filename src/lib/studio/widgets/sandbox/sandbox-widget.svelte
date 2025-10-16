@@ -66,9 +66,9 @@
     });
 
     function getSandboxClasses(): string {
-        const baseClasses = `border border-green-400 cursor-pointer`;
-        const activeClasses = 'bg-green-100 hover:bg-green-200 border-green-600';
-        const inactiveClasses = 'bg-green-50 hover:bg-green-100';
+        const baseClasses = `es-sandbox-widget cursor-pointer`;
+        const activeClasses = 'outline outline-blue-400';
+        const inactiveClasses = 'hover:outline hover:outline-gray-200';
 
         return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
     }

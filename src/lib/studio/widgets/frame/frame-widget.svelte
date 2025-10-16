@@ -64,7 +64,7 @@
 	});
 
     function getStateClasses(): string {
-        const baseClasses = `es-frame-widget cursor-pointer bg-white `;
+        const baseClasses = `es-frame-widget cursor-pointer`;
         const activeClasses = 'outline outline-blue-400';
         const inactiveClasses = 'hover:outline hover:outline-gray-200';
         return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;

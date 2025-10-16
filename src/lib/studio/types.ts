@@ -40,6 +40,7 @@ export type BaseWidgetProp = {
     horzAlign: HorizontalAlign;
     vertAlign: VerticalAlign;
     sizeConstraints?: SizeConstraints;
+    backgroundColor: string;
 }
 
 export type SizeConstraints = {

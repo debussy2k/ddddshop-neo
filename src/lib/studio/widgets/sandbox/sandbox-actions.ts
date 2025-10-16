@@ -70,6 +70,7 @@ export class SandboxActions {
                 centerOffsetY: 0,
                 horzAlign: 'left',
                 vertAlign: 'top',
+                backgroundColor: '#d9d9d9',
             },
             tablet: {
                 left: '10px',
@@ -82,6 +83,7 @@ export class SandboxActions {
                 centerOffsetY: 0,
                 horzAlign: 'left',
                 vertAlign: 'top',
+                backgroundColor: '#d9d9d9',
             },
             desktop: {
                 left: '10px',
@@ -93,7 +95,8 @@ export class SandboxActions {
                 height: '100px',
                 centerOffsetY: 0,
                 horzAlign: 'left',
-                vertAlign: 'top'
+                vertAlign: 'top',
+                backgroundColor: '#d9d9d9',
             }
         }
 

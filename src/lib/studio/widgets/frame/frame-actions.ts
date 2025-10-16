@@ -76,6 +76,7 @@ export class FrameActions {
                 paddingRight: 10,
                 paddingTop: 10,
                 paddingBottom: 10,
+                backgroundColor: '#ffffff',
             },
             tablet: {
                 layout: 'block',
@@ -98,6 +99,7 @@ export class FrameActions {
                 paddingRight: 10,
                 paddingTop: 10,
                 paddingBottom: 10,
+                backgroundColor: '#ffffff',
             },
             desktop: {
                 layout: 'block',
@@ -120,6 +122,7 @@ export class FrameActions {
                 paddingRight: 10,
                 paddingTop: 10,
                 paddingBottom: 10,
+                backgroundColor: '#ffffff',
             }
         }
 

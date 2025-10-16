@@ -127,6 +127,8 @@ export function getBaseStyleOfLeafWidget(prop: BaseWidgetProp, parentLayout: Lay
         styleObj.top = '0px';
     }
 
+    styleObj.backgroundColor = prop.backgroundColor;
+
     // 객체를 CSS 문자열로 변환하여 리턴
     return styleObjectToString(styleObj);
 }
