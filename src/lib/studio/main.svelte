@@ -11,14 +11,14 @@
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
         // Ctrl+Z (Windows/Linux) 또는 Cmd+Z (Mac)
-        if ((event.ctrlKey || event.metaKey) && event.key === 'z' && !event.shiftKey) {
+        if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && !event.shiftKey) {
             event.preventDefault();
             studioDoc.undo();
         }
         // Ctrl+Y (Windows/Linux) 또는 Cmd+Y (Mac), 또는 Ctrl+Shift+Z
         else if (
-            ((event.ctrlKey || event.metaKey) && event.key === 'y') ||
-            ((event.ctrlKey || event.metaKey) && event.key === 'z' && event.shiftKey)
+            ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'y') ||
+            ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z' && event.shiftKey)
         ) {
             event.preventDefault();
             studioDoc.redo();
@@ -41,7 +41,7 @@
 
     onMount(() => {
         // 브라우저 환경에서만 전역 키보드 이벤트 리스너 추가
-        if (browser) {
+        if (browser) {  
             document.addEventListener('keydown', handleKeydown);
         }
     });
