@@ -43,7 +43,7 @@
 		controller.setComputedVal(computedVal);
 	});
 
-	const controller = new BaseWidgetController(data, {
+	const controller = new BaseWidgetController(data, context, {
 		updateProp: (id, updatedProps) => {
 			cmdFrame.updateProp(id, updatedProps, context.break);
 		},

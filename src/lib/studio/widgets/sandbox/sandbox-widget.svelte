@@ -45,7 +45,7 @@
 		controller.setComputedVal(computedVal);
 	});
 
-	const controller = new BaseWidgetController(data, {
+	const controller = new BaseWidgetController(data, context, {
 		updateProp: (id, updatedProps) => {
 			cmdSandbox.updateProp(id, updatedProps, context.break);
 		},
