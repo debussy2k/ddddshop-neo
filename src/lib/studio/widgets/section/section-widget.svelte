@@ -54,7 +54,7 @@
 
     // 섹션 컨테이너의 클래스를 계산하는 함수
     function getSectionClasses(isActive: boolean): string {
-        const baseClasses = `relative cursor-pointer overflow-visible`;
+        const baseClasses = `relative overflow-visible`;
 
         const activeClasses = 'outline outline-blue-400';
         const inactiveClasses = '';

@@ -27,6 +27,7 @@ export function setupCanvasPanning(config: PanningConfig) {
 				return;
 			}
 			
+            console.log('space key down', e.code);
 			isSpacePressed = true;
 			e.preventDefault();
 			

@@ -38,7 +38,9 @@ export function unsetup(element: HTMLElement | SVGElement) {
  */
 export function setupDraggable(config: DraggableConfig): void {
 	let ctx: ContextInfo;
-    interact(config.element).draggable({
+    interact(config.element)
+	// .styleCursor(false)
+	.draggable({
         listeners: {
             start: (event: DragEvent) => {
                 event.stopPropagation();
