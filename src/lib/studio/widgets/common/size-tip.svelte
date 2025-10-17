@@ -38,7 +38,7 @@
 <div class="absolute bottom-[-24px] left-0 z-10 w-full">
 	<div class="relative flex w-full justify-center">
 		<div
-			class="flex items-center justify-center rounded-xs bg-blue-400 px-2 pb-[2px] text-xs whitespace-nowrap text-white"
+			class="flex items-center justify-center rounded-xs bg-blue-400 px-2 pb-[2px] text-xs whitespace-nowrap text-white user-select-none"
 		>
 			{sizeInfo}
 			<!-- {stripUnit(prop.width)} x {stripUnit(prop.height)} -->

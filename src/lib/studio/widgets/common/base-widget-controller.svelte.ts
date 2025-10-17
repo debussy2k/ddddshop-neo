@@ -152,6 +152,10 @@ export class BaseWidgetController<T extends NonSectionWidget> {
 	}    
 
     handleMousedown(event: MouseEvent) {
+        if (this.context.isPanning) {
+            return;
+        }
+
         studioDoc.activeId = this.data.id;
 		
 		// 포커스 설정 추가 - 키보드 이벤트를 받기 위해 필요
