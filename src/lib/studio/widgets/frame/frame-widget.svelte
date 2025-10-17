@@ -11,6 +11,7 @@
     import { BaseWidgetController } from "../common/base-widget-controller.svelte";
     import { getFramePositionStyle, getFrameChildrenLayoutStyle } from "./frame-style-util";
 	import type { Context } from "$lib/studio/context.svelte";
+	import { bpm } from '$lib/studio/breakpoint-man.svelte';
 
     let { data, context }: { data: Frame; context: Context } = $props();
 
@@ -102,7 +103,7 @@
         <WidgetRenderer widgets={data.children} {context} />
     </div>
 
-    {#if viewData.isActive}
+    {#if viewData.isActive && context.break === bpm.current}
         <SizeTip prop={{
 			width: computedVal.width.toString(), 
 			height: computedVal.height.toString(),

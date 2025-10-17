@@ -14,11 +14,11 @@
 	let left = $derived.by(() => {
 		switch(context.breakPoint) {
 			case 'desktop':
-				return 16;
+				return 32;
 			case 'tablet':
-				return 16 + 992 + 16;
+				return 32 + 992 + 32;
 			case 'mobile':
-				return 16 + 992 + 16 + 768 + 16;
+				return 32 + 992 + 32 + 768 + 32;
 		}
 	})
 	let width = $derived(context.breakPoint === 'desktop' ? 992 : context.breakPoint === 'tablet' ? 768 : 320);
@@ -48,6 +48,10 @@
     role="button"
     tabindex="0"
 >
+    <div class='absolute top-[-40px] left-0 text-sm p-2 rounded-sm  text-gray-500 bg-gray-200' style="width:{width}px;">
+        {context.breakPoint} {width}
+    </div>
+
     {#each doc.sections as section (section.id)}
         <SectionWidget data={section} {context} />
     {/each}

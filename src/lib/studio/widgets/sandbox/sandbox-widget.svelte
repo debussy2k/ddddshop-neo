@@ -10,6 +10,7 @@
 	import { BaseWidgetController } from '../common/base-widget-controller.svelte';
 	import type { BaseWidgetProp, BaseContainerProp } from '$lib/studio/types';
 	import type { Context } from '$lib/studio/context.svelte';
+	import { bpm } from '$lib/studio/breakpoint-man.svelte';
 
 	let { data, context }: { data: Sandbox; context: Context } = $props();
 
@@ -108,7 +109,7 @@
 		</div>
 	</div>
 
-	{#if viewData.isActive}
+	{#if viewData.isActive && context.break === bpm.current}
 		<SizeTip
 			prop={{
 				width: computedVal.width.toString(),
