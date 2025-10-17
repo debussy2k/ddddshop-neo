@@ -93,17 +93,19 @@
     onmouseleave={handleMouseLeave}
 >
 
-    <div class='absolute pointer-events-none top-0 bottom-0 left:[-320px] right:[320px] opacity-0 hover:opacity-100 transition-opacity duration-200' 
-        class:opacity-100={isHovered}
-        style="width:100%">
-            <!-- 섹션 왼쪽 빈 공간 -->
-            <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:-320px">
-            </div>
-            <!-- 섹션 오른쪽 빈 공간 -->
-            <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:100%">
-            </div>
-    </div>
-
+    {#if canvasManager.mode === 'fixed-canvas'}
+        <div class='absolute pointer-events-none top-0 bottom-0 left:[-320px] right:[320px] opacity-0 hover:opacity-100 transition-opacity duration-200' 
+            class:opacity-100={isHovered}
+            style="width:100%">
+                <!-- 섹션 왼쪽 빈 공간 -->
+                <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:-320px">
+                </div>
+                <!-- 섹션 오른쪽 빈 공간 -->
+                <div class='absolute top-0 bottom-0 w-[320px] border-y border-blue-400 border-dashed' style="left:100%">
+                </div>
+        </div>
+    {/if}
+    
     <div class="_outer">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
