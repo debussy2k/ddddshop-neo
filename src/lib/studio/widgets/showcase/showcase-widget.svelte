@@ -6,7 +6,7 @@
     import { ChangeTracker } from "$lib/studio/widgets/common/change-tracker";
 	import type { Context } from "$lib/studio/context.svelte";
 
-    let { data, context }: { data: Showcase; context?: Context } = $props();
+    let { data, context }: { data: Showcase; context: Context } = $props();
 
 	let showcaseData:any  = $state<any>({});
     let tracker = new ChangeTracker();
@@ -71,7 +71,7 @@
     }}
 >
 	<div class='text-center text-gray-700 font-medium'
-		style={`font-size: ${data.prop?.[context?.break || 'desktop']?.titleFontSize}px; font-weight: ${data.prop?.[context?.break || 'desktop']?.titleFontWeight};`}
+		style={`font-size: ${data.prop?.[context.break]?.titleFontSize}px; font-weight: ${data.prop?.[context.break]?.titleFontWeight};`}
 	>
 		{showcaseData.title}
 	</div>

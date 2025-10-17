@@ -9,12 +9,12 @@
 	import type { Context } from "$lib/studio/context.svelte";
 
     let element: HTMLElement;
-    let { data, context }: { data: SimpleImage; context?: Context } = $props();
+    let { data, context }: { data: SimpleImage; context: Context } = $props();
 
     let isActive = $derived(studioDoc.activeId === data.id);
     let parent = $derived(studioDoc.getParentByChildId(data.id));
 
-    let currentProp = $derived(data.prop?.[context?.break || 'desktop']);
+    let currentProp = $derived(data.prop?.[context.break]);
 
     onMount(() => {
         setupDraggableWidget();
@@ -28,7 +28,7 @@
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
             updateCallback: (id, updatedProps) => {
-                cmdSimpleImage.updateProp(id, updatedProps, context?.break || 'desktop');
+                cmdSimpleImage.updateProp(id, updatedProps, context.break);
             }
         });
     }
@@ -40,9 +40,9 @@
             getCurrentProp: () => currentProp,
             getParentSize: () => getParentSize(),
             updateCallback: (id, updatedProps) => {
-                cmdSimpleImage.updateProp(id, updatedProps, context?.break || 'desktop');
+                cmdSimpleImage.updateProp(id, updatedProps, context.break);
             },
-			getBreakPoint: () => context?.break || 'desktop'
+			getBreakPoint: () => context.break
         });
     }
 
@@ -96,7 +96,7 @@
             horzAlign: 'left' as const,
             vertAlign: 'top' as const
         };
-        let style = du.getBaseStyleOfLeafWidget(extendedProp, parent?.prop[context?.break || 'desktop'].layout || 'block');
+        let style = du.getBaseStyleOfLeafWidget(extendedProp, parent?.prop[context.break].layout || 'block');
         return style;
     }
 </script>

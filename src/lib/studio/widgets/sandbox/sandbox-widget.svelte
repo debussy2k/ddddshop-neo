@@ -11,20 +11,20 @@
 	import type { BaseWidgetProp, BaseContainerProp } from '$lib/studio/types';
 	import type { Context } from '$lib/studio/context.svelte';
 
-	let { data, context }: { data: Sandbox; context?: Context } = $props();
+	let { data, context }: { data: Sandbox; context: Context } = $props();
 
 	// 현재 breakpoint에 맞는 속성 가져오기
 	let currentProp = $derived.by(() => {
-		return data.prop?.[context?.break || 'desktop'];
+		return data.prop?.[context.break];
 	});
 	$effect(() => {
-		controller.setCurrentProp(data.prop?.[context?.break || 'desktop']);
+		controller.setCurrentProp(data.prop?.[context.break]);
 	});
 
 	// parentProp은 부모 위젯의 속성을 가져옴
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
-		return parent?.prop?.[context?.break || 'desktop'] as Readonly<BaseWidgetProp & BaseContainerProp>;
+		return parent?.prop?.[context.break] as Readonly<BaseWidgetProp & BaseContainerProp>;
 	});
 	$effect(() => {
 		controller.setParentProp(parentProp);
@@ -47,12 +47,12 @@
 
 	const controller = new BaseWidgetController(data, {
 		updateProp: (id, updatedProps) => {
-			cmdSandbox.updateProp(id, updatedProps, context?.break || 'desktop');
+			cmdSandbox.updateProp(id, updatedProps, context.break);
 		},
 		remove: (id) => {
 			cmdSandbox.remove(id);
 		},
-		getBreakPoint: () => context?.break || 'desktop'
+		getBreakPoint: () => context.break
 	});
 
 	// 뷰 데이터 - $derived로 자동 업데이트

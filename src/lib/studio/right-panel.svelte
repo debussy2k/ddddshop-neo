@@ -7,12 +7,18 @@
 	import SimpleImageProperty from './widgets/simple-image/simple-image-property.svelte';
 	import ShowcaseProperty from './widgets/showcase/showcase-property.svelte';
 	import { JsonView } from '@zerodevx/svelte-json-view';
-	import type { Context } from './context.svelte';
+	import { Context } from './context.svelte';
+	import { bpm, type BreakPoint } from './breakpoint-man.svelte';
 
 	type Mode = 'design' | 'json';
 
 	let state: Mode = $state('design');
-	let { width, context }: { width: string; context: Context } = $props();
+	let { width }: { width: string } = $props();
+
+	let context = new Context(bpm.current as BreakPoint);
+	$effect(() => {
+		context.breakPoint = bpm.current;
+	});
 
 	let style = `width: ${width}`;
 
@@ -43,6 +49,10 @@
             </button>
         </div>
         
+        <div class='px-4 py-2 text-xs text-gray-500'>
+            BreakPoint: {bpm.current}
+        </div>
+
         <!-- Tab Content -->
         <div class="flex-1 overflow-y-auto">
             {#if state === 'design'}

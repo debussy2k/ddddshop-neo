@@ -10,11 +10,6 @@
 	import { Context } from './context.svelte';
 	import type { BreakPoint } from './types';
 
-	let context = new Context(bpm.current as BreakPoint);
-	$effect(() => {
-		context.breakPoint = bpm.current;
-	});
-
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
         // Ctrl+Z (Windows/Linux) 또는 Cmd+Z (Mac)
@@ -67,6 +62,6 @@
     <div class="flex flex-1">
         <LeftPanel width="240px" />
         <CenterPanel class="flex-1" />
-        <RightPanel width="240px" {context} />
+        <RightPanel width="240px"/>
     </div>
 </div>

@@ -15,7 +15,7 @@
 	
 	interface Props {
 		widgets: Widget[] | undefined;
-		context?: Context;
+		context: Context;
 		class?: ClassValue;
 	}
 
