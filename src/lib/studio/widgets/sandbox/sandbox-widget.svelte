@@ -93,7 +93,7 @@
 </script>
 
 <div
-	id={data.id}
+	id={`${data.id}-${context.break}`}
 	bind:this={controller.element}
 	class={getSandboxClasses()}
 	style={positionStyle}
