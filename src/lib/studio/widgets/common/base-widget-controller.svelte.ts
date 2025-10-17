@@ -5,6 +5,7 @@ import { setupResizable } from "./resizable";
 import { type ComputedValue } from "./computed-value-util";
 import { ChangeTracker } from "./change-tracker";
 import * as du from "./doc-util";
+import { Context } from "$lib/studio/context.svelte";
 
 export interface WidgetControllerConfig {
     updateProp: (id: string, updatedProps: Partial<BaseWidgetProp>, breakpoint: string) => void;
@@ -17,17 +18,21 @@ export class BaseWidgetController<T extends NonSectionWidget> {
     protected config: WidgetControllerConfig;
 	element!: HTMLElement;    
     data: T;
+    context: Context;
     currentProp!: BaseWidgetProp;
     parentProp!: BaseWidgetProp & BaseContainerProp;
     computedVal!: ComputedValue;
     tracker = new ChangeTracker();
     refreshTrigger = $state(0);
-
     get isActive() {
         return studioDoc.activeId === this.data.id;
     }
 
-    constructor(data:T, config: WidgetControllerConfig) {
+    constructor(data:T, 
+        context: Context,
+        config: WidgetControllerConfig) 
+    {
+        this.context = context;
         $effect(() => {
             // console.log('a_data', this.data);
         });
