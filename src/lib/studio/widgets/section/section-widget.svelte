@@ -37,7 +37,7 @@
     }
 
 	function  keydown(e: KeyboardEvent) {
-		if (e.key === 'Enter' || e.key === ' ') {
+		if (e.key === 'Enter') {
 			e.preventDefault();
             e.stopPropagation();
 			handleMoutdown();
