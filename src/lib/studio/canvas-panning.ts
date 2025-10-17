@@ -5,6 +5,7 @@ export type PanningConfig = {
 	inputElement: HTMLElement;  // 입력을 받을 엘리먼트
 	targetElement: HTMLElement; // transform을 적용할 엘리먼트
 	onPanChange?: (x: number, y: number) => void;
+    onSpacePressed?: (isPressed: boolean) => void;
 };
 
 /**
@@ -33,6 +34,7 @@ export function setupCanvasPanning(config: PanningConfig) {
 			
 			// 커서 모양 변경 - inputElement에 적용
 			config.inputElement.style.cursor = isDragging ? 'grabbing' : 'grab';
+			config.onSpacePressed?.(true);
 		}
 	};
 
@@ -40,6 +42,7 @@ export function setupCanvasPanning(config: PanningConfig) {
 		if (e.code === 'Space') {
 			isSpacePressed = false;
 			config.inputElement.style.cursor = '';
+			config.onSpacePressed?.(false);
 		}
 	};
 

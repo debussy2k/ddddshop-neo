@@ -20,7 +20,12 @@
 				inputElement,        // flex-1 엘리먼트에서 입력 받기
 				targetElement: canvasElement,  // infinite-canvas에 transform 적용
 				onPanChange: (x, y) => {
-					console.log(`Canvas panned to: ${x}, ${y}`);
+					// console.log(`Canvas panned to: ${x}, ${y}`);
+				},
+				onSpacePressed: (isPressed) => {
+                    tabletContext.isPanning = isPressed;
+                    mobileContext.isPanning = isPressed;
+                    desktopContext.isPanning = isPressed;
 				}
 			});
 

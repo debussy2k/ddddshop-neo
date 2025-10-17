@@ -39,7 +39,7 @@
 		canvasManager.needUpdate; // 의존성만 추가.
 		controller.refreshTrigger;
 		isActive; // 선택 상태 변경에 반응하도록 함
-		console.log('(B)Sandbox computedVal', data.id);
+		// console.log('(B)Sandbox computedVal', data.id);
 		return getComputedVal(data, context.break);
 	});
 	$effect(() => {
@@ -71,8 +71,9 @@
 		const baseClasses = `es-sandbox-widget`;
 		const activeClasses = 'outline outline-blue-400';
 		const inactiveClasses = 'hover:outline hover:outline-blue-300';
+		const panningClasses = context.isPanning ? 'pointer-events-none' : '';
 
-		return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
+		return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses} ${panningClasses}`;
 	}
 
 	/*

@@ -69,7 +69,9 @@
         const baseClasses = `es-frame-widget cursor-pointer`;
         const activeClasses = 'outline outline-blue-400';
         const inactiveClasses = 'hover:outline hover:outline-blue-300';
-        return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses}`;
+		const panningClasses = context.isPanning ? 'pointer-events-none' : '';
+
+        return `${baseClasses} ${viewData.isActive ? activeClasses : inactiveClasses} ${panningClasses}`;
     }
 
 	/*
