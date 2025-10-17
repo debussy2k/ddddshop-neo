@@ -186,7 +186,7 @@
 			console.log('부모의 hugContentsWidth를 해제합니다');
 			const parent = du.findById(parentId, studioDoc.current);
 			if (parent && parent.type === 'frame') {
-				let parentComputedVal = getComputedVal(parent as any);
+				let parentComputedVal = getComputedVal(parent as any, context.break);
 				cmd.cmdFrame.updateProp(
 					parentId,
 					{

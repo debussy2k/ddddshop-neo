@@ -1,4 +1,4 @@
-import type { Widget } from "$lib/studio/types";
+import type { Widget, BreakPoint } from "$lib/studio/types";
 import { studioDoc } from "$lib/studio/studio-doc.svelte";
 import { round2 } from "$lib/studio/util";
 
@@ -19,11 +19,11 @@ export interface ComputedValue {
  * DOM의 getBoundingClientRect()를 사용하여 브라우저가 계산한 실제 픽셀 값을 가져오며,
  * 부모 요소를 기준으로 한 상대 위치(left, right, top, bottom)와 크기(width, height)를 반환합니다.
  */
-export function getComputedVal(data: Widget): ComputedValue {
+export function getComputedVal(data: Widget, breakPoint: BreakPoint): ComputedValue {
 	const defaultResult = { parentWidth: 0, parentHeight: 0, left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
 
-	const parentEl = studioDoc.getElement(data.parentId);
-	const el = studioDoc.getElement(data.id);
+	const parentEl = studioDoc.getElement(data.parentId, breakPoint);
+	const el = studioDoc.getElement(data.id, breakPoint);
 	if (parentEl === null) {
 		console.error(`parentEl is null (id: ${data.parentId})`);
 		return defaultResult;

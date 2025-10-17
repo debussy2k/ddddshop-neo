@@ -72,7 +72,7 @@ export class BaseWidgetController<T extends NonSectionWidget> {
 
     
     getParentSize() {
-        const parentEl = studioDoc.getElement(this.data.parentId);
+        const parentEl = studioDoc.getElement(this.data.parentId, this.context.break);
         if (parentEl === null) {
             console.error(`parentEl is null (id: ${this.data.parentId})`);
             return { width: 0, height: 0 };

@@ -39,7 +39,7 @@
 		controller.refreshTrigger;
 		isActive; // 선택 상태 변경에 반응하도록 함
 		console.log('(B)Sandbox computedVal', data.id);
-		return getComputedVal(data);
+		return getComputedVal(data, context.break);
 	});
 	$effect(() => {
 		controller.setComputedVal(computedVal);

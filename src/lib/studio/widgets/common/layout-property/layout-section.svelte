@@ -129,6 +129,7 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- width -->
 						<WidthComboBox value={computedVal.width} 
+							{context}
 							currentProp={currentProp} 
 							{parentProp} 
 							widgetId={data.id}
@@ -138,7 +139,6 @@
 							min={sizeConstraints.hasMinWidth ? sizeConstraints.minWidth : 1}
 							max={sizeConstraints.hasMaxWidth ? sizeConstraints.maxWidth : undefined}
 							bind:displayStatus={displayStatus}
-							{context}
 							/>
 						<!-- min width -->
 						{#if displayStatus.showMinWidth}
@@ -160,6 +160,7 @@
 					<div class='flex-1 min-w-0 space-y-2'>
 						<!-- height -->
 						<HeightComboBox value={computedVal.height} 
+							{context}
 							currentProp={currentProp}
 							{parentProp} 
 							widgetId={data.id}
@@ -169,7 +170,6 @@
 							min={sizeConstraints.hasMinHeight ? sizeConstraints.minHeight : 1}
 							max={sizeConstraints.hasMaxHeight ? sizeConstraints.maxHeight : undefined}
 							bind:displayStatus={displayStatus}
-							{context}
 							/>
 						<!-- min height -->
 						{#if displayStatus.showMinHeight}

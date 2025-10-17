@@ -35,7 +35,7 @@ export interface ResizableConfig {
     getComputedVal: () => ComputedValue;
 	getParentSize: () => { width: number; height: number };
     updateCallback: (id: string, updatedProps: Partial<BaseWidgetProp>) => void;
-	getBreakPoint?: () => BreakPoint;
+	getBreakPoint: () => BreakPoint;
     minSize?: { width: number; height: number };
     maxSize?: { width: number; height: number };
     edges?: { top?: boolean; left?: boolean; bottom?: boolean; right?: boolean };
@@ -427,7 +427,7 @@ export function setupResizable(config: ResizableConfig): void {
 			return;
 		}
 
-		const currentBreakPoint = config.getBreakPoint?.() || 'desktop';
+		const currentBreakPoint = config.getBreakPoint();
 		const parentProp = parent.prop[currentBreakPoint];
 		
 		if (!('sizeConstraints' in parentProp)) {
@@ -440,7 +440,7 @@ export function setupResizable(config: ResizableConfig): void {
 		// 3. 변경사항을 updateCallback을 통해 부모 위젯에 적용
 		if (parentProp.sizeConstraints?.hugContentsWidth) {
 			const newWidth = docUtil.calcFrameWidth(parent, currentBreakPoint);
-			const parentComputedVal = getComputedVal(parent);
+			const parentComputedVal = getComputedVal(parent, currentBreakPoint);
 			const widthUpdates = constraintsUtilHorz.calculateWidthConstraints(
 				newWidth,
 				parentProp,
@@ -455,7 +455,7 @@ export function setupResizable(config: ResizableConfig): void {
 		// 3. 변경사항을 updateCallback을 통해 부모 위젯에 적용
 		if (parentProp.sizeConstraints?.hugContentsHeight) {
 			const newHeight = docUtil.calcFrameHeight(parent, currentBreakPoint);
-			const parentComputedVal = getComputedVal(parent);
+			const parentComputedVal = getComputedVal(parent, currentBreakPoint);
 			const heightUpdates = constraintsUtilVert.calculateHeightConstraints(
 				newHeight,
 				parentProp,

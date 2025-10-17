@@ -1,5 +1,5 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
-import type { DocState, CompositeWidget, Widget } from "./types";
+import type { DocState, CompositeWidget, Widget, BreakPoint } from "./types";
 import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
@@ -40,8 +40,8 @@ class StudioDoc {
 		return parent as T;
 	}
 
-    getElement(id: string): HTMLElement|null {
-        const el = document.getElementById(id);
+    getElement(id: string, breakPoint: BreakPoint): HTMLElement|null {
+        const el = document.getElementById(`${id}-${breakPoint}`);
         // if (!el) 
         //     console.error(`Element with id ${id} not found`);
         return el;

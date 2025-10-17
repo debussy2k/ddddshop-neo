@@ -37,7 +37,7 @@
         canvasManager.needUpdate;   // 의존성만 추가. 
         controller.refreshTrigger;
 		// console.log('Frame computedVal', data.id);
-		return getComputedVal(data);
+		return getComputedVal(data, context.break);
     })
 	$effect(() => {
 		controller.setComputedVal(computedVal);

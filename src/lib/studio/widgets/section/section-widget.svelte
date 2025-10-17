@@ -81,7 +81,7 @@
 </script>
 
 <div 
-    id={data.id}
+    id={`${data.id}-${context.break}`}
     bind:this={sectionElement}
     class={getSectionClasses(isActive)}
     style:height={currentProp.height}

@@ -315,7 +315,7 @@ function normalizeToLeftPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
-    const computed = getComputedVal(child);
+    const computed = getComputedVal(child, breakPoint);
     
     // horzAlign을 left로 변경하고 수평 computed 값 설정
     child.prop[breakPoint].horzAlign = 'left';
@@ -336,7 +336,7 @@ function normalizeToTopPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
-    const computed = getComputedVal(child);
+    const computed = getComputedVal(child, breakPoint);
     
     // vertAlign을 top으로 변경하고 수직 computed 값 설정
     child.prop[breakPoint].vertAlign = 'top';
@@ -484,7 +484,7 @@ export function calcFrameWidth(data: CompositeWidget, breakPoint: BreakPoint): n
 	if (prop.layout === 'flex-row') {
 		// flex-row: children의 width를 모두 합산하고 gap 추가
 		data.children.forEach((child, index) => {
-			const computed = getComputedVal(child);
+			const computed = getComputedVal(child, breakPoint);
 			totalWidth += computed.width;
 			
 			// 마지막 child가 아니면 gap 추가
@@ -496,7 +496,7 @@ export function calcFrameWidth(data: CompositeWidget, breakPoint: BreakPoint): n
 		// flex-col, block, grid: children 중 가장 큰 width 사용
 		let maxWidth = 0;
 		data.children.forEach((child) => {
-			const computed = getComputedVal(child);
+			const computed = getComputedVal(child, breakPoint);
 			maxWidth = Math.max(maxWidth, computed.width);
 		});
 		totalWidth = maxWidth;
@@ -522,7 +522,7 @@ export function calcFrameHeight(data: CompositeWidget, breakPoint: BreakPoint): 
 	if (prop.layout === 'flex-col') {
 		// flex-col: children의 height를 모두 합산하고 gap 추가
 		data.children.forEach((child, index) => {
-			const computed = getComputedVal(child);
+			const computed = getComputedVal(child, breakPoint);
 			totalHeight += computed.height;
 			
 			// 마지막 child가 아니면 gap 추가
@@ -534,7 +534,7 @@ export function calcFrameHeight(data: CompositeWidget, breakPoint: BreakPoint): 
 		// flex-row, block, grid: children 중 가장 큰 height 사용
 		let maxHeight = 0;
 		data.children.forEach((child) => {
-			const computed = getComputedVal(child);
+			const computed = getComputedVal(child, breakPoint);
 			maxHeight = Math.max(maxHeight, computed.height);
 		});
 		totalHeight = maxHeight;
