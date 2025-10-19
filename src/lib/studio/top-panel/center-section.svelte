@@ -5,11 +5,13 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { canvasManager } from "../canvas-manager.svelte";
 	import { bpm, type BreakPoint } from "../breakpoint-man.svelte";
+	
 	interface Props {
 		class?: ClassValue;
 	}
 
 	let { class: className }: Props = $props();
+	let zoomPercentage = $derived(Math.round(canvasManager.zoomScale * 100));
 
 	function handleBreakPointClick(breakPoint: BreakPoint) {
 		bpm.breakPoint = breakPoint;
@@ -57,6 +59,9 @@
 				</div>
 			</Button>
 
+			{#if canvasManager.mode === 'infinite-canvas'}
+				<span class="text-xs text-gray-600 ml-2">{zoomPercentage}%</span>
+			{/if}
 		</div>
 	</div>
 </div>

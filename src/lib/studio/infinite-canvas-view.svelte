@@ -4,6 +4,7 @@
     import PageWidget from "./widgets/section/page-widget.svelte";
 	import { Context } from "./context.svelte";
 	import { setupCanvasPanning } from "./canvas-panning";
+    import { canvasManager } from "./canvas-manager.svelte";
 
     let doc = $derived(studioDoc.document);
 	let desktopContext = new Context('desktop');
@@ -26,7 +27,10 @@
                     tabletContext.isPanning = isPressed;
                     mobileContext.isPanning = isPressed;
                     desktopContext.isPanning = isPressed;
-				}
+				},
+                onScaleChange: (scale, panX, panY) => {
+                    canvasManager.updateZoomScale(scale);
+                }
 			});
 
 			return cleanup;

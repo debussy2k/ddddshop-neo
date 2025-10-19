@@ -15,6 +15,9 @@ class CanvasManager {
     width = $state<number>(300);
     needUpdate = $state<number>(0);
     
+    // 줌 스케일 상태 추가
+    zoomScale = $state<number>(1);
+    
     get currentWidth() {
         return this.width;
     }
@@ -29,6 +32,11 @@ class CanvasManager {
 
     updateNeedUpdate() {
         this.needUpdate = (this.needUpdate + 1) % 1000000;
+    }
+    
+    // 줌 스케일 업데이트 메서드 추가
+    updateZoomScale(scale: number) {
+        this.zoomScale = scale;
     }
 }
 
