@@ -17,7 +17,7 @@
     onMount(() => {
 		// Infinite canvas 패닝 기능 설정
 		if (inputElement && canvasElement) {
-			const cleanup = setupCanvasPanning({
+			const panningControl = setupCanvasPanning({
 				inputElement,        // flex-1 엘리먼트에서 입력 받기
 				targetElement: canvasElement,  // infinite-canvas에 transform 적용
 				onPanChange: (x, y) => {
@@ -33,7 +33,10 @@
                 }
 			});
 
-			return cleanup;
+			// zoom 리셋 기능을 canvasManager에 등록
+			canvasManager.registerResetZoom(panningControl.resetZoom);
+
+			return panningControl.cleanup;
 		}
     });
 </script>

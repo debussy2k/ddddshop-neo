@@ -18,6 +18,9 @@ class CanvasManager {
     // 줌 스케일 상태 추가
     zoomScale = $state<number>(1);
     
+    // zoom 리셋 콜백 저장
+    private resetZoomCallback: (() => void) | null = null;
+    
     get currentWidth() {
         return this.width;
     }
@@ -37,6 +40,18 @@ class CanvasManager {
     // 줌 스케일 업데이트 메서드 추가
     updateZoomScale(scale: number) {
         this.zoomScale = scale;
+    }
+
+    // zoom 리셋 콜백 등록 메서드
+    registerResetZoom(callback: () => void) {
+        this.resetZoomCallback = callback;
+    }
+
+    // zoom 리셋 실행 메서드
+    resetZoom() {
+        if (this.resetZoomCallback) {
+            this.resetZoomCallback();
+        }
     }
 }
 

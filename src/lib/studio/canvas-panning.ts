@@ -140,14 +140,23 @@ export function setupCanvasPanning(config: PanningConfig) {
 	window.addEventListener('keyup', handleKeyUp);
 	config.inputElement.addEventListener('wheel', handleWheel, { passive: false });
 
-	// Cleanup 함수 반환
-	return () => {
-		window.removeEventListener('keydown', handleKeyDown);
-		window.removeEventListener('keyup', handleKeyUp);
-		config.inputElement.removeEventListener('wheel', handleWheel);
-		interactable.unset();
-		config.targetElement.style.transform = '';
-		config.inputElement.style.cursor = '';
+	// cleanup과 resetZoom 메서드를 객체로 반환
+	return {
+		cleanup: () => {
+			window.removeEventListener('keydown', handleKeyDown);
+			window.removeEventListener('keyup', handleKeyUp);
+			config.inputElement.removeEventListener('wheel', handleWheel);
+			interactable.unset();
+			config.targetElement.style.transform = '';
+			config.inputElement.style.cursor = '';
+		},
+		resetZoom: () => {
+			panX = 0;
+			panY = 0;
+			scale = 1;
+			applyTransform();
+			config.onScaleChange?.(scale, panX, panY);
+		}
 	};
 }
 

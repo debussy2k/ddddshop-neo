@@ -21,6 +21,9 @@
 		canvasManager.mode = canvasManager.mode === 'infinite-canvas' ? 'fixed-canvas' : 'infinite-canvas';
 	}
 
+	function resetZoom() {
+		canvasManager.resetZoom();
+	}
 </script>
 
 <div class={cn('w-1/3 flex justify-center items-center gap-1 px-2', className || '')}>
@@ -61,6 +64,16 @@
 
 			{#if canvasManager.mode === 'infinite-canvas'}
 				<span class="text-xs text-gray-600 ml-2">{zoomPercentage}%</span>
+				<Button 
+					variant="outline" 
+					size="sm" 
+					class="h-6 px-2 ml-1" 
+					title="Zoom 100% 리셋" 
+					onclick={resetZoom}>
+					<div class="h-4 flex items-center text-xs">
+						100%
+					</div>
+			</Button>				
 			{/if}
 		</div>
 	</div>
