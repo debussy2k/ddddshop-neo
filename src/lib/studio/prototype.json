@@ -1,4 +1,24 @@
 {
+	"assets": [
+		{
+            "id": "1000",
+            "parentId": "999",
+            "type": "component",
+			"props": {
+				"name": "variant 1",
+				"color": "red"
+			},
+			"variants": [
+				{
+					"extends": "1000",
+					
+				}
+			]
+		}
+	]
+}
+
+{
     "assets": [
         {
             "id": "1000",
@@ -20,7 +40,7 @@
                     "name": "variant 2",
                     "variantId": "222",
                     "state": "hover",
-                    "extends": "",
+                    "extends": "111",
                     "delta": {
                         "bg": "{colors.brand}",
                         "color": "{colors.white}"
