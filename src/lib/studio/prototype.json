@@ -1,114 +1,53 @@
 {
-	"assets": [
-		{
-            "id": "1000",
-            "parentId": "999",
-            "type": "component",
-			"props": {
-				"name": "variant 1",
-				"color": "red"
-			},
-			"variants": [
-				{
-					"extends": "1000",
-					
-				}
-			]
-		}
-	]
-}
-
-{
     "assets": [
         {
             "id": "1000",
             "parentId": "999",
             "type": "component",
-            "name": "버튼",
             "props": {
                 "name": "variant 1",
-                "variantId": "111",
-                "label": "Button",
-                "bg": "{colors.brand}",
-                "color": "{colors.white}",
-                "radius": 10,
-                "size": "md",
-                "padding": 12
+                "color": "red",
+                "bg": "white"
             },
             "variants": [
                 {
+                    "id": "1200",
                     "name": "variant 2",
-                    "variantId": "222",
-                    "state": "hover",
-                    "extends": "111",
                     "delta": {
-                        "bg": "{colors.brand}",
-                        "color": "{colors.white}"
-                    }
+                        "color": "blue"
+                    },
+                    "stateVariants": [
+                        {
+                            "state": "hover",
+                            "id": "1210",
+                            "name": "variant 2.1",
+                            "delta": {
+                                "bg": "gray"
+                            }
+                        }
+                    ]
                 },
                 {
+                    "id": "1400",
                     "name": "variant 3",
-                    "variantId": "333",
-                    "state": "hover",
-                    "extends": "222", // extends는 state variant인 경우에만 유효함
                     "delta": {
-                        "bg": "{colors.brand}",
-                        "color": "{colors.white}"
+                        "bg": "green"
                     }
                 }
             ],
-            "children": [
-                {
-                    "parentId": "872FxJLzZGbWTTKSBNn5f",
-                    "text": "Sandbox One",
-                    "id": "2NNFgAGu2pWimznCMEP9o",
-                    "type": "sandbox",
-                    "name": "샌드박스 1",
-                    "props": {
-                        "left": "10px",
-                        "right": "auto",
-                        "centerOffsetX": 0,
-                        "top": "10px",
-                        "width": "160px",
-                        "bottom": "auto",
-                        "height": "100px",
-                        "centerOffsetY": 0,
-                        "horzAlign": "left",
-                        "vertAlign": "top",
-                        "backgroundColor": "#d9d9d9"                        
-                    },
-                    "variants": [
-                        {
-                            "name": "variant 2",
-                            "variantId": "222",
-                            "delta": {
-                                "bg": "{colors.brand}",
-                                "color": "{colors.white}"
-                            }
-                        },
-                        {
-                            "name": "variant 3",
-                            "variantId": "333",
-                            "extends": "222",
-                            "state": "hover",
-                            "delta": {
-                                "bg": "{colors.brand}",
-                                "color": "{colors.white}"
-                            }
-                        }                        
-                    ]
-                }
-            ]
+            "children": []
         }
     ],
-    "instances": {
-        "btn_42": {
+    "instances": [
+        {
+            "id": "9000",
+            "label": "버튼이다",
             "componentId": "1000",
-            "variantId": "secondary",
+            "variantId": "1200",
             "overrides": {
                 "label": "Buy now",
                 "padding": 10
             }
         }
-    }
+    ]
 }
