@@ -2,7 +2,6 @@
     "assets": [
         {
             "id": "1000",
-            "parentId": "999",
             "type": "component",
             "props": {
                 "name": "variant 1",
