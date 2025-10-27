@@ -15,6 +15,7 @@
 	// 네비게이션 메뉴 항목들
 	const navigationItems = [
 		{ label: 'Admin', url: '/admin' },
+		{ label: 'Studio2', url: '/admin/studio2' },
 		{ label: 'Studio', url: '/admin/studio' },
 		{ label: 'Site Test', url: '/admin/site-test' },
 		{ label: 'DnD Test', url: '/dnd-test' }
