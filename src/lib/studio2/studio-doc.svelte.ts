@@ -1,6 +1,6 @@
 import HistoryManager, { HistoryMode } from "./history-manager";
 import type { DocState } from "./types";
-// import * as du from "./widgets/common/doc-util";
+import * as du from "./widgets/common/doc-util";
 
 export interface HistoryInfo {
     pastCount: number;
@@ -81,11 +81,11 @@ class StudioDoc {
         return this.doc;
     }
 
-    // get activeItem() {
-    //     if(!this.activeId) return null;
+    get activeItem() {
+        if(!this.activeId) return null;
         
-    //     return du.findById(this.activeId, this.doc);
-    // }
+        return du.findById(this.activeId, this.doc);
+    }
 
     // 편의 메서드들 (화살표 함수로 this 바인딩)
     undo = () => {

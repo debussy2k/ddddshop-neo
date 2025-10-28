@@ -4,7 +4,8 @@
     import { studioDoc } from './studio-doc.svelte';
     import TopPanel from './top-panel.svelte';
     import LeftPanel from './left-panel.svelte';
-
+    import CenterPanel from './center-panel.svelte';
+    import RightPanel from './right-panel.svelte';
 
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
@@ -44,6 +45,7 @@
     <TopPanel />
     <div class="flex flex-1">
         <LeftPanel width="240px" />
-
+        <CenterPanel />
+        <RightPanel width="240px"/>
     </div>
 </div>

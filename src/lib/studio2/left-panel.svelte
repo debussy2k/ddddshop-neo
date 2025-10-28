@@ -2,7 +2,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
     import { onMount } from 'svelte';
     import { studioDoc } from './studio-doc.svelte';
-    // import { cmdSection, cmdFrame, cmdSandbox, cmdSimpleImage, cmdShowcase } from './command';
+    import { cmdSection, /* cmdFrame, cmdSandbox, cmdSimpleImage, cmdShowcase */ } from './command';
     // import LayoutBrowser from './layout-browser.svelte';
     let { width }: { width: string } = $props();
 
@@ -14,8 +14,10 @@
     });
 
     function addSection() {
-        // const { id } = cmdSection.add({});
-        // studioDoc.activeId = id;
+        const { id } = cmdSection.add({});
+        studioDoc.activeId = id;
+
+        console.log("studioDoc.document", studioDoc.document)
     }
 
     // function addFrame() {
