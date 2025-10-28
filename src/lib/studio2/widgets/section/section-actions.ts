@@ -27,32 +27,6 @@ export class SectionActions {
             const sectionName = data.name?.trim() || this.generateSectionName(draft.sections);
             
             const defaultProp:Section['prop'] = {
-				mobile: {
-					height: '260px',
-					layout: 'block',
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-				},
-				tablet: {
-					height: '360px',
-					layout: 'block',
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-				},
 				desktop: {
 					height: '460px',
 					layout: 'block',
@@ -65,6 +39,11 @@ export class SectionActions {
 					paddingRight: 10,
 					paddingTop: 10,
 					paddingBottom: 10,
+				},                
+				tablet: {
+				},
+                mobile: {
+					height: '260px',
 				}
             }
 

@@ -1,17 +1,25 @@
 import type { NonSectionWidget, BaseContainerProp } from '../../types';
-import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
+import type { BreakPoint } from '$lib/studio2/breakpoint-man.svelte';
 
 export interface Section {
     id: string;
     type: 'section';
     name: string;
-    // parentId: string;
+    parentId: string;
     // children: NonSectionWidget[]; // child Widget 객체들
 
-	prop: Record<BreakPoint, BaseContainerProp & {
-		height: string; // section에서만 사용하는 속성.
-	}>;
+	prop: {
+        [K in BreakPoint]: PropByBreakPoint<K>;
+    }
 }
+
+type Prop = BaseContainerProp & {
+    height: string;
+}
+
+// 조건부 타입으로 prop 매핑
+type PropByBreakPoint<B extends BreakPoint> = 
+  B extends "desktop" ? Prop : Partial<Prop>;
 
 export type SectionPropValue = Section['prop'][keyof Section['prop']];
 

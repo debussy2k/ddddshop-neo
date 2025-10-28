@@ -3,23 +3,26 @@ export const sample = {
         {
             "id": "1000",
             "type": "component",
-            "props": {
-                "name": "variant 1",
-                "color": "red",
-                "bg": "white"
-            },
             "variants": [
+                {
+                    "id": "1100",
+                    "name": "variant 1",
+                    "props": {
+                        "color": "red",
+                        "bg": "white"    
+                    }
+                },
                 {
                     "id": "1200",
                     "name": "variant 2",
-                    "delta": {
+                    "delta": { // variants[0]을 상속받음을 전제함
                         "color": "blue"
                     },
                     "stateVariants": [
                         {
-                            "state": "hover",
                             "id": "1210",
                             "name": "variant 2.1",
+                            "state": "hover", // 
                             "delta": {
                                 "bg": "gray"
                             }
@@ -56,19 +59,19 @@ export const section = {
     "id": "1000",
     "type": "section",
     "name": "section 1",
-    "props": { // Desktop
-        layout: "block",
-        justifyContent: "start",
-        alignItems: "start",
-        gap: 10,
-        verticalGap: 10,
-        wrap: false,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingTop: 10,
-        paddingBottom: 10,
-    },
-    "breakpoints": {
+    "prop": {
+        desktop: {
+            layout: "block",
+            justifyContent: "start",
+            alignItems: "start",
+            gap: 10,
+            verticalGap: 10,
+            wrap: false,
+            paddingLeft: 10,
+            paddingRight: 10,
+            paddingTop: 10,
+            paddingBottom: 10,    
+        },
         tablet: {
             justifyContent: "center",
             gap: 25,
