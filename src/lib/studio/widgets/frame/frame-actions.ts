@@ -55,7 +55,7 @@ export class FrameActions {
 
     private getDefaultProp(parentProp: ContainerProp) {
         const defaultProp:Frame['prop'] = {
-            mobile: {
+            desktop: {
                 layout: 'block',
                 left: '10px',
                 right: 'auto',
@@ -79,51 +79,9 @@ export class FrameActions {
                 backgroundColor: '#ffffff',
             },
             tablet: {
-                layout: 'block',
-                left: '10px',
-                right: 'auto',
-                width: '200px',
-                centerOffsetX: 0,
-                top: '10px',
-                bottom: 'auto',
-                height: '150px',
-                horzAlign: 'left',
-                vertAlign: 'top',
-                centerOffsetY: 0,
-                justifyContent: 'start',
-                alignItems: 'start',
-                gap: 10,
-                verticalGap: 10,
-                wrap: false,
-                paddingLeft: 10,
-                paddingRight: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
-                backgroundColor: '#ffffff',
             },
-            desktop: {
-                layout: 'block',
-                left: '10px',
-                right: 'auto',
-                width: '200px',
-                centerOffsetX: 0,
-                top: '10px',
-                bottom: 'auto',
-                height: '150px',
-                horzAlign: 'left',
-                vertAlign: 'top',
-                centerOffsetY: 0,
-                justifyContent: 'start',
-                alignItems: 'start',
-                gap: 10,
-                verticalGap: 10,
-                wrap: false,
-                paddingLeft: 10,
-                paddingRight: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
-                backgroundColor: '#ffffff',
-            }
+            mobile: {
+            },
         }
 
         // 부모의 layout이 flexbox인 경우 sizeConstraints를 부여함.
@@ -157,7 +115,7 @@ export class FrameActions {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft) as Frame;
             if (widget) {
-                const currentProp = widget.prop[breakPoint] as FramePropValue;
+                const currentProp = du.resolveProp<FramePropValue>(widget.prop, breakPoint);
 
                 // layout이 변경되면 children의 sizeConstraints를 재설정함
                 if (updates.layout && updates.layout !== currentProp.layout) {

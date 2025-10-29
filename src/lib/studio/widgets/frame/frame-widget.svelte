@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte";
     import type { BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
-    import type { Frame } from "./frame.type";
+    import type { Frame, FramePropValue } from "./frame.type";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
 	import { cmdFrame } from "$lib/studio/command";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
@@ -12,15 +12,16 @@
     import { getFramePositionStyle, getFrameChildrenLayoutStyle } from "./frame-style-util";
 	import type { Context } from "$lib/studio/context.svelte";
 	import { bpm } from '$lib/studio/breakpoint-man.svelte';
+	import * as  du from '$lib/studio/widgets/common/doc-util';
 
     let { data, context }: { data: Frame; context: Context } = $props();
 
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived.by(() => {
-		return data.prop?.[context.break]
+		return du.resolveProp<FramePropValue>(data.prop, context.break);
 	});
 	$effect(() => {
-		controller.setCurrentProp(data.prop?.[context.break]);		
+		controller.setCurrentProp(currentProp);		
 	});
 
 	// parentProp은 부모 위젯의 속성을 가져옴

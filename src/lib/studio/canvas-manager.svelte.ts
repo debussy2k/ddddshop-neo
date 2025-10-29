@@ -1,6 +1,7 @@
 import type { CanvasMode } from "./types";
 class CanvasManager {
-    canvasMode = $state<CanvasMode>('fixed-canvas');
+    // canvasMode = $state<CanvasMode>('fixed-canvas');
+    canvasMode = $state<CanvasMode>('infinite-canvas');
 
     get mode() {
         return this.canvasMode;
