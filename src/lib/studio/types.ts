@@ -5,6 +5,30 @@ import type { SimpleImage } from "./widgets/simple-image/simple-image.type";
 import type { Showcase } from "./widgets/showcase/showcase.type";
 export type { Section, Frame, Sandbox, SimpleImage, Showcase };
 
+/*
+export type DeepPartial<T> = { [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K] };
+
+type VariantNode<P> = {
+  id: string;
+  extends?: string | string[];
+  delta: DeepPartial<P>;
+  stateDeltas?: Record<string, DeepPartial<P>>; // hover, active 등
+};
+
+type ComponentDef<P> = {
+  tokens?: Record<string, any>;
+  base: P;
+  variants: Record<string, VariantNode<P>>;
+};
+
+type Instance<P> = {
+  componentId: string;
+  variantId: string;
+  overrides: DeepPartial<P>;
+};
+
+*/
+
 export type CanvasMode = "infinite-canvas" | "fixed-canvas";
 export type BreakPoint = "desktop" | "tablet" | "mobile";
 

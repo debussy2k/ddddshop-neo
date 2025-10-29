@@ -27,32 +27,6 @@ export class SectionActions {
             const sectionName = data.name?.trim() || this.generateSectionName(draft.sections);
             
             const defaultProp:Section['prop'] = {
-				mobile: {
-					height: '260px',
-					layout: 'block',
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-				},
-				tablet: {
-					height: '360px',
-					layout: 'block',
-                    justifyContent: 'start',
-                    alignItems: 'start',
-					gap: 10,
-					verticalGap: 10,
-					wrap: false,
-					paddingLeft: 10,
-					paddingRight: 10,
-					paddingTop: 10,
-					paddingBottom: 10,
-				},
 				desktop: {
 					height: '460px',
 					layout: 'block',
@@ -65,7 +39,11 @@ export class SectionActions {
 					paddingRight: 10,
 					paddingTop: 10,
 					paddingBottom: 10,
-				}
+				},
+				mobile: {
+				},
+				tablet: {
+				}                
             }
 
             const newSection: Section = {
@@ -126,6 +104,8 @@ export class SectionActions {
                     );
                 }
 
+                // @ts-expect-error - PropByBreakPoint 조건부 타입으로 인한 spread 타입 불일치
+                // PropByBreakPoint는 desktop에는 Prop를, mobile/tablet에는 Partial<Prop>를 반환하는데, 이로 인해 spread 연산자 사용 시 TypeScript가 정확한 타입을 추론하지 못함
                 widget.prop[breakPoint] = {
                     ...widget.prop[breakPoint],
                     ...updates

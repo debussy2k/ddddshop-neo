@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Sandbox } from './sandbox.type';
+	import type { Sandbox, SandboxPropValue } from './sandbox.type';
 	import { studioDoc } from '$lib/studio/studio-doc.svelte';
 	import { onMount } from 'svelte';
 	import { cmdSandbox } from '$lib/studio/command';
@@ -16,10 +16,10 @@
 
 	// 현재 breakpoint에 맞는 속성 가져오기
 	let currentProp = $derived.by(() => {
-		return data.prop?.[context.break];
-	});
+        return du.resolveProp<SandboxPropValue>(data.prop, context.break);
+    });
 	$effect(() => {
-		controller.setCurrentProp(data.prop?.[context.break]);
+		controller.setCurrentProp(currentProp);
 	});
 
 	// parentProp은 부모 위젯의 속성을 가져옴

@@ -59,32 +59,6 @@ export class SandboxActions {
 
     private getDefaultProp(parentProp: ContainerProp) {
         const defaultProp:Sandbox['prop'] = {
-            mobile: {
-                left: '10px',
-                right: 'auto',
-                width: '160px',
-                centerOffsetX: 0,
-                top: '10px',
-                bottom: 'auto',
-                height: '100px',
-                centerOffsetY: 0,
-                horzAlign: 'left',
-                vertAlign: 'top',
-                backgroundColor: '#d9d9d9',
-            },
-            tablet: {
-                left: '10px',
-                right: 'auto',
-                centerOffsetX: 0,
-                top: '10px',
-                width: '160px',
-                bottom: 'auto',
-                height: '100px',
-                centerOffsetY: 0,
-                horzAlign: 'left',
-                vertAlign: 'top',
-                backgroundColor: '#d9d9d9',
-            },
             desktop: {
                 left: '10px',
                 right: 'auto',
@@ -97,6 +71,10 @@ export class SandboxActions {
                 horzAlign: 'left',
                 vertAlign: 'top',
                 backgroundColor: '#d9d9d9',
+            },
+            mobile: {
+            },
+            tablet: {
             }
         }
 
@@ -130,6 +108,9 @@ export class SandboxActions {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft);
             if (widget) {
+
+                // @ts-expect-error - PropByBreakPoint 조건부 타입으로 인한 spread 타입 불일치
+                // PropByBreakPoint는 desktop에는 Prop를, mobile/tablet에는 Partial<Prop>를 반환하는데, 이로 인해 spread 연산자 사용 시 TypeScript가 정확한 타입을 추론하지 못함
                 widget.prop[breakpoint] = {
                     ...widget.prop[breakpoint],
                     ...updates

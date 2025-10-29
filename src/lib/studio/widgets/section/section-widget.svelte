@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from "./section.type";
+    import type { Section, SectionPropValue } from "./section.type";
     import { cmdSection } from "$lib/studio/command";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
@@ -9,13 +9,16 @@
 	import { cn } from "$lib/utils";
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
 	import type { Context } from "$lib/studio/context.svelte";
+    import * as du from '../common/doc-util';
 
 
     let { data, context }: { data: Section; context: Context } = $props();
 
     let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);
-    let currentProp = $derived(data.prop?.[context.break]);
+    let currentProp = $derived.by(() => {
+        return du.resolveProp<SectionPropValue>(data.prop, context.break);
+    });
 
 	export function getElement(): HTMLElement {
 		if (!sectionElement) throw new Error('Section element not mounted');

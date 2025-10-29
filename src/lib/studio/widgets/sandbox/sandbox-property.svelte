@@ -1,16 +1,18 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import type { Sandbox } from "./sandbox.type";
+    import type { ContainerPropValue } from "$lib/studio/types";
+    import type { Sandbox, SandboxPropValue } from "./sandbox.type";
     import { studioDoc } from "../../studio-doc.svelte";
     import { canvasManager } from "../../canvas-manager.svelte"; // 추가
     import { cmdSandbox as cmd } from "$lib/studio/command";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 	import CommonProperty from "../common/common-property.svelte";
 	import type { Context } from "$lib/studio/context.svelte";
+    import * as du from '../common/doc-util';
 
     let { data, context }: { data: Sandbox; context: Context } = $props();
-    let currentProp = $derived(data.prop?.[context.break]);
-    let parentProp = $derived(studioDoc.getParentByChildId(data.id)?.prop?.[context.break]);
+    let currentProp = $derived(du.resolveProp<SandboxPropValue>(data.prop, context.break));
+    let parentProp = $derived(du.resolveProp<ContainerPropValue>(studioDoc.getParentByChildId(data.id)?.prop, context.break));
 	let refreshTrigger = $state(0);
     let computedVal = $derived.by(() => {
         // console.log("parentSize", canvasManager.currentWidth)

@@ -5,6 +5,29 @@ import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 import * as util from "$lib/studio/util";
 
+export function resolveProp<T>(propRoot: Record<BreakPoint, T|Partial<T>> | undefined, breakPoint: BreakPoint) : T {
+    if (!propRoot) {
+        throw new Error(`propRoot is undefined (breakPoint: ${breakPoint})`);
+    }
+
+    if (breakPoint === 'desktop') {
+        return propRoot['desktop'] as T;
+    }
+    else {
+        return deepMerge(propRoot['desktop'] as object, propRoot[breakPoint] as object) as T;
+    }
+}
+
+function deepMerge<A extends object, B extends object>(a: A, b: B): A & B {
+    const out: any = Array.isArray(a) ? [...(a as any)] : { ...(a as any) };
+    for (const [k, v] of Object.entries(b as any)) {
+        if (v && typeof v === "object" && !Array.isArray(v)) out[k] = deepMerge(out[k] ?? {}, v);
+        else out[k] = v;
+    }
+    return out;
+}
+
+
 export function findById(id: string, draft: DocState) {
     // 재귀적으로 Widget을 찾는 헬퍼 함수
     function _find(widgets: Widget[] | undefined, targetId: string): Widget | undefined {
