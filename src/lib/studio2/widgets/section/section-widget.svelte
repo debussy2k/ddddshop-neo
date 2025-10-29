@@ -8,14 +8,16 @@
 	import * as util from "$lib/studio/util";
 	import { cn } from "$lib/utils";
 	import { canvasManager } from "$lib/studio2/canvas-manager.svelte";
-	import type { Context } from "$lib/studio/context.svelte";
+	import type { Context } from "$lib/studio2/context.svelte";
+    import * as du from '../common/doc-util';
 
 
     let { data, context }: { data: Section; context: Context } = $props();
 
     let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);
-    let currentProp = $derived(data.prop?.[context.break]);
+    // let currentProp = $derived(data.prop?.[context.break]);
+    let currentProp = $derived(du.resolveProp(data.prop, context.break));
 
 	export function getElement(): HTMLElement {
 		if (!sectionElement) throw new Error('Section element not mounted');

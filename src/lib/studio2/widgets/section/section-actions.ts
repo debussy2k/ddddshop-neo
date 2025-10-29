@@ -43,7 +43,6 @@ export class SectionActions {
 				tablet: {
 				},
                 mobile: {
-					height: '260px',
 				}
             }
 
