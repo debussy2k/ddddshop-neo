@@ -93,7 +93,7 @@ export class SectionActions {
         return this.historyManager.execute((draft) => {
             const widget = du.findById(id, draft) as Section;
             if (widget) {
-                const currentProp = widget.prop[breakPoint] as SectionPropValue;
+                const currentProp = du.resolveProp<SectionPropValue>(widget.prop, breakPoint);
 
                 // layout이 변경되면 children의 sizeConstraints를 재설정함
                 if (updates.layout && updates.layout !== currentProp.layout) {

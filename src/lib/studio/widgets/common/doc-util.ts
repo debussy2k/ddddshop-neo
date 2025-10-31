@@ -1,4 +1,4 @@
-import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget } from "../../types";
+import type { BaseWidgetProp, CompositeWidget, DocState, LayoutType, Widget, ContainerProp, NonSectionWidget, BaseContainerProp } from "../../types";
 import type { SectionPropValue } from "../section/section.type";
 import type { FramePropValue } from "../frame/frame.type";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
@@ -538,7 +538,7 @@ export function clearChildrenFullHeight(children: NonSectionWidget[], breakPoint
 	data는 CompositeWidget이지만 실제 Section인 경우는 없음
 */
 export function calcFrameWidth(data: CompositeWidget, breakPoint: BreakPoint): number {
-	const prop = data.prop[breakPoint];
+	const prop = resolveProp<BaseContainerProp>(data.prop, breakPoint);
 	
 	// children이 없으면 padding만 반환
 	if (!data.children || data.children.length === 0) {
@@ -576,7 +576,7 @@ export function calcFrameWidth(data: CompositeWidget, breakPoint: BreakPoint): n
 }
 
 export function calcFrameHeight(data: CompositeWidget, breakPoint: BreakPoint): number {
-	const prop = data.prop[breakPoint];
+	const prop = resolveProp<BaseContainerProp>(data.prop, breakPoint);
 	
 	// children이 없으면 padding만 반환
 	if (!data.children || data.children.length === 0) {
