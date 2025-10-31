@@ -280,7 +280,8 @@ export function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropVal
     return isContainerProps(prop) && (prop.layout === 'flex-row' || prop.layout === 'flex-col');
 }	
 
-export function isLayoutFlexBox(layout: LayoutType) {
+export function isLayoutFlexBox(layout: LayoutType | undefined) {
+    if (!layout) return false;
     return layout === 'flex-row' || layout === 'flex-col';
 }
 
@@ -338,14 +339,35 @@ function normalizeToLeftPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
-    const computed = getComputedVal(child, breakPoint);
-    
-    // horzAlign을 left로 변경하고 수평 computed 값 설정
-    child.prop[breakPoint].horzAlign = 'left';
-    child.prop[breakPoint].left = `${computed.left}px`;
-    child.prop[breakPoint].width = `${computed.width}px`;
-    child.prop[breakPoint].right = `${computed.right}px`;
-    child.prop[breakPoint].centerOffsetX = 0;
+    const computed = getComputedVal(child, breakPoint);    
+    const prop = resolveProp<BaseWidgetProp>(child.prop, breakPoint);
+
+    // horzAlign을 left로 변경하고 수평 computed 값 설정    
+    if (prop.horzAlign !== 'left') {
+        // horzAlign값이 "left"가 아닌 경우 모든 값을 override함.
+        child.prop[breakPoint].horzAlign = 'left';
+        child.prop[breakPoint].left = `${computed.left}px`;
+        child.prop[breakPoint].width = `${computed.width}px`;
+        child.prop[breakPoint].right = `${computed.right}px`;
+        child.prop[breakPoint].centerOffsetX = 0;    
+    }
+    else {
+        // horzAlign값이 "left"인 경우에만 delta값만 override함.
+        if (prop.left !== `${computed.left}px`) {
+            child.prop[breakPoint].left = `${computed.left}px`;
+        }
+        if (prop.width !== `${computed.width}px`) {
+            child.prop[breakPoint].width = `${computed.width}px`;
+        }
+        if (prop.right !== `${computed.right}px`) {
+            child.prop[breakPoint].right = `${computed.right}px`;
+        }
+        if (prop.centerOffsetX !== 0) {
+            child.prop[breakPoint].centerOffsetX = 0;
+        }
+    }
+
+
 }
 
 /**
@@ -359,14 +381,35 @@ function normalizeToTopPosition(
     child: NonSectionWidget,
     breakPoint: BreakPoint
 ): void {
-    const computed = getComputedVal(child, breakPoint);
-    
-    // vertAlign을 top으로 변경하고 수직 computed 값 설정
-    child.prop[breakPoint].vertAlign = 'top';
-    child.prop[breakPoint].top = `${computed.top}px`;
-    child.prop[breakPoint].height = `${computed.height}px`;
-    child.prop[breakPoint].bottom = `${computed.bottom}px`;
-    child.prop[breakPoint].centerOffsetY = 0;
+    const computed = getComputedVal(child, breakPoint);    
+    const prop = resolveProp<BaseWidgetProp>(child.prop, breakPoint);
+
+    // vertAlign을 top으로 변경하고 수직 computed 값 설정    
+    if (prop.vertAlign !== 'top') {
+        // vertAlign값이 "top"이 아닌 경우 모든 값을 override함.
+        child.prop[breakPoint].vertAlign = 'top';
+        child.prop[breakPoint].top = `${computed.top}px`;
+        child.prop[breakPoint].height = `${computed.height}px`;
+        child.prop[breakPoint].bottom = `${computed.bottom}px`;
+        child.prop[breakPoint].centerOffsetY = 0;    
+    }
+    else {
+        // vertAlign값이 "top"인 경우에만 delta값만 override함.
+        if (prop.top !== `${computed.top}px`) {
+            child.prop[breakPoint].top = `${computed.top}px`;
+        }
+        if (prop.height !== `${computed.height}px`) {
+            child.prop[breakPoint].height = `${computed.height}px`;
+        }
+        if (prop.bottom !== `${computed.bottom}px`) {
+            child.prop[breakPoint].bottom = `${computed.bottom}px`;
+        }
+        if (prop.centerOffsetY !== 0) {
+            child.prop[breakPoint].centerOffsetY = 0;
+        }
+    }
+
+
 }
 
 /**
@@ -408,7 +451,8 @@ export function updateChildrenSizeConstraintsOnLayoutChange(
     if (isLayoutFlexBox(newLayout)) {
         // children의 sizeConstraints를 기본값으로 설정
         children.forEach(child => {
-            if (child.prop[breakPoint].sizeConstraints === undefined) {
+            const currentProp = resolveProp<BaseWidgetProp>(child.prop, breakPoint);
+            if (currentProp.sizeConstraints === undefined) {
                 child.prop[breakPoint].sizeConstraints = getDefaultSizeConstraints();
             }
 

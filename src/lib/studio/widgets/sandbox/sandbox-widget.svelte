@@ -26,7 +26,6 @@
 	let parentProp = $derived.by(() => {
 		let parent = studioDoc.getParentByChildId(data.id);
 		return du.resolveProp<BaseWidgetProp & BaseContainerProp>(parent?.prop, context.break);
-			 // parent?.prop?.[context.break] as Readonly<BaseWidgetProp & BaseContainerProp>;
 	});
 	$effect(() => {
 		controller.setParentProp(parentProp);

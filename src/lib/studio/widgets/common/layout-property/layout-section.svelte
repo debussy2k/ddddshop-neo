@@ -65,15 +65,15 @@
 	function onChangeLayout(newLayout: LayoutType) {
 		let obj: Partial<FramePropValue | SectionPropValue> = {
 			layout: newLayout,
-			wrap: false,
-			width: computedVal.width + 'px',
-			height: computedVal.height + 'px',
 		}
 
 		if (newLayout === 'block' && parentProp.layout === 'block') {
 			// frame의 sizeConstraints가 제거되는 시점은 본인도 부모도 모두 block이 될 때임.
 			obj = {
 				...obj,
+				wrap: false,
+				width: computedVal.width + 'px',
+				height: computedVal.height + 'px',
 				sizeConstraints: undefined
 			}
 		}
@@ -83,7 +83,9 @@
 			}
 			else {
 			// block -> flex 일 경우 아래 값으로 초기화.
-				obj = { ...obj, 
+				obj = { 
+					...obj,
+					wrap: false,
 					justifyContent: "start",
 					alignItems: "start",						
 					gap: 10, 

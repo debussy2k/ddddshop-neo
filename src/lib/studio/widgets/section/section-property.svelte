@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Section } from "./section.type";
+    import type { Section, SectionPropValue } from "./section.type";
     import type { LayoutType } from "../../types";
     import { cmdSection as cmd } from "$lib/studio/command";
     import LayoutSelector from "../common/layout-property/layout-selector.svelte";
@@ -9,9 +9,10 @@
     import { MiniButton } from "$lib/components/ui/min-button";
     import ResizeToFitIcon from "$lib/components/ui/min-button/resize-to-fit.svg?raw";
 	import type { Context } from "$lib/studio/context.svelte";
+    import * as du from '../common/doc-util';
     
     let { data, context }: { data: Section; context: Context } = $props();
-    let currentProp = $derived(data.prop?.[context.break]);
+    let currentProp = $derived(du.resolveProp<SectionPropValue>(data.prop, context.break));
 
 	function updateLayout(newLayout: LayoutType) {
         cmd.updateProp(data.id, { layout: newLayout }, context.break);

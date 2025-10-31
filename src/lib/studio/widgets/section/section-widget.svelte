@@ -10,7 +10,7 @@
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
 	import type { Context } from "$lib/studio/context.svelte";
     import * as du from '../common/doc-util';
-
+    import { getSectionPositionStyle, getSectionChildrenLayoutStyle } from "./section-style-util";
 
     let { data, context }: { data: Section; context: Context } = $props();
 
@@ -85,6 +85,12 @@
         canvasManager.updateNeedUpdate();
 	}
 
+	let {childrenLayoutStyle} = $derived.by(() => {	
+        // console.log('(A)Frame currentStyle', data.id);
+        let childrenLayoutStyle = getSectionChildrenLayoutStyle(currentProp);
+		return { childrenLayoutStyle };
+	});    
+
 </script>
 
 <div 
@@ -116,7 +122,8 @@
     <div class="_outer">
         <!-- Child 위젯들 렌더링 -->
         {#if childWidgets().length > 0}
-            <div class={cn("es-section-widget-inner", getInnerClass())}
+            <div class={cn("es-section-widget-inner w-full")}
+                style={childrenLayoutStyle}
                 style:height={currentProp.height}
             >
                 <WidgetRenderer widgets={childWidgets()} {context} />

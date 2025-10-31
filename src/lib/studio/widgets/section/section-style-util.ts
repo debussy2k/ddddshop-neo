@@ -1,33 +1,6 @@
-import type { BaseWidgetProp, BaseContainerProp } from "$lib/studio/types";
-import * as du from "$lib/studio/widgets/common/doc-util";
+import type { BaseContainerProp } from "$lib/studio/types";
 
-/**
- * Frame 위젯의 기본 스타일을 생성합니다.
- * @param currentProp - 현재 프레임의 속성
- * @param parentProp - 부모 요소의 속성
- * @param onStyleApplied - 스타일 적용 후 실행할 콜백 (refreshTrigger 업데이트용)
- */
-export function getFramePositionStyle(
-	currentProp: Readonly<BaseWidgetProp & BaseContainerProp>,
-	parentProp: Readonly<BaseWidgetProp & BaseContainerProp>
-): string {
-	let style = du.getBaseStyleOfLeafWidget(currentProp, parentProp.layout || 'block');
-
-	if (currentProp.layout === 'flex-row') {
-		style += `column-gap: ${currentProp.gap}px;`;
-	}
-	else if (currentProp.layout === 'flex-col') {
-		style += `row-gap: ${currentProp.gap}px;`;
-	}
-
-	return style;
-}
-
-/**
- * Frame 위젯의 레이아웃 스타일을 생성합니다.
- * @param currentProp - 현재 프레임의 속성
- */
-export function getFrameChildrenLayoutStyle(
+export function getSectionChildrenLayoutStyle(
 	currentProp: Readonly<BaseContainerProp>
 ): string {
 	let style = "";
