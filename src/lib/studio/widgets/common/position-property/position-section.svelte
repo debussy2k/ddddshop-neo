@@ -28,7 +28,7 @@
 
 	let { class: className, data, cmd, currentProp, parentProp, computedVal, context }: Props = $props();
 
-	let parentEl: any = studioDoc.getElement(data.parentId);
+	let parentEl: any = studioDoc.getElement(data.parentId, context.break);
 
 	// 타입 가드 함수 - 위치 섹션에서 사용
 	function isFlexbox(prop: BaseWidgetProp | FramePropValue | SectionPropValue): prop is FramePropValue | SectionPropValue {
