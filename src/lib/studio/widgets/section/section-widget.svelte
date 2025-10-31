@@ -10,7 +10,7 @@
 	import { canvasManager } from "$lib/studio/canvas-manager.svelte";
 	import type { Context } from "$lib/studio/context.svelte";
     import * as du from '../common/doc-util';
-    import { getSectionPositionStyle, getSectionChildrenLayoutStyle } from "./section-style-util";
+    import { getSectionChildrenLayoutStyle } from "./section-style-util";
 
     let { data, context }: { data: Section; context: Context } = $props();
 
