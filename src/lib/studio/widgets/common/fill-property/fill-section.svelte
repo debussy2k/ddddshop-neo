@@ -39,6 +39,9 @@
 
 	function handleInput(color: { hsv: HsvaColor | null; rgb: RgbaColor | null; hex: string | null; color: any; }) {
 		// console.log(`handleInput (isOpen: ${isColorPickerOpen})`, color);
+		if (!isColorPickerOpen)
+			return;
+		
 		updateProp({ backgroundColor: color.hex || '#ffffff' });
 	}
 
