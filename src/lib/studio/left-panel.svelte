@@ -4,9 +4,12 @@
     import { studioDoc } from './studio-doc.svelte';
     import { cmdSection, cmdFrame, cmdSandbox, cmdSimpleImage, cmdShowcase } from './command';
     import LayoutBrowser from './layout-browser.svelte';
+    import { leftPanelTabManager } from './left-panel-tab-manager.svelte';
     let { width }: { width: string } = $props();
 
     let style = `width: ${width}`;
+    
+    let activeTab = $derived(leftPanelTabManager.activeTab);
 
     onMount(() => {
         console.log('LeftPanel mounted');
@@ -75,10 +78,27 @@
 </script>
 
 <div class="bg-white text-sm h-full flex flex-col" style={style}>
-    <div>
-        생성
+    <div class="flex border-b border-gray-200">
+        <button
+            class="flex-1 px-4 py-2 text-center transition-colors {activeTab === 'pages' ? 'border-b-2 border-blue-500 text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}"
+            onclick={() => leftPanelTabManager.setActiveTab('pages')}
+        >
+            Pages
+        </button>
+        <button
+            class="flex-1 px-4 py-2 text-center transition-colors {activeTab === 'layers' ? 'border-b-2 border-blue-500 text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}"
+            onclick={() => leftPanelTabManager.setActiveTab('layers')}
+        >
+            Layers
+        </button>
+        <button
+            class="flex-1 px-4 py-2 text-center transition-colors {activeTab === 'assets' ? 'border-b-2 border-blue-500 text-blue-600 font-medium' : 'text-gray-600 hover:text-gray-900'}"
+            onclick={() => leftPanelTabManager.setActiveTab('assets')}
+        >
+            Assets
+        </button>
     </div>
-    <div>
+    <div class='p-2'>
         <Button variant="outline" onclick={addSection}>Section</Button>
         <Button variant="outline" onclick={addFrame}>Frame</Button>
         <Button variant="outline" onclick={addSandbox}>Sandbox</Button>
