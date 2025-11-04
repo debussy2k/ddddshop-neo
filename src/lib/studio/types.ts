@@ -29,6 +29,7 @@ type Instance<P> = {
 
 */
 
+export type LeftPanelTab = "pages" | "layers" | "assets";
 export type CanvasMode = "infinite-canvas" | "fixed-canvas";
 export type BreakPoint = "desktop" | "tablet" | "mobile";
 

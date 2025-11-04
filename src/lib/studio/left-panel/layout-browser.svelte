@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { studioDoc } from "./studio-doc.svelte";
-    import type { Section, Widget } from "./types";
-    import { cmdSection, cmdSandbox, cmdSimpleImage, cmdFrame, cmdShowcase } from "./command";
+	import { studioDoc } from "../studio-doc.svelte";
+    import type { Section, Widget } from "../types";
+    import { cmdSection, cmdSandbox, cmdSimpleImage, cmdFrame, cmdShowcase } from "../command";
     import { EditableText } from "$lib/components/studio-ui/editable-text";
     let doc = $derived(studioDoc.document);
 

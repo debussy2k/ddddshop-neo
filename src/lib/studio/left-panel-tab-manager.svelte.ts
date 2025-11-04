@@ -1,7 +1,9 @@
-class LeftPanelTabManager {
-    activeTab = $state<'pages' | 'layers' | 'assets'>('pages');
+import type { LeftPanelTab } from "./types";
 
-    setActiveTab(tab: 'pages' | 'layers' | 'assets') {
+class LeftPanelTabManager {
+    activeTab = $state<LeftPanelTab>('layers');
+
+    setActiveTab(tab: LeftPanelTab) {
         if (this.activeTab !== tab) {
             this.activeTab = tab;
         }
