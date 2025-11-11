@@ -11,9 +11,21 @@ export interface HistoryInfo {
 }
 
 
+function  getMockupAssets() {
+    return {
+        components: [ 
+            {
+                id: "1000",
+                type: "component",
+                name: "컴포넌트 mockup"
+            }
+        ]
+    }
+}
 
 class StudioDoc {
     private initialDoc: DocState = {
+        assets: getMockupAssets(),
         sections: [],
     }
     
