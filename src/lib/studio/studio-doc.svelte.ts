@@ -161,6 +161,10 @@ class StudioDoc {
         }
     }
 
+    isEmpty = () => {
+        return this.document.sections.length === 0;
+    }
+
     // 저장된 문서가 있는지 확인
     hasSavedDocument = () => {
         try {

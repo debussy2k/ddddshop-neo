@@ -7,7 +7,9 @@
 
     onMount(() => {
         console.log('LeftPanel mounted');
-        addSection();
+        if (studioDoc.isEmpty()) {
+            addSection();
+        }
     });
 
     function addSection() {
