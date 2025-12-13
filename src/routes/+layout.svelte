@@ -17,7 +17,8 @@
 		{ label: 'Admin', url: '/admin' },
 		{ label: 'Studio', url: '/admin/studio' },
 		{ label: 'Site Test', url: '/admin/site-test' },
-		{ label: 'DnD Test', url: '/dnd-test' }
+		{ label: 'DnD Test', url: '/dnd-test' },
+		{ label: 'Component Test', url: '/component-test' }
 	];
 
     // 키보드 단축키 핸들러
