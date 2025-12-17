@@ -36,10 +36,10 @@ async function resolveTenantSite(pathname: string) {
     const tenant_id = tenant_site.split('-')[0];
     const site_id = tenant_site.split('-')[1];
    
-    if (tenant_id !== 'motion1') {
+    if (tenant_id !== 'tville') {
         error(404, 'Tenant not found');
     }
-    if (site_id !== 'market') {
+    if (site_id !== 'ddddshop') {
         error(404, 'Site not found');
     }
 
