@@ -15,7 +15,8 @@
 	// 네비게이션 메뉴 항목들
 	const navigationItems = [
 		{ label: 'Admin', url: '/admin' },
-		{ label: 'Studio', url: '/admin/studio' },
+		{ label: 'Tenant Site', url: '/site/motion1-market' },
+		{ label: 'Studio', url: '/admin/studio' },		
 		{ label: 'Component Test', url: '/component-test' },
 		{ label: 'Site Test', url: '/admin/site-test' },
 		{ label: 'DnD Test', url: '/dnd-test' },

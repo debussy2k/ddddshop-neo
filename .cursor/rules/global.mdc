@@ -1,0 +1,26 @@
+---
+description: "Project styling guidelines: Use shadcn-svelte components and Tailwind CSS. Avoid daisyUI classes and CSS."
+globs: "src/**/*.{svelte,js,ts,jsx,tsx,css,scss}"
+alwaysApply: true
+---
+
+# Project CSS Guidelines
+
+## UI Component Library
+- **Use shadcn-svelte** for UI components instead of daisyUI
+- Prefer shadcn-svelte components for consistent design system
+- If shadcn-svelte doesn't have a needed component, use custom Tailwind CSS classes
+
+## CSS Framework Rules
+- **DO NOT** use daisyUI classes or CSS
+- Use Tailwind CSS utility classes for styling
+- Write custom CSS only when necessary
+
+## Svelte 5 Rules
+- Use Svelte 5 syntax and features
+
+## Svelte 5 Effect Rules
+- **DO NOT** use async functions directly inside `$effect()` blocks
+- Reference: https://github.com/sveltejs/svelte/issues/9520
+- Use separate async functions and call them from within effects if needed
+
