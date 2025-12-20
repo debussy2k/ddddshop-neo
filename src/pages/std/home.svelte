@@ -17,4 +17,4 @@
 <hr>
 <div>Home Component</div>
 
-<a href="./{data.tenantSiteKey}/about">About</a>
+<a href="./about">About</a>

@@ -19,6 +19,9 @@ alwaysApply: true
 ## Svelte 5 Rules
 - Use Svelte 5 syntax and features
 
+# Latest Svelte Kit Rules
+- Use latest svelte kit 
+
 ## Svelte 5 Effect Rules
 - **DO NOT** use async functions directly inside `$effect()` blocks
 - Reference: https://github.com/sveltejs/svelte/issues/9520
