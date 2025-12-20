@@ -24,9 +24,13 @@
 	const modules = import.meta.glob(`@pages/*/*.svelte`);
 	console.log('### modules:', modules);
 
-	load();
-	async function load() {
-		const modulePath = `/src/pages/${data.pageComponentPath}`;
+	// data.pageComponentPath가 변경될 때마다 컴포넌트를 다시 로드
+	$effect(() => {
+		load(data.pageComponentPath);
+	});
+
+	async function load(componentPath: string) {
+		const modulePath = `/src/pages/${componentPath}`;
 		const loader = modules[modulePath];
 		if (loader) {
 			PageComp = (await loader() as { default: any }).default;
