@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({locals, params}) => {
 	return {
 		path: path,
 		site: locals.site,
-		tenant_site_key: locals.site?.tenant_id + '-' + locals.site?.site_id,
+		tenantSiteKey: locals.site?.tenant_id + '-' + locals.site?.site_id,
 		pageComponentPath: pathMap[path].componentPath,
 		pathMap: pathMap
 	};
@@ -24,16 +24,12 @@ function getPathMap(key: string) {
 		return {
 			'/': {
 				component: 'home',
-				componentPath: `./pageComponent/${key}/home`,
+				componentPath: `std/home.svelte`,
 			},
 			'/about': {
 				component: 'about',
-				componentPath: `./pageComponent/${key}/about`,
+				componentPath: `std/about.svelte`,
 			},
-			'/about_copy1': {
-				component: 'about_copy1',
-				componentPath: `./pageComponent/${key}/about_copy1`,
-			},			
 		}
 	}
 	return null;

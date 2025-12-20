@@ -1,25 +1,35 @@
 <script lang="ts">
     import type { PageData } from './$types';
+    import type { PageEnvData } from '@pages/types';
     import { JsonView } from '@zerodevx/svelte-json-view';
 
     let { data }: { data: PageData } = $props();
-	let pageComp = $state<any>(null);
+	let PageComp = $state<any>(null); // 컴포넌트로 바로 쓰기 위해서는 변수명은 반드시 대문자로 시작.
+
+	let pageEnvData: PageEnvData = {
+		path: data.path,
+		site: {
+			tenant_id: data.site!.tenant_id,
+			site_id: data.site!.site_id
+		},
+		tenantSiteKey: data.tenantSiteKey,
+		pageComponentPath: data.pageComponentPath
+	}
 
 	/*
 		SSR이 작동할 수 있도록 onMount에서 처리하지 않음.
 	*/
 
-
-	// Vite glob으로 모든 pageComponent를 미리 매핑
-	const modules = import.meta.glob(`./pageComponent/**/index.svelte`);
+	// code splitting을 하여 lazy loading을 함.
+	const modules = import.meta.glob(`@pages/*/*.svelte`);
 	console.log('### modules:', modules);
 
 	load();
 	async function load() {
-		const modulePath = `${data.pageComponentPath}/index.svelte`;
+		const modulePath = `/src/pages/${data.pageComponentPath}`;
 		const loader = modules[modulePath];
 		if (loader) {
-			pageComp = (await loader() as { default: any }).default;
+			PageComp = (await loader() as { default: any }).default;
 		} else {
 			console.error(`Component not found: ${modulePath}`);
 		}
@@ -27,13 +37,11 @@
 
 </script>
 
-<div class="">
+<!-- <div class="">
     <JsonView json={data} />
-</div>
+</div> -->
 
 <hr>
-
-Link: <a href="my-link">my-link</a>
-
-<hr>
-{@render pageComp?.()}
+{#if PageComp}
+	<PageComp data={pageEnvData} />
+{/if}
