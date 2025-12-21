@@ -2,6 +2,7 @@
     import type { PageData } from './$types';
     import type { PageEnvData } from '@pages/types';
     import { JsonView } from '@zerodevx/svelte-json-view';
+    import NotFound from '@pages/std/not-found.svelte';
 
     let { data }: { data: PageData } = $props();
 	let PageComp = $state<any>(null); // 컴포넌트로 바로 쓰기 위해서는 변수명은 반드시 대문자로 시작.
@@ -13,7 +14,7 @@
 			site_id: data.site!.site_id
 		},
 		tenantSiteKey: data.tenantSiteKey,
-		pageComponentPath: data.pageComponentPath
+		pageComponentPath: data.pageComponentPath ?? ''
 	}
 
 	/*
@@ -26,7 +27,9 @@
 
 	// data.pageComponentPath가 변경될 때마다 컴포넌트를 다시 로드
 	$effect(() => {
-		load(data.pageComponentPath);
+		if (!data.notFound && data.pageComponentPath) {
+			load(data.pageComponentPath);
+		}
 	});
 
 	async function load(componentPath: string) {
@@ -46,6 +49,8 @@
 </div> -->
 
 <hr>
-{#if PageComp}
+{#if data.notFound}
+	<NotFound data={pageEnvData} />
+{:else if PageComp}
 	<PageComp data={pageEnvData} />
 {/if}
