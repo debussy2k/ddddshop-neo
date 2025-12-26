@@ -7,7 +7,7 @@
     let { data }: { data: PageData } = $props();
 	let PageComp = $state<any>(null); // 컴포넌트로 바로 쓰기 위해서는 변수명은 반드시 대문자로 시작.
 
-	let pageEnvData: PageEnvData = {
+	let pageEnvData: PageEnvData = $derived({
 		path: data.path,
 		site: {
 			tenant_id: data.site!.tenant_id,
@@ -15,7 +15,7 @@
 		},
 		tenantSiteKey: data.tenantSiteKey,
 		pageComponentPath: data.pageComponentPath ?? ''
-	}
+	});
 
 	/*
 		SSR이 작동할 수 있도록 onMount에서 처리하지 않음.

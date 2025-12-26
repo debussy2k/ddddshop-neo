@@ -12,6 +12,9 @@
 
 <div class="">
 	<JsonView json={data} />
+	<hr>
+	<button class="border p-2 mx-4" onclick={() => {}}>preview</button>
+	<button class="border p-2 mx-4" onclick={() => {}}>editor</button>
 </div>
 
 <hr>
