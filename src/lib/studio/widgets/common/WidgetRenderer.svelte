@@ -10,16 +10,19 @@
 	import type { Frame } from "$lib/studio/widgets/frame";
 	import type { Showcase } from "$lib/studio/widgets/showcase";
 	import { studioDoc } from "$lib/studio/studio-doc.svelte";
-	import type { Widget } from "$lib/studio/types";
-	import type { Context } from "$lib/studio/context.svelte";
-	
-	interface Props {
-		widgets: Widget[] | undefined;
-		context: Context;
-		class?: ClassValue;
-	}
+    import type { Widget } from "$lib/studio/types";
+    import type { Context } from "$lib/studio/context.svelte";
+    import type { Snippet } from "svelte";
+    import type { ImplSnippet } from "$lib/studio/impl-snippet";
+    
+    interface Props {
+        widgets: Widget[] | undefined;
+        context: Context;
+        class?: ClassValue;
+        impl: ImplSnippet;
+    }
 
-	let { widgets, context, class: className }: Props = $props();
+    let { widgets, context, class: className, impl }: Props = $props();
 </script>
 
 {#each widgets || [] as widgetData (widgetData.id)}
@@ -27,13 +30,15 @@
 		<FrameWidget 
 			data={widgetData as Frame}
 			{context}
+            {impl}
 		/>
-	{:else if (widgetData as any).type === 'sandbox'}
-		<SandboxWidget 
-			data={widgetData as Sandbox}
-			{context}
-		/>
-	{:else if (widgetData as any).type === 'simple-image'}
+    {:else if (widgetData as any).type === 'sandbox'}
+        <SandboxWidget 
+            data={widgetData as Sandbox}
+            {context}
+            {impl}
+        />
+    {:else if (widgetData as any).type === 'simple-image'}
 		{#key widgetData.id + (widgetData as SimpleImage).url}
 			<SimpleImageWidget 
 				data={widgetData as SimpleImage}

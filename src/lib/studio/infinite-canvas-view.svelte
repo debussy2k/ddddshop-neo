@@ -5,6 +5,9 @@
 	import { Context } from "./context.svelte";
 	import { setupCanvasPanning } from "./canvas-panning";
     import { canvasManager } from "./canvas-manager.svelte";
+    import type { ImplSnippet } from "./impl-snippet";
+
+    let { impl }: { impl: ImplSnippet } = $props();
 
     let doc = $derived(studioDoc.document);
 	let desktopContext = new Context('desktop');
@@ -43,8 +46,8 @@
 
 <div class="flex-1 relative overflow-hidden bg-gray-100" style="box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.15);" bind:this={inputElement}>
     <div class='infinite-canvas absolute' bind:this={canvasElement}>
-        <PageWidget doc={doc} context={desktopContext} />
-        <PageWidget doc={doc} context={tabletContext} />
-        <PageWidget doc={doc} context={mobileContext} />
+        <PageWidget doc={doc} context={desktopContext} {impl} />
+        <PageWidget doc={doc} context={tabletContext} {impl} />
+        <PageWidget doc={doc} context={mobileContext} {impl} />
     </div>
 </div>

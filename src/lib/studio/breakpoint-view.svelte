@@ -1,6 +1,5 @@
 <script lang="ts">
     import { onMount } from "svelte";
-	import type { ClassValue } from "svelte/elements";
 	import { cn } from "$lib/utils";
 	import { studioDoc } from "./studio-doc.svelte";
     import { JsonView } from "@zerodevx/svelte-json-view";
@@ -9,8 +8,14 @@
     import { getScreenInfo, type BreakPoint } from "$lib/config/screen-info.config";
     import { bpm } from "./breakpoint-man.svelte";
     import { canvasManager } from "./canvas-manager.svelte"; // 추가
-	import { Context } from "./context.svelte";
+    import { Context } from "./context.svelte";
+    import type { ImplSnippet } from "./impl-snippet";
 
+    interface Props {
+        impl: ImplSnippet;
+    }
+
+    let { impl }: Props = $props();
 
     let doc = $derived(studioDoc.document);
     let currentResizableWidth = $state(300);
@@ -41,7 +46,7 @@
     <div class='absolute inset-0 overflow-y-scroll flex justify-center' >
         <div class='page @container absolute shadow-lg shadow-gray-400 mt-4 ' style="width:{currentResizableWidth}px;">
             {#each doc.sections as section (section.id)}
-                <SectionWidget data={section} {context} />
+                <SectionWidget data={section} {context} {impl} />
             {/each}
             <!-- <div class="text-xs pt-4 border-t border-gray-200">
                 <JsonView json={currentActiveItem} />

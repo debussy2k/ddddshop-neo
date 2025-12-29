@@ -13,8 +13,10 @@
 	import type { Context } from "$lib/studio/context.svelte";
 	import { bpm } from '$lib/studio/breakpoint-man.svelte';
 	import * as  du from '$lib/studio/widgets/common/doc-util';
+    import type { Snippet } from "svelte";
+    import type { ImplSnippet } from "$lib/studio/impl-snippet";
 
-    let { data, context }: { data: Frame; context: Context } = $props();
+    let { data, context, impl }: { data: Frame; context: Context; impl: ImplSnippet } = $props();
 
     // 현재 breakpoint에 맞는 스타일 가져오기
     let currentProp = $derived.by(() => {
@@ -103,7 +105,7 @@
     onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
     <div class="relative h-full" style={childrenLayoutStyle}>
-        <WidgetRenderer widgets={data.children} {context} />
+        <WidgetRenderer widgets={data.children} {context} {impl} />
     </div>
 
     {#if viewData.isActive && context.break === bpm.current}

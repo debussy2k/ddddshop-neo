@@ -7,10 +7,10 @@
     import LeftPanel from './left-panel.svelte';
     import RightPanel from './right-panel.svelte';
     import CenterPanel from './center-panel.svelte';
-    import type { Snippet } from 'svelte';
+    import type { ImplSnippet } from './impl-snippet';
     
     interface Props {
-        impl: Snippet<[string]>;
+        impl: ImplSnippet;
     }
     let { impl }: Props = $props();
 
@@ -65,7 +65,7 @@
     <TopPanel />
     <div class="flex flex-1">
         <LeftPanel width="240px" />
-        <CenterPanel class="flex-1" />
+        <CenterPanel class="flex-1" {impl} />
         <RightPanel width="240px"/>
     </div>
 </div>

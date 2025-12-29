@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { Section, SectionPropValue } from "./section.type";
+    import type { ImplSnippet } from "$lib/studio/impl-snippet";
     import { cmdSection } from "$lib/studio/command";
     import WidgetRenderer from "$lib/studio/widgets/common/WidgetRenderer.svelte";
     import { studioDoc } from "$lib/studio/studio-doc.svelte";
@@ -12,7 +13,7 @@
     import * as du from '../common/doc-util';
     import { getSectionChildrenLayoutStyle } from "./section-style-util";
 
-    let { data, context }: { data: Section; context: Context } = $props();
+    let { data, context, impl }: { data: Section; context: Context; impl: ImplSnippet } = $props();
 
     let sectionElement = $state<HTMLElement | undefined>(undefined);
     let isHovered = $state(false);
@@ -126,7 +127,7 @@
                 style={childrenLayoutStyle}
                 style:height={currentProp.height}
             >
-                <WidgetRenderer widgets={childWidgets()} {context} />
+                <WidgetRenderer widgets={childWidgets()} {context} {impl} />
             </div>
         {/if}
     </div>

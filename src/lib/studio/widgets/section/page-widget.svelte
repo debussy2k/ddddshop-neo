@@ -1,16 +1,18 @@
 <script lang="ts">
     import type { DocState } from "../../types";
+    import type { ImplSnippet } from "../../impl-snippet";
     import SectionWidget from "./section-widget.svelte";
-	import type { Context } from "$lib/studio/context.svelte";
-	import { bpm } from "$lib/studio/breakpoint-man.svelte";
+    import type { Context } from "$lib/studio/context.svelte";
+    import { bpm } from "$lib/studio/breakpoint-man.svelte";
     
-	type Props = {
-		doc: DocState;
-		context: Context;
-	}
-    let { doc, context }: Props = $props();
+    type Props = {
+        doc: DocState;
+        context: Context;
+        impl: ImplSnippet;
+    }
+    let { doc, context, impl }: Props = $props();
 
-	let top = 32;
+    let top = 32;
 	let left = $derived.by(() => {
 		switch(context.breakPoint) {
 			case 'desktop':
@@ -53,7 +55,7 @@
     </div>
 
     {#each doc.sections as section (section.id)}
-        <SectionWidget data={section} {context} />
+        <SectionWidget data={section} {context} {impl} />
     {/each}
 </div>
 

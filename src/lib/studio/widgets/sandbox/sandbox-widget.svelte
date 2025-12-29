@@ -8,13 +8,14 @@
 	import { canvasManager } from '../../canvas-manager.svelte';
 	import { getComputedVal } from '$lib/studio/widgets/common/computed-value-util';
 	import { BaseWidgetController } from '../common/base-widget-controller.svelte';
-	import type { BaseWidgetProp, BaseContainerProp } from '$lib/studio/types';
-	import type { Context } from '$lib/studio/context.svelte';
-	import { bpm } from '$lib/studio/breakpoint-man.svelte';
+    import type { BaseWidgetProp, BaseContainerProp } from '$lib/studio/types';
+    import type { Context } from '$lib/studio/context.svelte';
+    import type { ImplSnippet } from '$lib/studio/impl-snippet';
+    import { bpm } from '$lib/studio/breakpoint-man.svelte';
 
-	let { data, context }: { data: Sandbox; context: Context } = $props();
+    let { data, context, impl }: { data: Sandbox; context: Context; impl: ImplSnippet } = $props();
 
-	// 현재 breakpoint에 맞는 속성 가져오기
+    // 현재 breakpoint에 맞는 속성 가져오기
 	let currentProp = $derived.by(() => {
         return du.resolveProp<SandboxPropValue>(data.prop, context.break);
     });
@@ -104,11 +105,9 @@
 	onmousedown={(e) => controller.handleMousedown(e as MouseEvent)}
 	onkeydown={(e) => controller.handleKeyDown(e as KeyboardEvent)}
 >
-	<div class="flex flex-col items-center justify-center select-none">
-		<div class="text-center font-medium text-gray-700">
-			{data.name}
-		</div>
-	</div>
+    <div class="flex flex-col items-center justify-center select-none">
+        {@render impl?.(data as Sandbox, context)}
+    </div>
 
 	{#if viewData.isActive && context.break === bpm.current}
 		<SizeTip
