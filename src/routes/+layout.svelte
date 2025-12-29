@@ -1,4 +1,5 @@
 <script lang="ts">
+	import DebugControl from "$lib/devTools/DebugControl.svelte";
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { onMount, onDestroy } from 'svelte';
@@ -102,3 +103,6 @@
 		</div>
 	</div>
 {/if}
+
+
+<DebugControl />
