@@ -1,10 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import Studio from '$lib/studio/studio.svelte';
-	import type { Widget } from '$lib/studio/types';
-	import type { Context } from '$lib/studio/context.svelte';
-	
+	import { Studio, type Widget, type Context } from '$lib/studio';
+
+
 	interface Props {
 		data: PageData;
 	}
