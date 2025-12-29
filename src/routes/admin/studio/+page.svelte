@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import Studio from '$lib/studio/main.svelte';
+	import Studio from '$lib/studio/studio.svelte';
 	
 	interface Props {
 		data: PageData;
@@ -13,5 +13,8 @@
 
 </script>
 
-<Studio />
-
+<Studio>
+	{#snippet impl(id: string)}
+		<div>Studio {id}</div>
+	{/snippet}
+</Studio>

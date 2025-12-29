@@ -7,8 +7,12 @@
     import LeftPanel from './left-panel.svelte';
     import RightPanel from './right-panel.svelte';
     import CenterPanel from './center-panel.svelte';
-	import { Context } from './context.svelte';
-	import type { BreakPoint } from './types';
+    import type { Snippet } from 'svelte';
+    
+    interface Props {
+        impl: Snippet<[string]>;
+    }
+    let { impl }: Props = $props();
 
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
