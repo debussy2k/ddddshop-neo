@@ -1,7 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
     import type { PageEnvData } from '@pages/types';
-    import { JsonView } from '@zerodevx/svelte-json-view';
     import NotFound from '@pages/std/not-found.svelte';
 
     let { data }: { data: PageData } = $props();

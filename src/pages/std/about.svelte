@@ -2,7 +2,9 @@
 	import { onMount } from 'svelte';
 	import type { PageEnvData } from '@pages/types';
     import { JsonView } from '@zerodevx/svelte-json-view';
+	import { Studio, type Widget, type Context } from '$lib/studio';
 
+	
 	let { data }: { data: PageEnvData } = $props();
 
 	onMount(() => {
@@ -10,11 +12,10 @@
 	});
 </script>
 
-<div class="">
-	<JsonView json={data} />
-</div>
-
-<hr>
-<div>About Component</div>
-<!-- <a href="./{data.tenantSiteKey}/">Home</a> -->
-<a href="./">Home</a>
+<Studio>
+	{#snippet impl(widget: Widget, context: Context)}
+		<div class="text-center font-medium text-gray-700">
+			{widget.name} / {context.breakPoint}
+		</div>
+	{/snippet}
+</Studio>

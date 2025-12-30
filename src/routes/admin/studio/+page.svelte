@@ -3,14 +3,11 @@
 	import type { PageData } from './$types';
 	import { Studio, type Widget, type Context } from '$lib/studio';
 
-
 	interface Props {
 		data: PageData;
 	}
 	let { data }: Props = $props();
 
-	onMount(async () => {
-	});
 
 </script>
 

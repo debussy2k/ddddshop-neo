@@ -8,16 +8,9 @@
 	let { data }: { data: PageEnvData } = $props();
 
 	onMount(() => {
-		console.log('### data:', data);
+		console.log('### Home data:', data);
 	});
 </script>
-
-<div class="">
-	<JsonView json={data} />
-</div>
-
-<hr>
-<div>Home Component</div>
 
 <Studio>
 	{#snippet impl(widget: Widget, context: Context)}
@@ -26,6 +19,3 @@
 		</div>
 	{/snippet}
 </Studio>
-
-
-<a href="./about">About</a>

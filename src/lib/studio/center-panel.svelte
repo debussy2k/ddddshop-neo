@@ -19,7 +19,7 @@
 </script>
 
 {#if canvasManager.mode === 'infinite-canvas'}
-    {#if activeTab === 'layers'}
+    {#if activeTab === 'pages' || activeTab === 'layers'}
         <InfiniteCanvasView {impl} />
     {:else if activeTab === 'assets'}
         <InfiniteComponentsView />

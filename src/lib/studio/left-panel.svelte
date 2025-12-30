@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { leftPanelTabManager } from './left-panel-tab-manager.svelte';
+    import PagesPanel from './left-panel/pages-panel.svelte';
     import LayersPanel from './left-panel/layers-panel.svelte';
     import AssetsPanel from './left-panel/assets-panel.svelte';
     let { width }: { width: string } = $props();
@@ -35,7 +36,9 @@
         </button>
     </div>
 
-    {#if activeTab === 'layers'}
+    {#if activeTab === 'pages'}
+        <PagesPanel />
+    {:else if activeTab === 'layers'}
         <LayersPanel />
     {:else if activeTab === 'assets'}
         <AssetsPanel />
