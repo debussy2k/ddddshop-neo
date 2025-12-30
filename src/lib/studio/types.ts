@@ -52,6 +52,13 @@ export type { ContainerPropValue };
 
 export interface DocState {
     sections: Section[];
+    assets?: {
+        components: {
+            id: string;
+            type: string;
+            name: string;
+        }[];
+    };
 }
 
 // 위젯의 기본 위치/크기 속성을 나타내는 공통 인터페이스

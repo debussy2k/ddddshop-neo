@@ -3,6 +3,7 @@
 	import { cn } from "$lib/utils";
 	import { studioDoc } from '../studio-doc.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
+	import { page } from '$app/stores';
 
 	interface Props {
 		class?: ClassValue;
@@ -12,24 +13,27 @@
 
 	// 히스토리 정보를 반응적으로 가져오기
 	let historyInfo = $derived(studioDoc.historyInfo);
+
+	// docKey 정보 가져오기 (서버에서 전달받은 값 사용)
+	let docKey = $derived($page.data.docKey);
 	
 	// 저장된 문서가 있는지 확인
 	let hasSavedDoc = $state(false);
 	
 	// 브라우저 환경에서만 localStorage 확인
 	$effect(() => {
-		if (typeof window !== 'undefined') {
-			hasSavedDoc = studioDoc.hasSavedDocument();
+		if (typeof window !== 'undefined' && docKey) {
+			hasSavedDoc = studioDoc.hasSavedDocument(docKey);
 		}
 	});
 	
 	// 저장 버튼 클릭 핸들러
 	function handleSave() {
-		const success = studioDoc.save();
+		const success = studioDoc.saveToLocalStorage(docKey);
 		if (success) {
 			hasSavedDoc = true;
 			// 사용자에게 피드백 제공 (선택사항)
-			console.log('문서가 저장되었습니다.');
+			console.log(`문서가 ${docKey}에 저장되었습니다.`);
 		} else {
 			console.error('문서 저장에 실패했습니다.');
 		}
@@ -37,9 +41,9 @@
 	
 	// 불러오기 버튼 클릭 핸들러  
 	function handleLoad() {
-		const success = studioDoc.load();
+		const success = studioDoc.loadFromLocalStorage(docKey);
 		if (success) {
-			console.log('문서가 불러와졌습니다.');
+			console.log(`문서가 ${docKey}에 불러와졌습니다.`);
 		} else {
 			console.error('문서 불러오기에 실패했습니다.');
 		}

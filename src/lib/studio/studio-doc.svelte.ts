@@ -12,15 +12,16 @@ export interface HistoryInfo {
 
 
 function  getMockupAssets() {
-    return {
-        components: [ 
-            {
-                id: "1000",
-                type: "component",
-                name: "컴포넌트 mockup"
-            }
-        ]
-    }
+    return {};
+    // return {
+    //     components: [ 
+    //         {
+    //             id: "1000",
+    //             type: "component",
+    //             name: "컴포넌트 mockup"
+    //         }
+    //     ]
+    // }
 }
 
 class StudioDoc {
@@ -124,16 +125,15 @@ class StudioDoc {
     }
 
     // localStorage 키
-    private readonly STORAGE_KEY = 'studio-doc-state';
 
     // 문서를 localStorage에 저장
-    save = () => {
+    saveToLocalStorage = (docKey: string) => {
         try {
             const docData = {
                 doc: this.doc,
                 timestamp: Date.now()
             };
-            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(docData));
+            localStorage.setItem(docKey, JSON.stringify(docData));
             return true;
         } catch (error) {
             console.error('Failed to save document:', error);
@@ -142,9 +142,9 @@ class StudioDoc {
     }
 
     // localStorage에서 문서 불러오기
-    load = () => {
+    loadFromLocalStorage = (docKey: string) => {
         try {
-            const savedData = localStorage.getItem(this.STORAGE_KEY);
+            const savedData = localStorage.getItem(docKey);
             if (!savedData) {
                 return false;
             }
@@ -161,14 +161,28 @@ class StudioDoc {
         }
     }
 
+    reset = () => {
+        const freshDoc: DocState = {
+            assets: getMockupAssets(),
+            sections: [],
+        };
+        
+        // 현재 상태를 초기 상태로 강제 설정 (히스토리 기록 없음)
+        this.historyManager.setState(freshDoc);
+        // 히스토리 스택(undo/redo) 비우기
+        this.historyManager.clear();
+        // 선택된 아이템 초기화
+        this.activeId = null;
+    }
+
     isEmpty = () => {
         return this.document.sections.length === 0;
     }
 
     // 저장된 문서가 있는지 확인
-    hasSavedDocument = () => {
+    hasSavedDocument = (docKey: string) => {
         try {
-            return localStorage.getItem(this.STORAGE_KEY) !== null;
+            return localStorage.getItem(docKey) !== null;
         } catch {
             return false;
         }
