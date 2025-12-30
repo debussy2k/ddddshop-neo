@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { page } from '$app/state';
     import { onDestroy, onMount } from 'svelte';
     import { browser } from '$app/environment';
     import { studioDoc } from './studio-doc.svelte';
@@ -13,6 +14,10 @@
         impl: ImplSnippet;
     }
     let { impl }: Props = $props();
+    let isInitialized = $state(false);
+
+
+
 
     // 키보드 단축키 핸들러
     function handleKeydown(event: KeyboardEvent) {
@@ -50,9 +55,13 @@
         if (browser) {  
             document.addEventListener('keydown', handleKeydown);
         }
+
+        studioDoc.initialize();
+        studioDoc.loadFromLocalStorage(page.data.docKey);
+        isInitialized = true;
     });
 
-    onDestroy(() => {
+    onDestroy(() => {        
         // 브라우저 환경에서만 이벤트 리스너 제거
         if (browser) {
             document.removeEventListener('keydown', handleKeydown);
@@ -66,6 +75,8 @@
     <div class="flex flex-1">
         <LeftPanel width="240px" />
         <CenterPanel class="flex-1" {impl} />
-        <RightPanel width="240px"/>
+        {#if isInitialized}
+            <RightPanel width="240px"/>
+        {/if}
     </div>
 </div>

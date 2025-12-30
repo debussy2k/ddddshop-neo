@@ -2,6 +2,7 @@
 	import { page } from '$app/state';
     import { JsonView } from '@zerodevx/svelte-json-view';
     import { goto } from '$app/navigation';
+    import { studioDoc } from '../studio-doc.svelte';
     
 	let pageData = $derived(page.data);
 
@@ -15,6 +16,8 @@
     });
 
     function handlePathClick(path: string) {
+        studioDoc.saveToLocalStorage(pageData.docKey);
+
         let url = `/site/${pageData.tenantSiteKey}${path}`;
         goto(url);
     }

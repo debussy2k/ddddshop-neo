@@ -12,7 +12,7 @@ export interface HistoryInfo {
 
 
 function  getMockupAssets() {
-    return {};
+    return { components: [] };
     // return {
     //     components: [ 
     //         {
@@ -33,7 +33,7 @@ class StudioDoc {
     private doc = $state<DocState>(this.initialDoc);
     
     historyManager = new HistoryManager(this.initialDoc);
-    private unsub: () => void;
+    private unsub: (() => void) | null = null;
     
     // 히스토리 정보를 reactive state로 관리
     private _historyInfo = $state<HistoryInfo>({
@@ -61,6 +61,12 @@ class StudioDoc {
     }
 
     constructor() {
+        this.initialize();
+    }
+
+    initialize() {
+        if (this.unsub) return;
+
         this.unsub = this.historyManager.subscribe((state) => {
             this.doc = state;
             // 히스토리 정보도 함께 업데이트
@@ -83,7 +89,10 @@ class StudioDoc {
 
     // 반드시 어디에선가의 onDestory에서 호출되어야 함.
     destroy() {
-        this.unsub();
+        if (this.unsub) {
+            this.unsub();
+            this.unsub = null;
+        }
     }
 
     get document(): DocState {
@@ -151,8 +160,11 @@ class StudioDoc {
             
             const { doc } = JSON.parse(savedData);
             
-            // 히스토리에 새로운 상태로 실행 (execute 사용)
-            this.historyManager.execute(() => doc);
+            // 히스토리에 새로운 상태로 실행 (execute 사용) -> setState로 변경하여 강제 업데이트 및 히스토리 초기화
+            // 페이지 전환 시 이전 페이지의 히스토리가 남는 것을 방지하고 확실한 렌더링 갱신을 보장함
+            this.historyManager.setState(doc);
+            this.historyManager.clear();
+            this.activeId = null;
             
             return true;
         } catch (error) {
@@ -167,6 +179,8 @@ class StudioDoc {
             sections: [],
         };
         
+        this.doc = freshDoc;
+
         // 현재 상태를 초기 상태로 강제 설정 (히스토리 기록 없음)
         this.historyManager.setState(freshDoc);
         // 히스토리 스택(undo/redo) 비우기

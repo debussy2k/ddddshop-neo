@@ -43,11 +43,7 @@
 
 </script>
 
-<!-- <div class="">
-    <JsonView json={data} />
-</div> -->
 
-<hr>
 {#if data.notFound}
 	<NotFound data={pageEnvData} />
 {:else if PageComp}
