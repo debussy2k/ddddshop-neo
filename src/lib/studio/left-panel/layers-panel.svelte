@@ -38,6 +38,18 @@
         }
     }
 
+	function addShowcase1() {
+        if (studioDoc.activeId) {
+            let parentId = studioDoc.getAddableParentId(studioDoc.activeId);
+            const { id } = cmdSandbox.add({
+                parentId: parentId,
+                text: 'showcase1',
+				componentId: "showcase1",
+            });
+            studioDoc.activeId = id;
+        }
+	}
+
     function addSimpleImage() {
         if (studioDoc.activeId) {
             const { id } = cmdSimpleImage.add({
@@ -75,11 +87,14 @@
 
 
 <div class='p-2'>
-    <Button variant="outline" onclick={addSection}>Section</Button>
-    <Button variant="outline" onclick={addFrame}>Frame</Button>
-    <Button variant="outline" onclick={addSandbox}>Sandbox</Button>
-    <Button variant="outline" onclick={addSimpleImage}>Image</Button>
-    <Button variant="outline" onclick={addShowcase}>Showcase</Button>
+    <Button variant="outline" size="sm" onclick={addSection}>Section</Button>
+    <Button variant="outline" size="sm" onclick={addFrame}>Frame</Button>
+	<hr class="my-2">
+    <Button variant="outline" size="sm" onclick={addSandbox}>Sandbox</Button>
+	<Button variant="outline" size="sm" onclick={addShowcase1}>Showcase1</Button>
+	<hr class="my-2">
+    <Button variant="outline" size="sm" onclick={addSimpleImage}>Image</Button>
+    <Button variant="outline" size="sm" onclick={addShowcase}>Showcase</Button>
 </div>
 
 <div class='p-2 mt-4'>

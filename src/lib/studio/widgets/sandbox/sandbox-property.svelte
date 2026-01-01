@@ -59,6 +59,14 @@
         />
     </div> -->
 
+	{#if data.componentId}
+		<div class='px-3 py-4 flex items-center gap-2 text-xs border-b border-gray-200'>
+			<span>컴포넌트 :</span>
+			<span>{data.componentId}</span>
+		</div>
+
+	{/if}
+
 	{#if parentProp}
 		<CommonProperty data={data} cmd={cmd} {parentProp} {currentProp} {computedVal} {context} />
 	{/if}

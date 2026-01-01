@@ -7,6 +7,7 @@ export interface Sandbox {
     name: string;
     text: string;
     parentId: string; // Section의 child로 사용될 때의 부모 ID
+	componentId: string;
     prop: {
         [K in BreakPoint]: PropByBreakPoint<K>;
     }
