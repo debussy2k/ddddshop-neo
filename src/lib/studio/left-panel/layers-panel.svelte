@@ -33,6 +33,7 @@
             const { id } = cmdSandbox.add({
                 parentId: parentId,
                 text: 'Sandbox One',
+                componentId: ""
             });
             studioDoc.activeId = id;
         }
@@ -45,6 +46,13 @@
                 parentId: parentId,
                 text: 'showcase1',
 				componentId: "showcase1",
+                compProp: {
+                    desktop: {
+                        columns: 6,
+                    },
+                    tablet: {},
+                    mobile: {},
+                }
             });
             studioDoc.activeId = id;
         }

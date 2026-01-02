@@ -7,6 +7,7 @@
     import { cmdSandbox as cmd } from "$lib/studio/command";
     import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 	import CommonProperty from "../common/common-property.svelte";
+    import CompProperty from "$lib/studio/comps/comp-property.svelte";
 	import type { Context } from "$lib/studio/context.svelte";
     import * as du from '../common/doc-util';
 
@@ -60,11 +61,7 @@
     </div> -->
 
 	{#if data.componentId}
-		<div class='px-3 py-4 flex items-center gap-2 text-xs border-b border-gray-200'>
-			<span>컴포넌트 :</span>
-			<span>{data.componentId}</span>
-		</div>
-
+		<CompProperty data={data} cmd={cmd} context={context} />
 	{/if}
 
 	{#if parentProp}

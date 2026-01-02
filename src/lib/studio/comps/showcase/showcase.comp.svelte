@@ -3,10 +3,14 @@
 	import type { Sandbox } from '$lib/studio/widgets/sandbox';
 	import type { Context } from '$lib/studio/context.svelte';
     import  { getShopicusAPI }  from '$lib/service/api.config';
+	import type { ShowcaseCompPropValue } from "./showcase.ctype";
+	import * as du from '$lib/studio/widgets/common/doc-util';
 
 	let { data, context }: { data: Sandbox; context: Context } = $props();
 
 	let showcaseData:any  = $state<any>({});
+	let currentCompProp = $derived(du.resolveProp<ShowcaseCompPropValue>(data.compProp, context.break));
+
 
 	onMount(() => {
 		console.log('Showcase mounted', data);
@@ -28,8 +32,8 @@
 		{showcaseData.desc}
 	</div>	
 
-    <div class="grid grid-cols-4 gap-4 mt-6  @3xl:grid-cols-8">
-		{#each showcaseData.categories as item}
+    <div class="grid gap-4 mt-6" style="grid-template-columns: repeat({currentCompProp.columns}, minmax(0, 1fr))">
+		{#each showcaseData.categories ?? [] as item}
 			<div class='flex flex-col items-center'>
 				<div class='aspect-square'>
 					<img src={item.imageUrl} alt={item.promoText} class='object-cover' />

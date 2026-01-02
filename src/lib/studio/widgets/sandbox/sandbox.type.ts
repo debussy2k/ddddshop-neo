@@ -1,5 +1,6 @@
 import type { BaseWidgetProp } from "$lib/studio/types";
 import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
+import type { ShowcaseCompProp } from "$lib/studio/comps/showcase/showcase.ctype";
 
 export interface Sandbox {
     id: string;
@@ -7,10 +8,11 @@ export interface Sandbox {
     name: string;
     text: string;
     parentId: string; // Section의 child로 사용될 때의 부모 ID
-	componentId: string;
     prop: {
         [K in BreakPoint]: PropByBreakPoint<K>;
     }
+	componentId?: string;
+    compProp?: ShowcaseCompProp;
 }
 
     

@@ -4,7 +4,7 @@
     import { JsonView } from '@zerodevx/svelte-json-view';
 	import { Studio, type Widget, type Context } from '$lib/studio';
 	import type { Sandbox } from '$lib/studio/widgets/sandbox';
-	import Showcase from './showcase.comp.svelte';
+	import Showcase from '$lib/studio/comps/showcase/showcase.comp.svelte';
 
 	let { data }: { data: PageEnvData } = $props();
 

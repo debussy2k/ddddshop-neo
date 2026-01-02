@@ -4,6 +4,7 @@ import type { DocState, Section, Widget, ContainerProp } from "../../types";
 import type { Sandbox, SandboxInput, SandboxPropValue } from "./sandbox.type";
 import type { BreakPoint } from '$lib/studio/breakpoint-man.svelte';
 import * as du from '../common/doc-util';
+import type { ShowcaseCompPropValue } from '$lib/studio/comps/showcase/showcase.ctype';
 
 export class SandboxActions {
 
@@ -113,6 +114,20 @@ export class SandboxActions {
                 // PropByBreakPoint는 desktop에는 Prop를, mobile/tablet에는 Partial<Prop>를 반환하는데, 이로 인해 spread 연산자 사용 시 TypeScript가 정확한 타입을 추론하지 못함
                 widget.prop[breakpoint] = {
                     ...widget.prop[breakpoint],
+                    ...updates
+                };
+            }
+        });
+    }
+
+    updateCompProp(id: string, updates: Partial<ShowcaseCompPropValue>, breakpoint: BreakPoint): DocState {
+        return this.historyManager.execute((draft) => {
+            const widget = du.findById(id, draft);
+            if (widget && widget.type === 'sandbox' && widget.compProp) {
+                // @ts-expect-error - PropByBreakPoint 조건부 타입으로 인한 spread 타입 불일치
+                // PropByBreakPoint는 desktop에는 Prop를, mobile/tablet에는 Partial<Prop>를 반환하는데, 이로 인해 spread 연산자 사용 시 TypeScript가 정확한 타입을 추론하지 못함
+                widget.compProp[breakpoint] = {
+                    ...widget.compProp[breakpoint],
                     ...updates
                 };
             }

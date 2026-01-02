@@ -5,6 +5,19 @@ import type { BreakPoint } from "$lib/studio/breakpoint-man.svelte";
 import { getComputedVal } from "$lib/studio/widgets/common/computed-value-util";
 import * as util from "$lib/studio/util";
 
+/*
+resolveProp 함수는 특정 브레이크포인트(화면 크기)에 해당하는 최종 속성값을 계산하여 반환하는 함수입니다.
+이 함수는 "Desktop First" 또는 기본값 상속 개념을 구현하고 있습니다.
+
+1. 유효성 검사:
+  - propRoot가 없으면 에러를 발생시킵니다. (propRoot는 각 브레이크포인트별 속성값을 담고 있는 객체입니다.)
+2. Desktop (기본값) 처리:
+  -요청한 breakPoint가 'desktop'인 경우, 저장된 'desktop' 값을 그대로 반환합니다. 이 프로젝트에서 'desktop'은 모든 속성의 기본(Base) 값 역할을 합니다.
+3. 그 외 브레이크포인트 (오버라이드) 처리:
+    -'desktop'이 아닌 다른 브레이크포인트(예: mobile, tablet 등)를 요청하면,
+    -desktop의 값(기본값)을 바탕으로, 해당 브레이크포인트의 값(변경사항)을 덮어씌웁니다 (deepMerge).
+    -즉, 모바일에서 특정 속성을 따로 지정하면, desktop의 값을 기본값으로 하고, 모바일에서 지정한 값을 덮어씌웁니다.
+*/
 export function resolveProp<T>(propRoot: Record<BreakPoint, T|Partial<T>> | undefined, breakPoint: BreakPoint) : T {
     if (!propRoot) {
         throw new Error(`propRoot is undefined (breakPoint: ${breakPoint})`);
