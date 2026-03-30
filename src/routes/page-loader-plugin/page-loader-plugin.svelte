@@ -300,6 +300,26 @@
         return result;
     });
 
+    // 선택된 총 페이지 수
+    let totalSelectedCount = $derived(
+        Array.from(selectedThumbnails.values()).reduce((sum, indices) => sum + indices.length, 0)
+    );
+
+    // 선택한 내지 불러오기
+    async function handleLoadSelected() {
+        const selected = Array.from(selectedThumbnails.entries()).map(([projectId, indices]) => {
+            const project = projects.find(p => p.edicusProjectId === projectId);
+            return {
+                projectId,
+                title: project?.title,
+                edicusPsCode: project?.edicusPsCode,
+                authorGuid: project?.authorGuid,
+                selectedPages: indices,
+            };
+        });
+        console.log('선택한 내지 불러오기:', selected);
+    }
+
 </script>
 
 <div class={cn('flex flex-col h-full bg-white', className || '')}>
@@ -437,8 +457,8 @@
             {/if}
         </div>
 
-        <!-- 선택된 썸네일 정보 -->
-        {#if selectedThumbnails.size > 0}
+        <!-- 선택된 썸네일 정보 : 디버깅용 -->
+        <!-- {#if selectedThumbnails.size > 0}
             <div class='mx-5 mb-4 p-3 bg-blue-50 border border-blue-200 rounded'>
                 <h3 class='text-xs font-bold text-blue-800 mb-1.5'>선택된 썸네일</h3>
                 {#each Array.from(selectedThumbnails.entries()) as [projectId, thumbnailIndices] (projectId)}
@@ -453,10 +473,29 @@
                     {/if}
                 {/each}
             </div>
-        {/if}
+        {/if} -->
 
-        <div class='px-5 pb-4'>
+        <!-- <div class='px-5 pb-4'>
             <JsonView json={projects} />
-        </div>
+        </div> -->
+    </div>
+
+    <!-- 하단 고정 버튼 -->
+    <div class="flex justify-center shrink-0 border-t border-gray-200 px-5 py-3 bg-gray-50">
+        <button
+            type="button"
+            onclick={handleLoadSelected}
+            disabled={totalSelectedCount === 0}
+            class="w-[320px] h-10 rounded text-sm font-semibold transition-colors
+                {totalSelectedCount > 0
+                    ? 'bg-[#34D8BF] text-white hover:bg-[#2bc4ad]'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'}"
+        >
+            {#if totalSelectedCount > 0}
+                선택한 내지 불러오기 ({totalSelectedCount}페이지)
+            {:else}
+                내지를 선택해 주세요
+            {/if}
+        </button>
     </div>
 </div>
