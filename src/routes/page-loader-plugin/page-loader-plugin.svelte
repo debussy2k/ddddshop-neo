@@ -1,10 +1,18 @@
 <script lang="ts">
+    import type { ClassValue } from 'svelte/elements';
+    import { cn } from '$lib/utils';
     import { onMount } from 'svelte';
     import ShopicusFunc from './shopicus-func';
     import { JsonView } from '@zerodevx/svelte-json-view';
     import ProjectItem from './project-item.svelte';
     import { pluginStore } from './plugin.store.svelte';
     import { isInnerPageSize, getTnUrl } from './util';
+
+    interface Props {
+        class?: ClassValue;
+    }
+
+    let { class: className }: Props = $props();
     
     
     let childUsers = $state<any[]>([]);
@@ -279,7 +287,7 @@
 
 </script>
 
-<div class='w-[920px] min-h-[600px] border border-gray-200'>
+<div class={cn('flex flex-col h-full', className || '')}>
     <div class='flex justify-center items-center h-[42px] border-b border-gray-200'>
         초대계정 내지 불러오기
     </div>
@@ -379,22 +387,29 @@
         </div>
     </div>
 
-    <div class='text-sm p-4 flex flex-col gap-4'>
-        {#each filteredProjects as project}
-            <ProjectItem 
-                {project} 
-                selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
-                onSelectAll={handleSelectAll}
-                onSelectPartial={handleSelectPartial}
-                onThumbnailSelect={handleThumbnailSelect}
-            />
-        {/each}
+    <!-- 프로젝트 목록 -->
+    <div class='text-sm p-4 flex flex-col flex-1 overflow-y-auto border-t gap-y-12'>
+        <div>
+            {#each filteredProjects as project, index (project.edicusProjectId)}
+                <div>
+                    {index + 1}. {project.childUserDisplayName} ({project.childUserLoginId})
+                </div>
+                <ProjectItem 
+                    {project} 
+                    selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
+                    onSelectAll={handleSelectAll}
+                    onSelectPartial={handleSelectPartial}
+                    onThumbnailSelect={handleThumbnailSelect}
+                />
+            {/each}
+        </div>
 
         <!-- 선택된 썸네일 정보 -->
+        <div>tn</div>
         {#if selectedThumbnails.size > 0}
             <div class='mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md'>
                 <h3 class='font-bold text-blue-800 mb-2'>선택된 썸네일</h3>
-                {#each Array.from(selectedThumbnails.entries()) as [projectId, thumbnailIndices]}
+                {#each Array.from(selectedThumbnails.entries()) as [projectId, thumbnailIndices] (projectId)}
                     {@const project = projects.find(p => p.edicusProjectId === projectId)}
                     {#if project}
                         <div class='mb-2'>

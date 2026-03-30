@@ -7,5 +7,5 @@
 <TestPanel />
 
 <div class='flex justify-center'>
-    <PageLoaderPlugin />
+    <PageLoaderPlugin class='w-[920px] h-[800px] overflow-hidden border border-blue-300' />
 </div>
