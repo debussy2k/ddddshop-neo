@@ -18,18 +18,32 @@
     let childUsers = $state<any[]>([]);
     let projects = $state<any[]>([]);
     let selectedThumbnails = $state<Map<string, number[]>>(new Map()); // projectId -> selected thumbnail indices
-    let filterType = $state<'all' | 'available' | 'unavailable'>('all'); // 필터 상태
+    let filterType = $state<'all' | 'available' | 'unavailable'>('available'); // 필터 상태
     
     // 검색 관련 상태
     let searchTarget = $state<'all' | 'title' | 'childUserLoginId' | 'childUserDisplayName'>('all');
     let searchKeyword = $state('');
+    let isLoading = $state(true);
+    let searchTimer: ReturnType<typeof setTimeout> | null = null;
+    let searchCooldown = false;
+
+    $effect(() => {
+        searchKeyword;
+        if (searchTimer) clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            handleSearch();
+        }, 1000);
+        return () => {
+            if (searchTimer) clearTimeout(searchTimer);
+        };
+    });
 
     pluginStore.innerPageProductCode = 'TV-1PAGE-BODY'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
     pluginStore.innerPageSizeCode = 'A4'; // 선생님 상품의 psCode로 부터 이 값을 유도할 수 있어야 함.
 
     onMount(async () => {
-            
-            childUsers = await ShopicusFunc.getChildUsers({
+        isLoading = true;
+        childUsers = await ShopicusFunc.getChildUsers({
             $orderby: 'LoginId asc',
             $top: '10',
             $skip: '0',
@@ -37,13 +51,13 @@
         });
 
         let ids = childUsers.map((user) => user.loginId);
-        
+
         for await (let loginId of ids) {
             let {totalCount, items} = await fetchCartItems(loginId);
             projects.push(...items);
         }
         console.log(projects);
-
+        isLoading = false;
     });
 
     async function fetchCartItems(loginId: string) {
@@ -229,33 +243,34 @@
     // 검색 함수
     async function handleSearch() {
         if (!searchKeyword.trim()) {
-            // 검색어가 없으면 전체 데이터 다시 로드
             await loadAllProjects();
             return;
         }
 
         console.log(`검색 대상: ${searchTarget}, 검색어: ${searchKeyword}`);
-        
-        // 서버에서 검색 결과 가져오기
         await searchProjects();
     }
 
     // 전체 프로젝트 로드
     async function loadAllProjects() {
+        isLoading = true;
         projects = [];
         for await (let loginId of childUsers.map(user => user.loginId)) {
             let {totalCount, items} = await fetchCartItems(loginId);
             projects.push(...items);
         }
+        isLoading = false;
     }
 
     // 검색된 프로젝트 로드
     async function searchProjects() {
+        isLoading = true;
         projects = [];
         for await (let loginId of childUsers.map(user => user.loginId)) {
             let {totalCount, items} = await fetchCartItemsWithSearch(loginId, searchTarget, searchKeyword);
             projects.push(...items);
         }
+        isLoading = false;
     }
 
     // 검색 초기화 함수
@@ -323,7 +338,11 @@
                 class="h-8 w-44 px-2.5 border border-gray-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                 onkeydown={(e) => {
                     if (e.key === 'Enter') {
+                        if (searchCooldown) return;
+                        if (searchTimer) clearTimeout(searchTimer);
                         handleSearch();
+                        searchCooldown = true;
+                        setTimeout(() => { searchCooldown = false; }, 1000);
                     }
                 }}
             />
@@ -384,18 +403,38 @@
     <!-- 프로젝트 목록 -->
     <div class='flex-1 overflow-y-auto'>
         <div class='px-5 py-4 flex flex-col gap-3'>
-            {#each filteredProjects as project, index (project.edicusProjectId)}
-                <div class="text-xs text-gray-400 font-medium {index > 0 ? 'mt-2' : ''}">
-                    {index + 1}. {project.childUserDisplayName} ({project.childUserLoginId})
+            {#if filteredProjects.length > 0}
+                {#each filteredProjects as project, index (project.edicusProjectId)}
+                    <div class="text-xs text-gray-400 font-medium {index > 0 ? 'mt-2' : ''}">
+                        {index + 1}. {project.childUserDisplayName} ({project.childUserLoginId})
+                    </div>
+                    <ProjectItem
+                        {project}
+                        selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
+                        onSelectAll={handleSelectAll}
+                        onSelectPartial={handleSelectPartial}
+                        onThumbnailSelect={handleThumbnailSelect}
+                    />
+                {/each}
+            {:else if isLoading}
+                <!-- 데이터 로딩 중 -->
+                <div class="flex flex-col items-center justify-center py-16 text-center">
+                    <svg class="w-10 h-10 text-gray-300 mb-3 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500 font-medium">프로젝트를 불러오는 중...</p>
                 </div>
-                <ProjectItem
-                    {project}
-                    selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
-                    onSelectAll={handleSelectAll}
-                    onSelectPartial={handleSelectPartial}
-                    onThumbnailSelect={handleThumbnailSelect}
-                />
-            {/each}
+            {:else}
+                <!-- 검색/필터 결과 없음 -->
+                <div class="flex flex-col items-center justify-center py-16 text-center">
+                    <svg class="w-10 h-10 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <p class="text-sm text-gray-500 font-medium">조건에 맞는 프로젝트가 없습니다</p>
+                    <p class="text-xs text-gray-400 mt-1">필터 조건을 변경하거나 검색어를 수정해 보세요</p>
+                </div>
+            {/if}
         </div>
 
         <!-- 선택된 썸네일 정보 -->
