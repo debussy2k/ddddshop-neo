@@ -114,84 +114,74 @@
 
 </script>
 
-<div>
-	<div class={cn('border border-gray-200 mt-4', className || '')}>
-		<div class='flex gap-x-4 p-4'>
-			<!-- 썸네일 -->
-			<div class="relative">
-				<img 
-					src={project.thumbnailUrl} 
-					alt={project.title} 
-					class='w-26 h-26 object-contain border border-gray-200' 
-				/>
-				{#if !isInnerPageSize(project.edicusPsCode)}
-					<div class="absolute inset-0 flex items-center justify-center rounded bg-gray-500/70">
-						<div class=" text-white text-xs font-bold text-center px-2 py-1 rounded">
-							내지 사이즈가<br/>일치하지 않습니다
-						</div>
-					</div>
-				{/if}
-			</div>
-
-			<!-- 상세정보 -->
-			<div class='flex flex-1'>
-				<!-- 왼쪽 상세정보 -->
-				<div class='flex flex-col gap-1 flex-1'>
-					<div class="text-lg font-bold">{project.title}</div>
-					<div>
-						초대 계정(ID): {project.childUserLoginId} | {project.childUserDisplayName} | 구분정보: {project.userMemo}
-					</div>
-					<div class='flex'>
-						<div class='bg-gray-200 border border-gray-300 px-1 rounded-xs mr-2'>판형</div>
-						{getProductOptionName(project.productOptions, '판형')}
-					</div>
-					<div>
-						수정 : {getDateTime(project.modificationDate)}
+<div class={cn('border border-gray-200 rounded', className || '')}>
+	<div class='flex gap-x-3 p-3'>
+		<!-- 썸네일 -->
+		<div class="relative shrink-0">
+			<img
+				src={project.thumbnailUrl}
+				alt={project.title}
+				class='w-20 h-20 object-contain border border-gray-200 rounded-sm'
+			/>
+			{#if !isInnerPageSize(project.edicusPsCode)}
+				<div class="absolute inset-0 flex items-center justify-center rounded-sm bg-gray-500/70">
+					<div class="text-white text-[10px] font-bold text-center leading-tight px-1.5 py-0.5">
+						내지 사이즈가<br/>일치하지 않습니다
 					</div>
 				</div>
+			{/if}
+		</div>
 
-				<!-- 오른쪽 액션 버튼들 -->
-				<div class='w-[120px] flex-shrink-0 flex items-center'>
-					<div class="flex flex-col gap-2">
-						<div class="flex justify-start items-center">
-							<Checkbox 
-								id="selectAll-{project.edicusProjectId}" 
-								bind:checked={checkboxChecked}
-								disabled={!isInnerPageSize(project.edicusPsCode)}
-							/>
-							<label
-								for="selectAll-{project.edicusProjectId}"
-								class={cn(
-									"text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 ml-2",
-									isInnerPageSize(project.edicusPsCode) ? "cursor-pointer" : "cursor-not-allowed opacity-50"
-								)}
-							>
-								전체 선택
-							</label>
-						</div>
-						<!-- <div>
-							<Button variant="outline" onclick={handleSelectPartial}>
-								일부만 선택
-							</Button>
-						</div> -->
-					</div>
+		<!-- 상세정보 -->
+		<div class='flex flex-1 min-w-0'>
+			<div class='flex flex-col gap-0.5 flex-1 min-w-0'>
+				<div class="text-sm font-bold text-gray-900 truncate">{project.title}</div>
+				<div class="text-xs text-gray-500">
+					{project.childUserLoginId} | {project.childUserDisplayName}{#if project.userMemo} | {project.userMemo}{/if}
+				</div>
+				<div class='flex items-center text-xs text-gray-600 mt-0.5'>
+					<span class='bg-gray-100 border border-gray-200 px-1.5 py-px rounded text-[10px] font-medium text-gray-500 mr-1.5'>판형</span>
+					{getProductOptionName(project.productOptions, '판형')}
+				</div>
+				<div class="text-[11px] text-gray-400 mt-0.5">
+					수정 {getDateTime(project.modificationDate)}
+				</div>
+			</div>
+
+			<!-- 오른쪽 액션 -->
+			<div class='shrink-0 flex items-center pl-3'>
+				<div class="flex items-center gap-1.5">
+					<Checkbox
+						id="selectAll-{project.edicusProjectId}"
+						bind:checked={checkboxChecked}
+						disabled={!isInnerPageSize(project.edicusPsCode)}
+					/>
+					<label
+						for="selectAll-{project.edicusProjectId}"
+						class={cn(
+							"text-xs font-medium leading-none",
+							isInnerPageSize(project.edicusPsCode) ? "cursor-pointer text-gray-700" : "cursor-not-allowed text-gray-400"
+						)}
+					>
+						전체 선택
+					</label>
 				</div>
 			</div>
 		</div>
-
-		<div class="h-[1px] bg-gray-200 my-2"></div>
-		
-		<TnList 
-			{project}
-			selectedThumbnails={selectedThumbnails}
-			hoveredThumbnailIndex={hoveredThumbnailIndex}
-			onThumbnailClick={handleThumbnailClick}
-			onThumbnailMouseEnter={handleThumbnailMouseEnter}
-			onThumbnailMouseLeave={handleThumbnailMouseLeave}
-			onViewThumbnail={handleViewThumbnail}
-			isInnerPageSize={isInnerPageSize}
-		/>
 	</div>
+
+	<div class="h-px bg-gray-100 mx-3"></div>
+
+	<TnList
+		{project}
+		selectedThumbnails={selectedThumbnails}
+		hoveredThumbnailIndex={hoveredThumbnailIndex}
+		onThumbnailClick={handleThumbnailClick}
+		onThumbnailMouseEnter={handleThumbnailMouseEnter}
+		onThumbnailMouseLeave={handleThumbnailMouseLeave}
+		onViewThumbnail={handleViewThumbnail}
+		isInnerPageSize={isInnerPageSize}
+	/>
 </div>
 
 <!-- 썸네일 미리보기 팝업 -->

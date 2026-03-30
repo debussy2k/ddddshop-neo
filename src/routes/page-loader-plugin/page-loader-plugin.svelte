@@ -287,115 +287,109 @@
 
 </script>
 
-<div class={cn('flex flex-col h-full', className || '')}>
-    <div class='flex justify-center items-center h-[42px] border-b border-gray-200'>
+<div class={cn('flex flex-col h-full bg-white', className || '')}>
+    <!-- 헤더 -->
+    <div class='flex justify-center items-center h-[42px] border-b border-gray-200 bg-gray-50 text-sm font-semibold text-gray-700 shrink-0'>
         초대계정 내지 불러오기
     </div>
 
-    <div class='px-4 py-4 border-b border-gray-200'>
-        <div class='font-bold'>
+    <!-- 안내 -->
+    <div class='px-5 py-3 border-b border-gray-200 shrink-0'>
+        <div class='text-[13px] font-bold text-gray-800'>
             내지를 추가할 프로젝트를 선택해 주세요
         </div>
-        <div>
-            동일한 내지(판형) 사이즈만 추가 가능합니다. (선생님이 선택한 판형 사이즈는 {pluginStore.innerPageSizeCode}입니다.)
+        <div class='text-xs text-gray-500 mt-0.5'>
+            동일한 내지(판형) 사이즈만 추가 가능합니다. (선생님이 선택한 판형 사이즈는 <span class="font-semibold text-gray-700">{pluginStore.innerPageSizeCode}</span>입니다.)
         </div>
     </div>
 
-    <div class='flex justify-between items-center p-4'>
-        <div class='flex-1'>
-            <div class="flex items-center gap-3">
-                <!-- 검색 대상 선택 드롭다운 -->
-                <select 
-                    bind:value={searchTarget}
-                    class="px-3 py-2 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                    <option value="all">전체</option>
-                    <option value="title">프로젝트명</option>
-                    <option value="childUserLoginId">ID</option>
-                    <option value="childUserDisplayName">이름</option>
-                </select>
-                
-                <!-- 검색어 입력창 -->
-                <input 
-                    type="text"
-                    bind:value={searchKeyword}
-                    placeholder="검색어를 입력하세요"
-                    class="w-[160px] px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
-                    onkeydown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleSearch();
-                        }
-                    }}
-                />
-                
-                <!-- 검색 버튼 -->
-                <button 
+    <!-- 검색 & 필터 -->
+    <div class='flex flex-wrap justify-between items-center px-5 py-2.5 border-b border-gray-200 gap-y-2 shrink-0'>
+        <div class="flex items-center gap-1.5">
+            <select
+                bind:value={searchTarget}
+                class="h-8 px-2 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            >
+                <option value="all">전체</option>
+                <option value="title">프로젝트명</option>
+                <option value="childUserLoginId">ID</option>
+                <option value="childUserDisplayName">이름</option>
+            </select>
+
+            <input
+                type="text"
+                bind:value={searchKeyword}
+                placeholder="검색어를 입력하세요"
+                class="h-8 w-44 px-2.5 border border-gray-300 rounded text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                onkeydown={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSearch();
+                    }
+                }}
+            />
+
+            <button
+                type="button"
+                onclick={handleSearch}
+                class="h-8 w-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center shrink-0"
+                aria-label="검색"
+            >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+
+            {#if searchKeyword}
+                <button
                     type="button"
-                    onclick={handleSearch}
-                    class="px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors flex items-center justify-center"
-                    aria-label="검색"
+                    onclick={clearSearch}
+                    class="h-8 px-2.5 bg-gray-100 text-gray-500 text-xs rounded hover:bg-gray-200 transition-colors"
                 >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
+                    초기화
                 </button>
-                
-                <!-- 검색 초기화 버튼 -->
-                {#if searchKeyword}
-                    <button 
-                        type="button"
-                        onclick={clearSearch}
-                        class="px-3 py-2 bg-gray-100 text-gray-600 text-sm font-medium rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 transition-colors"
-                    >
-                        초기화
-                    </button>
-                {/if}
-            </div>
+            {/if}
         </div>
-        <div class='flex-1 flex justify-end'>
-            <div class="flex items-center gap-6">
-                <div class="flex items-center gap-4">
-                    <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input 
-                            type="radio" 
-                            bind:group={filterType} 
-                            value="all"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
-                        />
-                        <span class="text-sm text-gray-700">전체</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input 
-                            type="radio" 
-                            bind:group={filterType} 
-                            value="available"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
-                        />
-                        <span class="text-sm text-gray-700">추가 가능한 내지</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer select-none">
-                        <input 
-                            type="radio" 
-                            bind:group={filterType} 
-                            value="unavailable"
-                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
-                        />
-                        <span class="text-sm text-gray-700">추가 불가능한 내지</span>
-                    </label>
-                </div>
-            </div>
+
+        <div class="flex items-center gap-3">
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input
+                    type="radio"
+                    bind:group={filterType}
+                    value="all"
+                    class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                />
+                <span class="text-xs text-gray-600">전체</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input
+                    type="radio"
+                    bind:group={filterType}
+                    value="available"
+                    class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                />
+                <span class="text-xs text-gray-600">추가 가능</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer select-none">
+                <input
+                    type="radio"
+                    bind:group={filterType}
+                    value="unavailable"
+                    class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-0 focus:outline-none"
+                />
+                <span class="text-xs text-gray-600">추가 불가</span>
+            </label>
         </div>
     </div>
 
     <!-- 프로젝트 목록 -->
-    <div class='text-sm p-4 flex flex-col flex-1 overflow-y-auto border-t gap-y-12'>
-        <div>
+    <div class='flex-1 overflow-y-auto'>
+        <div class='px-5 py-4 flex flex-col gap-3'>
             {#each filteredProjects as project, index (project.edicusProjectId)}
-                <div>
+                <div class="text-xs text-gray-400 font-medium {index > 0 ? 'mt-2' : ''}">
                     {index + 1}. {project.childUserDisplayName} ({project.childUserLoginId})
                 </div>
-                <ProjectItem 
-                    {project} 
+                <ProjectItem
+                    {project}
                     selectedThumbnails={selectedThumbnails.get(project.edicusProjectId) || []}
                     onSelectAll={handleSelectAll}
                     onSelectPartial={handleSelectPartial}
@@ -405,16 +399,15 @@
         </div>
 
         <!-- 선택된 썸네일 정보 -->
-        <div>tn</div>
         {#if selectedThumbnails.size > 0}
-            <div class='mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md'>
-                <h3 class='font-bold text-blue-800 mb-2'>선택된 썸네일</h3>
+            <div class='mx-5 mb-4 p-3 bg-blue-50 border border-blue-200 rounded'>
+                <h3 class='text-xs font-bold text-blue-800 mb-1.5'>선택된 썸네일</h3>
                 {#each Array.from(selectedThumbnails.entries()) as [projectId, thumbnailIndices] (projectId)}
                     {@const project = projects.find(p => p.edicusProjectId === projectId)}
                     {#if project}
-                        <div class='mb-2'>
-                            <div class='font-medium'>{project.title}</div>
-                            <div class='text-sm text-gray-600'>
+                        <div class='mb-1.5 last:mb-0'>
+                            <div class='text-xs font-medium text-gray-800'>{project.title}</div>
+                            <div class='text-xs text-gray-500'>
                                 선택된 페이지: {thumbnailIndices.map(i => i + 1).join(', ')} ({thumbnailIndices.length}개)
                             </div>
                         </div>
@@ -423,7 +416,7 @@
             </div>
         {/if}
 
-        <div class=''>
+        <div class='px-5 pb-4'>
             <JsonView json={projects} />
         </div>
     </div>

@@ -56,7 +56,7 @@
 </script>
 
 {#if project.tnUrls && project.tnUrls.length > 0}
-	<div class={cn('flex gap-2 mt-2 overflow-x-auto p-4', className || '')}>
+	<div class={cn('flex gap-2 overflow-x-auto px-3 py-2.5', className || '')}>
 		{#each project.tnUrls as tnUrl, index}
 			<div class="flex flex-col items-center">
 				<div 
