@@ -97,14 +97,16 @@
 					{#if hoveredThumbnailIndex === index}
 						<button
 							type="button"
-							class="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs hover:bg-opacity-90 transition-all duration-200"
+							class="absolute bottom-1 right-1 w-6 h-6 bg-black/60 text-white rounded flex items-center justify-center hover:bg-black/80 transition-all duration-200"
 							onclick={(e) => {
 								e.stopPropagation();
 								handleViewThumbnail(index);
 							}}
 							aria-label={`썸네일 ${index + 1} 크게 보기`}
 						>
-							보기
+							<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path>
+							</svg>
 						</button>
 					{/if}
 				</div>

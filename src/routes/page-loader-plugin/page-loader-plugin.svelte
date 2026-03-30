@@ -311,9 +311,7 @@
             const project = projects.find(p => p.edicusProjectId === projectId);
             return {
                 projectId,
-                title: project?.title,
                 edicusPsCode: project?.edicusPsCode,
-                authorGuid: project?.authorGuid,
                 selectedPages: indices,
             };
         });
@@ -370,7 +368,7 @@
             <button
                 type="button"
                 onclick={handleSearch}
-                class="h-8 w-8 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex items-center justify-center shrink-0"
+                class="h-8 w-8 text-gray-500 rounded hover:text-gray-800 hover:bg-gray-100 transition-colors flex items-center justify-center shrink-0"
                 aria-label="검색"
             >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,7 +419,7 @@
     </div>
 
     <!-- 프로젝트 목록 -->
-    <div class='flex-1 overflow-y-auto'>
+    <div class='flex-1 overflow-y-auto bg-gray-50/50 shadow-[inset_0_4px_6px_-4px_rgba(0,0,0,0.08)]'>
         <div class='px-5 py-4 flex flex-col gap-3'>
             {#if filteredProjects.length > 0}
                 {#each filteredProjects as project, index (project.edicusProjectId)}
@@ -481,7 +479,7 @@
     </div>
 
     <!-- 하단 고정 버튼 -->
-    <div class="flex justify-center shrink-0 border-t border-gray-200 px-5 py-3 bg-gray-50">
+    <div class="flex justify-center shrink-0 border-t border-gray-200 px-5 py-3 bg-white shadow-[0_-4px_6px_-4px_rgba(0,0,0,0.08)]">
         <button
             type="button"
             onclick={handleLoadSelected}
